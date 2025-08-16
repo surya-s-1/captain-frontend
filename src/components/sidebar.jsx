@@ -1,0 +1,97 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import { PanelLeft, LayoutDashboard, Settings, SquarePen, Sun, Moon } from 'lucide-react'
+
+const Sidebar = () => {
+    const [isExpanded, setIsExpanded] = useState(true)
+    const [isDark, setIsDark] = useState(false)
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const savedTheme = localStorage.getItem('theme')
+            if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark')
+                setIsDark(true)
+            }
+        }
+    }, [])
+
+    const toggleTheme = () => {
+        const html = document.documentElement
+        if (html.classList.contains('dark')) {
+            html.classList.remove('dark')
+            localStorage.setItem('theme', 'light')
+            setIsDark(false)
+        } else {
+            html.classList.add('dark')
+            localStorage.setItem('theme', 'dark')
+            setIsDark(true)
+        }
+    }
+
+    const toggleSidebar = () => {
+        setIsExpanded(!isExpanded)
+    }
+
+    const navItems = [
+        { label: 'Dashboard', icon: LayoutDashboard, link: '/dashboard' },
+        { label: 'New Chat', icon: SquarePen, link: '/new' },
+        { label: 'Settings', icon: Settings, link: '/settings' },
+    ]
+
+    return (
+        <div
+            className={`flex flex-col h-screen
+                        bg-secondary text-color-secondary
+                        transition-all duration-300 ease-in-out
+                        ${isExpanded ? 'w-60' : 'w-20'}
+                        p-4 shadow-lg text-sm
+                    `}
+        >
+            <div className='flex justify-between mb-8'>
+                <button
+                    onClick={toggleSidebar}
+                    className='p-2 text-color-secondary rounded-full hover:bg-tertiary hover:text-color-tertiary transition-colors duration-200 cursor-pointer'
+                >
+                    <PanelLeft size={24} className={`transition-transform duration-300 ${isExpanded ? '' : 'rotate-180'}`} />
+                </button>
+                {isExpanded &&
+                <button
+                    onClick={toggleTheme}
+                    className='p-2 text-color-secondary rounded-full hover:bg-tertiary hover:text-color-tertiary transition-colors duration-200 cursor-pointer'
+                >
+                    {isDark ? 
+                    <Sun size={24} className={`transition-transform duration-300`} /> : 
+                    <Moon size={24} className={`transition-transform duration-300`} />}
+                </button>}
+            </div>
+
+            <nav className='flex-1'>
+                <ul className='space-y-4'>
+                    {navItems.map((item, index) => (
+                        <li key={index}>
+                            <a
+                                href={item.link}
+                                className='flex items-center space-x-3 p-2 rounded-lg hover:bg-tertiary hover:text-color-tertiary transition-colors duration-200 cursor-pointer'
+                            >
+                                <item.icon size={20} />
+                                <span
+                                    className={`
+                                        whitespace-nowrap overflow-hidden
+                                        ${isExpanded ? 'opacity-100 w-auto' : 'opacity-0 w-0'}
+                                        transition-opacity duration-300
+                                    `}
+                                >
+                                    {item.label}
+                                </span>
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+            </nav>
+        </div>
+    )
+}
+
+export default Sidebar
