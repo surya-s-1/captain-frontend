@@ -29,7 +29,7 @@ export default function Home() {
     }
 
     return (
-        <div className='bg-primary text-color-primary dark:bg-primary dark:text-color-primary'>
+        <div className='bg-primary text-color-primary'>
             Hello!
             <button
                 onClick={toggleTheme}
