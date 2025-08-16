@@ -35,8 +35,8 @@ const Sidebar = () => {
     }
 
     const navItems = [
+        { label: 'New Chat', icon: SquarePen, link: '/chat' },
         { label: 'Dashboard', icon: LayoutDashboard, link: '/dashboard' },
-        { label: 'New Chat', icon: SquarePen, link: '/new' },
         { label: 'Settings', icon: Settings, link: '/settings' },
     ]
 
@@ -49,17 +49,17 @@ const Sidebar = () => {
                         p-4 shadow-lg text-sm
                     `}
         >
-            <div className='flex justify-between mb-8'>
+            <div className='flex justify-between mb-4'>
                 <button
                     onClick={toggleSidebar}
-                    className='p-2 text-color-secondary rounded-full hover:bg-tertiary hover:text-color-tertiary transition-colors duration-200 cursor-pointer'
+                    className='p-2 rounded-full hover:bg-tertiary hover:text-color-tertiary transition-colors duration-200 cursor-pointer'
                 >
                     <PanelLeft size={24} className={`transition-transform duration-300 ${isExpanded ? '' : 'rotate-180'}`} />
                 </button>
                 {isExpanded &&
                 <button
                     onClick={toggleTheme}
-                    className='p-2 text-color-secondary rounded-full hover:bg-tertiary hover:text-color-tertiary transition-colors duration-200 cursor-pointer'
+                    className='p-2 rounded-full hover:bg-tertiary hover:text-color-tertiary transition-colors duration-200 cursor-pointer'
                 >
                     {isDark ? 
                     <Sun size={24} className={`transition-transform duration-300`} /> : 
@@ -68,7 +68,7 @@ const Sidebar = () => {
             </div>
 
             <nav className='flex-1'>
-                <ul className='space-y-4'>
+                <ul className='space-y-1'>
                     {navItems.map((item, index) => (
                         <li key={index}>
                             <a

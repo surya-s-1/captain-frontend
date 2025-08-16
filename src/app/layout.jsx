@@ -10,9 +10,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang='en'>
       <body>
-        <div className="flex flex-row min-h-screen">
+        <div className='flex min-h-screen'>
           <Sidebar />
-          {children}
+          <div className='w-full flex justify-center items-center'>
+            {children}
+          </div>
         </div>
       </body>
     </html>
