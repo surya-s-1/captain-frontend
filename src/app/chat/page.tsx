@@ -6,7 +6,7 @@ import ChatMessages from '@/components/chat/messages'
 
 export default function Chat() {
     return(
-        <div className='w-[60%] h-screen flex flex-col items-center scrollbar-none overflow-hidden pb-2'>
+        <div className='w-[60%] h-screen flex flex-col items-center scrollbar-none overflow-hidden pb-6'>
             <ChatMessages />
             <ChatInput />
         </div>
