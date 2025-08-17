@@ -8,8 +8,9 @@ export default function Home() {
     const appUser = useSelector((state: RootState) => state.user)
 
     return (
-        <div className='bg-primary text-color-primary'>
-            Hello, {appUser.name}!
+        <div className='flex w-full h-full items-center justify-center bg-primary text-color-primary/50 text-7xl pb-20'>
+            Hello,<br />
+            {appUser.name}!
         </div>
     )
 }
