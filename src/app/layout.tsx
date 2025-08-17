@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+import { useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 
 import StoreProvider from '@/app/StoreProvider'
@@ -17,6 +18,10 @@ listenToAuthChanges()
 
 export default function RootLayout({ children }) {
     const pathname = usePathname()
+
+    useEffect(() => {
+        document.title = 'Beta App'
+    }, [])
 
     return (
         <html lang='en'>
