@@ -4,12 +4,12 @@ import React from 'react'
 
 const Branding = () => {
     return (
-        <div className='bg-transparent text-color-secondary not-odd:fixed top-0 z-10 py-4 px-8'>
+        <header className='w-full bg-transparent text-color-secondary sticky top-0 py-4 px-8'>
             <div className='flex-col items-center space-y-sm'>
                 <span className='text-3xl'>Beta</span>
                 {/* Add any dropdowns in the future here */}
             </div>
-        </div>
+        </header>
     )
 }
 

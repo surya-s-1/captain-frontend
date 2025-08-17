@@ -47,7 +47,7 @@ const Sidebar = () => {
                         bg-secondary text-color-secondary
                         transition-all duration-300 ease-in-out
                         ${isExpanded ? 'w-60' : 'w-20'}
-                        p-4 shadow-lg text-sm
+                        p-4 text-sm
                     `}
         >
             <div className='flex justify-between mb-4'>
