@@ -30,11 +30,11 @@ export default function LoginPage() {
 
     return (
         <div className='flex flex-col w-full h-full items-center justify-center bg-primary'>
-            <div>
-                <h1 className='text-3xl mb-4'>Login</h1>
+            <div className='pb-80'>
+                <h1 className='text-5xl text-color-primary/50 mb-4'>Login</h1>
                 <button
                     onClick={handleGoogleLogin}
-                    className='px-4 py-2 bg-blue-500 hover:bg-blue-600 transition-colors duration-300 cursor-pointer text-white rounded-lg'
+                    className='px-4 py-2 bg-blue-500 hover:bg-blue-600 transition-colors duration-300 cursor-pointer text-white text-lg rounded-lg'
                 >
                     Sign in with Google
                 </button>
