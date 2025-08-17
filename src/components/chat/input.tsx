@@ -136,6 +136,7 @@ export default function ChatInput() {
         <div className='w-full h-fit p-4 bg-secondary rounded-2xl'>
             <textarea
                 className='w-full p-0 mb-2 outline-0 resize-none overflow-y-auto scrollbar'
+                autoFocus
                 ref={textareaRef}
                 value={inputValue}
                 onChange={e => setInputValue(e.target.value)}
@@ -241,7 +242,7 @@ export default function ChatInput() {
                         <span className='text-sm'>Upload</span>
                     </button>
 
-                    <button
+                    {/* <button
                         onClick={() => {
                             if (/Mobi|Android/i.test(navigator.userAgent)) {
                                 handleCaptureMobile()
@@ -255,7 +256,7 @@ export default function ChatInput() {
                     >
                         <Camera size={20} />
                         <span className='text-sm'>Camera</span>
-                    </button>
+                    </button> */}
                 </div>
 
                 <button
