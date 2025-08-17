@@ -1,5 +1,6 @@
 import Sidebar from '@/components/sidebar'
 import './globals.css'
+import Branding from '@/components/branding'
 
 export const metadata = {
   title: 'Next App',
@@ -12,8 +13,11 @@ export default function RootLayout({ children }) {
       <body>
         <div className='flex min-h-screen'>
           <Sidebar />
-          <div className='w-full flex justify-center'>
-            {children}
+          <div className='w-full flex flex-col'>
+            <Branding />
+            <div className='w-full h-full flex flex-col items-center'>
+              {children}
+            </div>
           </div>
         </div>
       </body>
