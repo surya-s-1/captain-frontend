@@ -23,12 +23,38 @@ export function listenToAuthChanges() {
                     email: user.email || ''
                 })
             )
+
+            const idTokenResult = await user.getIdTokenResult()
+            const expiryTime = new Date(idTokenResult.expirationTime).getTime()
+            const now = Date.now()
+            const timeout = expiryTime - now - 5 * 60 * 1000
+
+            if (timeout > 0) {
+                setTimeout(async () => {
+                    await getFreshIdToken(true)
+                }, timeout)
+            }
+
         } else {
             sessionStorage.removeItem(SESSION_STORAGE.ID_TOKEN)
             sessionStorage.removeItem(SESSION_STORAGE.REFRESH_TOKEN)
             store.dispatch(clearUser())
         }
-        
+
         store.dispatch(setLoading(false))
     })
+}
+
+export async function getFreshIdToken(force = false): Promise<string | null> {
+    const user = auth.currentUser
+    if (!user) return null
+
+    try {
+        const token = await user.getIdToken(force)
+        sessionStorage.setItem(SESSION_STORAGE.ID_TOKEN, token)
+        return token
+    } catch (err) {
+        console.error('Error refreshing ID token:', err)
+        return null
+    }
 }

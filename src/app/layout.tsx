@@ -9,7 +9,7 @@ import AuthGuard from './AuthGaurd'
 import Sidebar from '@/components/sidebar'
 import Branding from '@/components/branding'
 
-import { listenToAuthChanges } from '@/lib/firebaseListeners'
+import { listenToAuthChanges } from '@/lib/firebase/utilities'
 
 import './globals.css'
 

@@ -41,8 +41,7 @@ const Sidebar = () => {
 
     const handleLogout = async () => {
         await signOut(auth)
-        sessionStorage.removeItem(SESSION_STORAGE.ID_TOKEN)
-        sessionStorage.removeItem(SESSION_STORAGE.REFRESH_TOKEN)
+        sessionStorage.clear()
     }
 
     const navItems = [
