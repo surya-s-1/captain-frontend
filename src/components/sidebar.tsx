@@ -46,7 +46,7 @@ const Sidebar = () => {
             className={`flex flex-col h-screen
                         bg-secondary text-color-secondary
                         transition-all duration-300 ease-in-out
-                        ${isExpanded ? 'w-60' : 'w-20'}
+                        ${isExpanded ? 'w-80' : 'w-20'}
                         p-4 text-sm
                     `}
         >
