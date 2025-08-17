@@ -46,30 +46,28 @@ const Sidebar = () => {
 
     const navItems = [
         { label: 'New Chat', icon: SquarePen, link: '/chat' },
-        { label: 'Dashboard', icon: LayoutDashboard, link: '/dashboard' },
-        { label: 'Settings', icon: Settings, link: '/settings' },
+        { label: 'Dashboard', icon: LayoutDashboard, link: '/dashboard' }
     ]
+
+    const iconClass = 'p-2 rounded-full hover:bg-tertiary hover:text-color-tertiary transition-colors duration-200 cursor-pointer'
+
+    const navButtonClass = 'flex items-center space-x-3 p-2 rounded-lg hover:bg-tertiary hover:text-color-tertiary transition-colors duration-200 cursor-pointer'
 
     return (
         <div
-            className={`flex flex-col h-screen
-                        bg-secondary text-color-secondary
-                        transition-all duration-300 ease-in-out
-                        ${isExpanded ? 'w-80' : 'w-20'}
-                        p-4 text-sm
-                    `}
+            className={`flex flex-col h-screen bg-secondary text-color-secondary transition-all duration-300 ease-in-out ${isExpanded ? 'w-80' : 'w-20'} p-4 text-sm`}
         >
             <div className='flex justify-between mb-4'>
                 <button
                     onClick={toggleSidebar}
-                    className='p-2 rounded-full hover:bg-tertiary hover:text-color-tertiary transition-colors duration-200 cursor-pointer'
+                    className={iconClass}
                 >
                     <PanelLeft size={24} className={`transition-transform duration-300 ${isExpanded ? '' : 'rotate-180'}`} />
                 </button>
                 {isExpanded &&
                     <button
                         onClick={toggleTheme}
-                        className='p-2 rounded-full hover:bg-tertiary hover:text-color-tertiary transition-colors duration-200 cursor-pointer'
+                        className={iconClass}
                     >
                         {isDark ?
                             <Sun size={24} className={`transition-transform duration-300`} /> :
@@ -83,7 +81,7 @@ const Sidebar = () => {
                         <li key={index}>
                             <a
                                 href={item.link}
-                                className='flex items-center space-x-3 p-2 rounded-lg hover:bg-tertiary hover:text-color-tertiary transition-colors duration-200 cursor-pointer'
+                                className={navButtonClass}
                             >
                                 <item.icon size={20} />
                                 {isExpanded &&
@@ -96,16 +94,28 @@ const Sidebar = () => {
                 </ul>
             </nav>
 
-            <button
-                className='flex items-center space-x-3 p-2 rounded-lg text-red-500 hover:bg-tertiary transition-colors duration-200 cursor-pointer'
-                onClick={handleLogout}
-            >
-                <LogOut size={20} />
-                {isExpanded &&
-                    <span className='whitespace-nowrap overflow-hidden transition-opacity duration-300'>
-                        Logout
-                    </span>}
-            </button>
+            <div>
+                <a
+                    href={'/settings'}
+                    className={navButtonClass}
+                >
+                    <Settings size={20} />
+                    {isExpanded &&
+                        <span className='whitespace-nowrap overflow-hidden transition-opacity duration-300'>
+                            Settings
+                        </span>}
+                </a>
+                <button
+                    className={`${navButtonClass} w-full text-red-500 hover:text-red-500`}
+                    onClick={handleLogout}
+                >
+                    <LogOut size={20} />
+                    {isExpanded &&
+                        <span className='whitespace-nowrap overflow-hidden transition-opacity duration-300'>
+                            Logout
+                        </span>}
+                </button>
+            </div>
         </div>
     )
 }
