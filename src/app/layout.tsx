@@ -1,31 +1,38 @@
+'use client'
+
 import React from 'react'
+import { usePathname } from 'next/navigation'
 
 import StoreProvider from '@/app/StoreProvider'
+import AuthGuard from './AuthGaurd'
 
 import Sidebar from '@/components/sidebar'
 import Branding from '@/components/branding'
 
+import { listenToAuthChanges } from '@/lib/firebaseListeners'
+
 import './globals.css'
 
-export const metadata = {
-    title: 'Beta App',
-    description: 'Work In Progress',
-}
+listenToAuthChanges()
 
 export default function RootLayout({ children }) {
+    const pathname = usePathname()
+
     return (
         <html lang='en'>
             <body>
                 <StoreProvider>
-                    <div className='flex min-h-screen'>
-                        <Sidebar />
-                        <div className='w-full h-screen flex flex-col'>
-                            <Branding />
-                            <div className='w-full h-full flex flex-col items-center flex-1 overflow-hidden'>
-                                {children}
+                    <AuthGuard>
+                        <div className='flex min-h-screen'>
+                            {pathname!=='/login' && <Sidebar />}
+                            <div className='w-full h-screen flex flex-col'>
+                                <Branding />
+                                <div className='w-full h-full flex flex-col items-center flex-1 overflow-hidden'>
+                                    {children}
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </AuthGuard>
                 </StoreProvider>
             </body>
         </html>
