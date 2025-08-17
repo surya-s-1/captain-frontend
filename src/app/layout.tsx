@@ -1,6 +1,8 @@
+import React from 'react'
 import Sidebar from '@/components/sidebar'
-import './globals.css'
 import Branding from '@/components/branding'
+
+import './globals.css'
 
 export const metadata = {
   title: 'Next App',
