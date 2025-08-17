@@ -77,15 +77,10 @@ const Sidebar = () => {
                                 className='flex items-center space-x-3 p-2 rounded-lg hover:bg-tertiary hover:text-color-tertiary transition-colors duration-200 cursor-pointer'
                             >
                                 <item.icon size={20} />
-                                <span
-                                    className={`
-                                        whitespace-nowrap overflow-hidden
-                                        ${isExpanded ? 'opacity-100 w-auto' : 'opacity-0 w-0'}
-                                        transition-opacity duration-300
-                                    `}
-                                >
+                                {isExpanded &&
+                                <span className='whitespace-nowrap overflow-hidden transition-opacity duration-300'>
                                     {item.label}
-                                </span>
+                                </span>}
                             </a>
                         </li>
                     ))}
