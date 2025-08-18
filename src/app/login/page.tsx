@@ -33,7 +33,7 @@ export default function LoginPage() {
     return (
         <div className='flex flex-col w-full h-full items-center justify-center bg-primary'>
             <div className='flex flex-col gap-8 pb-40'>
-                <h1 className='text-5xl text-color-primary'>Login</h1>
+                <h1 className='text-5xl text-color-primary/50'>Login</h1>
                 <button
                     onClick={handleGoogleLogin}
                     className='flex items-center gap-2 px-4 py-2 bg-secondary hover:bg-tertiary text-color-secondary/80 hover:text-color-tertiary transition-colors duration-300 cursor-pointer text-lg rounded-lg'
