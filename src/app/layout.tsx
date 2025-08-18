@@ -4,8 +4,8 @@ import React from 'react'
 import { useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 
-import StoreProvider from '@/app/StoreProvider'
-import AuthGuard from './AuthGaurd'
+import StoreProvider from '@/components/store-provider'
+import AuthGuard from '@/components/auth-gaurd'
 
 import Sidebar from '@/components/sidebar'
 import Branding from '@/components/branding'
