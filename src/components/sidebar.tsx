@@ -8,37 +8,21 @@ import { PanelLeft, LayoutDashboard, Settings, SquarePen, Sun, Moon, LogOut } fr
 
 import { auth } from '@/lib/firebase'
 import { RootState } from '@/lib/store'
-import { toggleMode } from '@/lib/slices/user'
 
 const Sidebar = () => {
     const appUser = useSelector((state: RootState) => state.user)
+
     const [isExpanded, setIsExpanded] = useState(true)
-    const isDark = appUser.mode === 'dark'
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
-            const savedTheme = localStorage.getItem('theme')
-            if (savedTheme === 'dark') {
+            if (appUser.mode === 'dark') {
                 document.documentElement.classList.add('dark')
-                toggleMode('dark')
             } else {
-                toggleMode('light')
+                document.documentElement.classList.remove('dark')
             }
         }
-    }, [])
-
-    const toggleTheme = () => {
-        const html = document.documentElement
-        if (html.classList.contains('dark')) {
-            html.classList.remove('dark')
-            localStorage.setItem('theme', 'light')
-            toggleMode('light')
-        } else {
-            html.classList.add('dark')
-            localStorage.setItem('theme', 'dark')
-            toggleMode('dark')
-        }
-    }
+    }, [appUser])
 
     const toggleSidebar = () => {
         setIsExpanded(!isExpanded)
@@ -54,7 +38,6 @@ const Sidebar = () => {
     ]
 
     const iconClass = 'p-2 rounded-full hover:bg-tertiary hover:text-color-tertiary transition-colors duration-200 cursor-pointer'
-
     const navButtonClass = 'flex items-center space-x-3 p-2 rounded-lg hover:bg-tertiary hover:text-color-tertiary transition-colors duration-200 cursor-pointer'
 
     return (
@@ -68,15 +51,6 @@ const Sidebar = () => {
                 >
                     <PanelLeft size={24} className={`transition-transform duration-300 ${isExpanded ? '' : 'rotate-180'}`} />
                 </button>
-                {isExpanded &&
-                    <button
-                        onClick={toggleTheme}
-                        className={iconClass}
-                    >
-                        {isDark ?
-                            <Sun size={24} className={`transition-transform duration-300`} /> :
-                            <Moon size={24} className={`transition-transform duration-300`} />}
-                    </button>}
             </div>
 
             <nav className='flex-1'>

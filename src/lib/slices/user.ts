@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-type Mode = 'light' | 'dark'
+export type Mode = 'light' | 'dark'
 
 interface UserState {
     uid: string | null
