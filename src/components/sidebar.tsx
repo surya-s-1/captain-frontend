@@ -21,6 +21,8 @@ const Sidebar = () => {
             if (savedTheme === 'dark') {
                 document.documentElement.classList.add('dark')
                 toggleMode('dark')
+            } else {
+                toggleMode('light')
             }
         }
     }, [])
