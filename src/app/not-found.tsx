@@ -39,7 +39,7 @@ export default function NotFound() {
                 {countdown > 0 &&
                 <p className='text-base'>You will be redirected in {countdown} second{countdown !== 1 ? 's' : ''}</p>}
                 {countdown < 1 &&
-                <p className='text-base'>In case you are not redirected click <span className='cursor-pointer text-blue-500' onClick={redirectPage}><i>here</i></span></p>}
+                <p className='text-base'>In case you are not redirected, click <span className='cursor-pointer text-blue-500' onClick={redirectPage}><i>here</i></span></p>}
             </div>
         </div>
     )
