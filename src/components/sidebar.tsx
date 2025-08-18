@@ -16,7 +16,7 @@ const Sidebar = () => {
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
-            if (appUser.mode === 'dark') {
+            if (appUser.theme === 'dark') {
                 document.documentElement.classList.add('dark')
             } else {
                 document.documentElement.classList.remove('dark')

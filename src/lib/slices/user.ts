@@ -1,13 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-export type Mode = 'light' | 'dark'
+export type Theme = 'light' | 'dark'
 
 interface UserState {
     uid: string | null
     name: string | null
     email: string | null
     loading: boolean
-    mode: Mode
+    theme: Theme
 }
 
 const initialState: UserState = {
@@ -15,7 +15,7 @@ const initialState: UserState = {
     name: 'User',
     email: null,
     loading: true,
-    mode: 'light'
+    theme: 'light'
 }
 
 export const userSlice = createSlice({
@@ -37,8 +37,8 @@ export const userSlice = createSlice({
         setLoading: (state, action: PayloadAction<boolean>) => {
             state.loading = action.payload
         },
-        toggleMode: (state, action: PayloadAction<Mode>) => {
-            state.mode = action.payload
+        toggleTheme: (state, action: PayloadAction<Theme>) => {
+            state.theme = action.payload
         }
     }
 })
@@ -47,7 +47,7 @@ export const {
     setUser,
     clearUser,
     setLoading,
-    toggleMode
+    toggleTheme
 } = userSlice.actions
 
 export default userSlice.reducer

@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { UserRound } from 'lucide-react'
 
 import { RootState } from '@/lib/store'
-import { toggleMode, Mode } from '@/lib/slices/user'
+import { toggleTheme, Theme } from '@/lib/slices/user'
 
 export default function Settings() {
     const appUser = useSelector((state: RootState) => state.user)
@@ -26,8 +26,8 @@ export default function Settings() {
                 <span>Theme</span>
                 <select
                     className='bg-secondary text-color-secondary rounded-md border border-gray-500 outline-0 p-1'
-                    value={appUser.mode}
-                    onChange={e => dispatch(toggleMode(e.target.value as Mode))}
+                    value={appUser.theme}
+                    onChange={e => dispatch(toggleTheme(e.target.value as Theme))}
                 >
                     <option value='light'>Light</option>
                     <option value='dark'>Dark</option>
