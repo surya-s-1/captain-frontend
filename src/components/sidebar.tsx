@@ -2,21 +2,25 @@
 
 import React from 'react'
 import { useState, useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import { signOut } from 'firebase/auth'
 import { PanelLeft, LayoutDashboard, Settings, SquarePen, Sun, Moon, LogOut } from 'lucide-react'
 
 import { auth } from '@/lib/firebase'
+import { RootState } from '@/lib/store'
+import { toggleMode } from '@/lib/slices/user'
 
 const Sidebar = () => {
+    const appUser = useSelector((state: RootState) => state.user)
     const [isExpanded, setIsExpanded] = useState(true)
-    const [isDark, setIsDark] = useState(false)
+    const isDark = appUser.mode === 'dark'
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
             const savedTheme = localStorage.getItem('theme')
             if (savedTheme === 'dark') {
                 document.documentElement.classList.add('dark')
-                setIsDark(true)
+                toggleMode('dark')
             }
         }
     }, [])
@@ -26,11 +30,11 @@ const Sidebar = () => {
         if (html.classList.contains('dark')) {
             html.classList.remove('dark')
             localStorage.setItem('theme', 'light')
-            setIsDark(false)
+            toggleMode('light')
         } else {
             html.classList.add('dark')
             localStorage.setItem('theme', 'dark')
-            setIsDark(true)
+            toggleMode('dark')
         }
     }
 
