@@ -5,6 +5,8 @@ import { useSelector } from 'react-redux'
 import { useRouter } from 'next/navigation'
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 
+import Google_Logo from '@/../public/Google_Logo.png'
+
 import { auth } from '@/lib/firebase'
 import { RootState } from '@/lib/store'
 
@@ -30,13 +32,14 @@ export default function LoginPage() {
 
     return (
         <div className='flex flex-col w-full h-full items-center justify-center bg-primary'>
-            <div className='pb-80'>
-                <h1 className='text-5xl text-color-primary/50 mb-4'>Login</h1>
+            <div className='flex flex-col gap-8 pb-40'>
+                <h1 className='text-5xl text-color-primary'>Login</h1>
                 <button
                     onClick={handleGoogleLogin}
-                    className='px-4 py-2 bg-blue-500 hover:bg-blue-600 transition-colors duration-300 cursor-pointer text-white text-lg rounded-lg'
+                    className='flex items-center gap-2 px-4 py-2 bg-secondary hover:bg-tertiary text-color-secondary/80 hover:text-color-tertiary transition-colors duration-300 cursor-pointer text-lg rounded-lg'
                 >
-                    Sign in with Google
+                    <img className='max-h-[24px]' src={Google_Logo.src} />
+                    <span>Sign in with Google</span>
                 </button>
             </div>
         </div>
