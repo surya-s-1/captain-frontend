@@ -1,18 +1,20 @@
 'use client'
 
 import React from 'react'
-import { useState, useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import { useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { signOut } from 'firebase/auth'
-import { PanelLeft, LayoutDashboard, Settings, SquarePen, Sun, Moon, LogOut } from 'lucide-react'
+import { PanelLeft, LayoutDashboard, Settings, SquarePen, LogOut } from 'lucide-react'
 
 import { auth } from '@/lib/firebase'
 import { RootState } from '@/lib/store'
+import { toggleSidebar } from '@/lib/slices/user'
 
 const Sidebar = () => {
     const appUser = useSelector((state: RootState) => state.user)
+    const dispatch = useDispatch()
 
-    const [isExpanded, setIsExpanded] = useState(true)
+    const isExpanded = appUser.sidebarExpanded
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -23,10 +25,6 @@ const Sidebar = () => {
             }
         }
     }, [appUser])
-
-    const toggleSidebar = () => {
-        setIsExpanded(!isExpanded)
-    }
 
     const handleLogout = async () => {
         await signOut(auth)
@@ -46,7 +44,7 @@ const Sidebar = () => {
         >
             <div className='flex justify-between mb-4'>
                 <button
-                    onClick={toggleSidebar}
+                    onClick={() => dispatch(toggleSidebar())}
                     className={iconClass}
                 >
                     <PanelLeft size={24} className={`transition-transform duration-300 ${isExpanded ? '' : 'rotate-180'}`} />
