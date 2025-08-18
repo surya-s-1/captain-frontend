@@ -6,7 +6,6 @@ import { signOut } from 'firebase/auth'
 import { PanelLeft, LayoutDashboard, Settings, SquarePen, Sun, Moon, LogOut } from 'lucide-react'
 
 import { auth } from '@/lib/firebase'
-import { SESSION_STORAGE } from '@/lib/constants'
 
 const Sidebar = () => {
     const [isExpanded, setIsExpanded] = useState(true)
@@ -41,7 +40,6 @@ const Sidebar = () => {
 
     const handleLogout = async () => {
         await signOut(auth)
-        sessionStorage.clear()
     }
 
     const navItems = [
