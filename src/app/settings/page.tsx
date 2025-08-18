@@ -13,7 +13,10 @@ export default function Settings() {
 
     return (
         <div className='w-full h-full flex flex-col pl-40 mt-8 gap-8'>
-            <UserRound className='text-color-secondary bg-secondary rounded-full' size={56} />
+            {appUser?.photoURL ?
+                <img src={appUser.photoURL} className='rounded-full w-20' /> :
+                <UserRound className='text-color-secondary bg-secondary rounded-full' size={72} />
+            }
             <div className='flex items-center gap-8 text-xl'>
                 <span>Name</span>
                 <span>{appUser.name}</span>

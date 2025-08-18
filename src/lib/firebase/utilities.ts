@@ -16,7 +16,8 @@ export function listenToAuthChanges() {
                 setUser({
                     uid: user.uid,
                     name: user.displayName || 'Anonymous',
-                    email: user.email || ''
+                    email: user.email || '',
+                    photoURL: user.photoURL
                 })
             )
 

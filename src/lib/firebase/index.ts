@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app'
-import { getAuth, setPersistence, browserSessionPersistence } from 'firebase/auth'
+import { getAuth } from 'firebase/auth'
 
 const firebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_FB_API_KEY,
@@ -12,7 +12,3 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig)
 
 export const auth = getAuth(app)
-
-setPersistence(auth, browserSessionPersistence)
-    .then(() => console.log('Firebase persistance set to session storage'))
-    .catch((err) => console.error('Error setting persistance:', err))
