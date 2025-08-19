@@ -22,9 +22,7 @@ jobs:
         run: npm install
 
       - name: Build and Export Next.js
-        run: |
-          npm run build
-          npm run export
+        run: npm run build
         env:
           NEXT_PUBLIC_FB_API_KEY: ${{ secrets.NEXT_PUBLIC_FB_API_KEY }}
           NEXT_PUBLIC_FB_AUTH_DOMAIN: ${{ secrets.NEXT_PUBLIC_FB_AUTH_DOMAIN }}
