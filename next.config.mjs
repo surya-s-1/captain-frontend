@@ -1,12 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    devIndicators: false,
-    // output: 'export',
-    basePath: '/app',
-    // assetPrefix: '/app/',
-    // images: {
-    //     unoptimized: true
-    // }
+    devIndicators: false
 }
 
 export default nextConfig
