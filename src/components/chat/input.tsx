@@ -2,22 +2,28 @@
 
 import React from 'react'
 import { useState, useEffect, useRef } from 'react'
+import { useDispatch } from 'react-redux'
 import { Paperclip, Camera, Send, X as Remove } from 'lucide-react'
 import Webcam from 'react-webcam'
+
+import { pushMessage, updateMessage } from '@/lib/slices/chat'
+
+const MODEL_ENDPOINT = process.env.NEXT_PUBLIC_MODEL_ENDPOINT
 
 export default function ChatInput() {
     const [inputValue, setInputValue] = useState('')
     const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
     const [capturedFiles, setCapturedFiles] = useState<File[]>([])
-    const [isCameraOpen, setIsCameraOpen] = useState(false)
-    const [isRecording, setIsRecording] = useState(false)
-    const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null)
-    const [recordedChunks, setRecordedChunks] = useState<Blob[]>([])
+    // const [isCameraOpen, setIsCameraOpen] = useState(false)
+    // const [isRecording, setIsRecording] = useState(false)
+    // const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null)
+    // const [recordedChunks, setRecordedChunks] = useState<Blob[]>([])
 
     const textareaRef = useRef<HTMLTextAreaElement>(null)
     const fileInputRef = useRef<HTMLInputElement>(null)
-    const captureInputRef = useRef<HTMLInputElement>(null)
-    const webcamRef = useRef<Webcam>(null)
+    // const captureInputRef = useRef<HTMLInputElement>(null)
+    // const webcamRef = useRef<Webcam>(null)
+    const dispatch = useDispatch()
 
     useEffect(() => {
         if (textareaRef.current) {
@@ -43,7 +49,7 @@ export default function ChatInput() {
             if (fileInputRef.current) fileInputRef.current.click()
         }
     }
-
+    /*
     const handleCaptureMobile = () => {
         if (captureInputRef.current) {
             captureInputRef.current.value = ''
@@ -95,7 +101,7 @@ export default function ChatInput() {
                 const blob = new Blob(recordedChunks, { type: 'video/webm' })
                 const file = new File([blob], `video-${Date.now()}.webm`, { type: 'video/webm' })
                 setCapturedFiles(prev => [...prev, file])
-                setRecordedChunks([]) // reset
+                setRecordedChunks([]) reset
             }
 
             recorder.start()
@@ -115,22 +121,93 @@ export default function ChatInput() {
         setRecordedChunks([])
         mediaRecorder?.stop()
     }
+    */
 
     const handleRemoveFile = (file) => {
         setUploadedFiles(prev => prev.filter(f => f !== file))
         setCapturedFiles(prev => prev.filter(f => f !== file))
     }
 
-    const handleSend = () => {
+    const handleSend = async () => {
         const allFiles = [...uploadedFiles, ...capturedFiles]
         if (inputValue.trim() !== '' || allFiles.length > 0) {
-            console.log('Sending message:', inputValue, allFiles)
+            const formData = new FormData()
+            formData.append('text', inputValue)
+            for (const file of allFiles) {
+                formData.append('files', file)
+            }
+
+            const newMsgRes = await fetch(`${MODEL_ENDPOINT}/new-message`, {
+                method: 'POST',
+                body: formData
+            })
+
+            if (!newMsgRes.ok) {
+                alert('Failed to send message.')
+                return
+            }
+
+            const msg_id = await newMsgRes.text()
+
+            const newMsg = {
+                msg_id,
+                text: inputValue,
+                files: allFiles.map(f => f.name),
+                timestamp: new Date().toISOString(),
+                role: 'user'
+            }
+
+            dispatch(pushMessage(newMsg))
             setInputValue('')
             setUploadedFiles([])
             setCapturedFiles([])
-            handleCloseCamera()
+
+            const assistantMsgId = msg_id + '-assistant'
+            const assistantMsg = {
+                msg_id: assistantMsgId,
+                text: '',
+                files: [],
+                timestamp: new Date().toISOString(),
+                role: 'assistant'
+            }
+
+            dispatch(pushMessage(assistantMsg))
+
+            await getStreamingResponse('', assistantMsgId)
         }
     }
+
+    async function getStreamingResponse(chat_id: string, assistantMsgId: string) {
+        const response = await fetch(`${MODEL_ENDPOINT}/streaming-response`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'text/plain'
+            },
+            body: JSON.stringify({ chat_id: chat_id || '' })
+        })
+
+        const decoder = new TextDecoder()
+        let fullText = ''
+
+        if (response.body) {
+            const reader = response.body.getReader()
+            while (true) {
+                const { done, value } = await reader.read()
+                if (done) break
+                const textChunk = decoder.decode(value, { stream: true })
+                fullText += textChunk
+                dispatch(updateMessage({ msg_id: assistantMsgId, text: fullText }))
+            }
+        }
+    }
+
+    const handleTextareaKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleSend();
+        }
+    };
 
     return (
         <div className='w-full h-fit p-4 bg-secondary rounded-2xl'>
@@ -140,33 +217,34 @@ export default function ChatInput() {
                 ref={textareaRef}
                 value={inputValue}
                 onChange={e => setInputValue(e.target.value)}
+                onKeyDown={handleTextareaKeyDown}
                 placeholder='Ask Sage'
                 rows={1}
             />
 
-            {uploadedFiles.length > 0 && 
-            <div className='flex flex-wrap gap-2 mb-2'>
-                {uploadedFiles.map((file, idx) => (
-                    <span key={idx} className='flex items-center gap-1 py-0.5 px-2 border rounded-full text-xs'>
-                        <Paperclip size={12} />
-                        {file.name}
-                        <Remove size={12} className='text-red-500 cursor-pointer' onClick={() => handleRemoveFile(file)} />
-                    </span>
-                ))}
-            </div>}
+            {uploadedFiles.length > 0 &&
+                <div className='flex flex-wrap gap-2 mb-2'>
+                    {uploadedFiles.map((file, idx) => (
+                        <span key={idx} className='flex items-center gap-1 py-0.5 px-2 border rounded-full text-xs'>
+                            <Paperclip size={12} />
+                            {file.name}
+                            <Remove size={12} className='text-red-500 cursor-pointer' onClick={() => handleRemoveFile(file)} />
+                        </span>
+                    ))}
+                </div>}
 
-            {capturedFiles.length > 0 && 
-            <div className='flex flex-wrap gap-2 mb-2'>
-                {capturedFiles.map((file, idx) => (
-                    <span key={idx} className='flex items-center gap-1 py-0.5 px-2 border rounded-full text-xs'>
-                        <Camera size={12} />
-                        {file.name}
-                        <Remove size={12} className='text-red-500 cursor-pointer' onClick={() => handleRemoveFile(file)} />
-                    </span>
-                ))}
-            </div>}
+            {capturedFiles.length > 0 &&
+                <div className='flex flex-wrap gap-2 mb-2'>
+                    {capturedFiles.map((file, idx) => (
+                        <span key={idx} className='flex items-center gap-1 py-0.5 px-2 border rounded-full text-xs'>
+                            <Camera size={12} />
+                            {file.name}
+                            <Remove size={12} className='text-red-500 cursor-pointer' onClick={() => handleRemoveFile(file)} />
+                        </span>
+                    ))}
+                </div>}
 
-            {isCameraOpen && (
+            {/* {isCameraOpen && (
                 <div className='mb-2'>
                     <Webcam
                         ref={webcamRef}
@@ -210,7 +288,7 @@ export default function ChatInput() {
                         </button>
                     </div>
                 </div>
-            )}
+            )} */}
 
             <div className='flex justify-between items-center'>
                 <div className='flex gap-2'>
@@ -222,7 +300,7 @@ export default function ChatInput() {
                         accept='.pdf,.doc,.docx,.xls,.xlsx,.csv,image/*,video/*'
                         onChange={handleFileUpload}
                     />
-                    <input
+                    {/* <input
                         className='hidden'
                         type='file'
                         ref={captureInputRef}
@@ -230,7 +308,7 @@ export default function ChatInput() {
                         capture='environment'
                         multiple
                         onChange={handleCaptureChange}
-                    />
+                    /> */}
 
                     <button
                         onClick={() => handleFileUpload()}

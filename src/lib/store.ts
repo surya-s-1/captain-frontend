@@ -3,9 +3,11 @@ import { persistReducer, persistStore } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
 import userReducer, { userSlice } from '@/lib/slices/user'
+import chatReducer, { chatSlice } from '@/lib/slices/chat'
 
 const rootReducer = combineReducers({
-    [userSlice.name]: userReducer
+    [userSlice.name]: userReducer,
+    [chatSlice.name]: chatReducer
 })
 
 const persistConfig = {
