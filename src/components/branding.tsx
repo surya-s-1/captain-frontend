@@ -6,7 +6,7 @@ const Branding = () => {
     return (
         <header className='w-full bg-transparent text-color-secondary sticky top-0 py-4 px-8'>
             <div className='flex-col items-center space-y-sm'>
-                <span className='text-3xl'>Beta</span>
+                <span className='text-3xl'>Sage</span>
                 {/* Add any dropdowns in the future here */}
             </div>
         </header>

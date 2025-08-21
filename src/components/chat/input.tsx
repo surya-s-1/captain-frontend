@@ -140,7 +140,7 @@ export default function ChatInput() {
                 ref={textareaRef}
                 value={inputValue}
                 onChange={e => setInputValue(e.target.value)}
-                placeholder='Ask Beta'
+                placeholder='Ask Sage'
                 rows={1}
             />
 

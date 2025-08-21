@@ -20,7 +20,7 @@ export default function RootLayout({ children }) {
     const pathname = usePathname()
 
     useEffect(() => {
-        document.title = 'Beta App'
+        document.title = 'Sage App'
     }, [])
 
     return (
