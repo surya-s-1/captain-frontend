@@ -1,7 +1,9 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 import { RootState } from '@/lib/store'
 import { pushMessage } from '@/lib/slices/chat'
@@ -14,6 +16,12 @@ export default function ChatMessages() {
 
     const appUser = useSelector((state: RootState) => state.user)
     const messages = useSelector((state: RootState) => state.chat.messages)
+    const messagesEndRef = useRef<HTMLDivElement | null>(null)
+    useEffect(() => {
+        if (messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
+        }
+    }, [messages])
 
     useEffect(() => {
         dispatch(clearMessages())
@@ -39,7 +47,7 @@ export default function ChatMessages() {
     }, [])
 
     return (
-        <div className='w-full flex-1 space-y-2 overflow-y-auto scrollbar-hide'>
+        <div className='w-full flex-1 space-y-2 overflow-y-auto scrollbar' style={{ display: 'flex', flexDirection: 'column' }}>
             {messages.length === 0 ? (
                 <div className='flex w-full h-full items-center justify-center bg-primary text-color-primary/50 text-7xl pb-52'>
                     {appUser.name ? (
@@ -52,13 +60,25 @@ export default function ChatMessages() {
                     )}
                 </div>
             ) : (
-                <div className='flex flex-col gap-2 p-4'>
-                    {messages.map((msg) => (
-                        <div key={msg.msg_id} className={`rounded-lg px-4 py-2 max-w-xl ${msg.role === 'user' ? 'self-end bg-tertiary text-black-500' : 'self-start bg-primary text-color-primary'}`}>
-                            {msg.text}
-                        </div>
-                    ))}
-                </div>
+                    <div className='flex flex-col gap-2 p-4 scrollbar-hide' style={{ flex: 1, overflowY: 'auto' }}>
+                        {messages.map((msg) => {
+                            const cleanText = msg.role === 'model' ? msg.text.replaceAll('[text]:', '') : msg.text
+
+                            return (
+                                <div key={msg.msg_id} className={`
+                                rounded-lg px-4 py-2 w-fit max-w-full 
+                                ${msg.role === 'user' ? 
+                                    'self-end bg-tertiary text-black-500 max-w-[70%]' : 
+                                    'self-start bg-primary text-color-primary'}
+                                `}>
+                                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                        {cleanText}
+                                    </ReactMarkdown>
+                                </div>
+                            )
+                        })}
+                        <div ref={messagesEndRef} />
+                    </div>
             )}
         </div>
     )
