@@ -18,6 +18,7 @@ export default function ChatInput() {
     // const [isRecording, setIsRecording] = useState(false)
     // const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null)
     // const [recordedChunks, setRecordedChunks] = useState<Blob[]>([])
+    const [loading, setLoading] = useState<boolean>(false)
 
     const textareaRef = useRef<HTMLTextAreaElement>(null)
     const fileInputRef = useRef<HTMLInputElement>(null)
@@ -129,9 +130,15 @@ export default function ChatInput() {
     }
 
     const handleSend = async () => {
+        if (loading) return
+
         const allFiles = [...uploadedFiles, ...capturedFiles]
+
         if (inputValue.trim() !== '' || allFiles.length > 0) {
+            setLoading(true)
+            
             const formData = new FormData()
+
             formData.append('text', inputValue)
             for (const file of allFiles) {
                 formData.append('files', file)
@@ -162,22 +169,22 @@ export default function ChatInput() {
             setUploadedFiles([])
             setCapturedFiles([])
 
-            const assistantMsgId = msg_id + '-assistant'
-            const assistantMsg = {
-                msg_id: assistantMsgId,
+            const modelMsgId = msg_id + '-model'
+            const modelMsg = {
+                msg_id: modelMsgId,
                 text: '',
                 files: [],
                 timestamp: new Date().toISOString(),
-                role: 'assistant'
+                role: 'model'
             }
 
-            dispatch(pushMessage(assistantMsg))
+            dispatch(pushMessage(modelMsg))
 
-            await getStreamingResponse('', assistantMsgId)
+            await getStreamingResponse('', modelMsgId)
         }
     }
 
-    async function getStreamingResponse(chat_id: string, assistantMsgId: string) {
+    async function getStreamingResponse(chat_id: string, modelMsgId: string) {
         const response = await fetch(`${MODEL_ENDPOINT}/streaming-response`, {
             method: 'POST',
             headers: {
@@ -197,8 +204,9 @@ export default function ChatInput() {
                 if (done) break
                 const textChunk = decoder.decode(value, { stream: true })
                 fullText += textChunk
-                dispatch(updateMessage({ msg_id: assistantMsgId, text: fullText }))
+                dispatch(updateMessage({ msg_id: modelMsgId, text: fullText }))
             }
+            setLoading(false)
         }
     }
 
@@ -310,6 +318,7 @@ export default function ChatInput() {
                         onChange={handleCaptureChange}
                     /> */}
 
+                    {!loading &&
                     <button
                         onClick={() => handleFileUpload()}
                         className='flex gap-2 bg-tertiary hover:bg-quaternary rounded-full p-2 cursor-pointer transition-all duration-200'
@@ -318,7 +327,7 @@ export default function ChatInput() {
                     >
                         <Paperclip size={20} />
                         <span className='text-sm'>Upload</span>
-                    </button>
+                    </button>}
 
                     {/* <button
                         onClick={() => {
@@ -337,15 +346,16 @@ export default function ChatInput() {
                     </button> */}
                 </div>
 
+                {!loading &&
                 <button
                     onClick={handleSend}
-                    className='flex gap-2 bg-tertiary hover:bg-quaternary rounded-full p-2 cursor-pointer transition-all duration-300'
+                    className={`flex gap-2 bg-tertiary hover:bg-quaternary rounded-full p-2 cursor-pointer transition-all duration-300`}
                     aria-label='Send message'
                     type='button'
                 >
                     <Send size={20} />
                     <span className='text-sm'>Send</span>
-                </button>
+                </button>}
             </div>
         </div>
     )
