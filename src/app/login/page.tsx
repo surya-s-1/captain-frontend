@@ -31,16 +31,23 @@ export default function LoginPage() {
     }
 
     return (
-        <div className='flex flex-col w-full h-full items-center justify-center bg-primary'>
-            <div className='flex flex-col gap-8 pb-40'>
-                <h1 className='text-5xl text-color-primary/50'>Login</h1>
-                <button
-                    onClick={handleGoogleLogin}
-                    className='flex items-center gap-2 px-4 py-2 bg-secondary hover:bg-tertiary text-color-secondary/80 hover:text-color-tertiary transition-colors duration-300 cursor-pointer text-lg rounded-lg'
-                >
-                    <img className='max-h-[24px]' src={Google_Logo.src} />
-                    <span>Sign in with Google</span>
-                </button>
+        <div className='flex w-full h-full items-center justify-evenly bg-primary pb-40'>
+            <div className='flex flex-col gap-8 w-[60%]'>
+                <p className='text-5xl font-extrabold font-mono text-color-primary/25 px-20'>
+                    The only true wisdom is in knowing you know nothing.<br />- Socrates
+                </p>
+            </div>
+            <div className='flex flex-col w-[40%]'>
+                <div className='flex flex-col gap-8 w-fit pl-20'>
+                    <h1 className='text-5xl text-color-primary/50'>Login</h1>
+                    <button
+                        onClick={handleGoogleLogin}
+                        className='flex items-center gap-2 px-4 py-2 bg-secondary hover:bg-tertiary text-color-secondary/80 hover:text-color-tertiary transition-colors duration-300 cursor-pointer text-lg rounded-lg'
+                    >
+                        <img className='max-h-[24px]' src={Google_Logo.src} />
+                        <span>Sign in with Google</span>
+                    </button>
+                </div>
             </div>
         </div>
     )
