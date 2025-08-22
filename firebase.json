@@ -11,6 +11,11 @@
                 "source": "/:path",
                 "destination": "/:path.html",
                 "type": 301
+            },
+            {
+                "source": "/:path.html",
+                "destination": "/:path.html",
+                "type": 200
             }
         ]
     }
