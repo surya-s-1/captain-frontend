@@ -99,9 +99,9 @@ export default function ChatMessages({ autoScroll, setAutoScroll }) {
 
                         return (
                             <div key={msg.msg_id} className={`
-                                rounded-lg px-4 py-2 w-fit max-w-full 
+                                px-4 py-2 w-fit max-w-full 
                                 ${msg.role === 'user' ?
-                                    'self-end bg-tertiary text-black-500 max-w-[70%]' :
+                                    'self-end bg-tertiary text-black-500 max-w-[70%] rounded-xl rounded-br-none' :
                                     'self-start bg-primary text-color-primary'}
                                 `}>
                                 <ReactMarkdown remarkPlugins={[remarkGfm, breaks]}>
