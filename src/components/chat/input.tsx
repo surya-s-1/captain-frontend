@@ -11,7 +11,7 @@ import { getCurrentUser } from '@/lib/firebase/utilities'
 
 const MODEL_ENDPOINT = process.env.NEXT_PUBLIC_MODEL_ENDPOINT
 
-export default function ChatInput() {
+export default function ChatInput({ setAutoScroll }) {
     const [inputValue, setInputValue] = useState('')
     const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
     const [capturedFiles, setCapturedFiles] = useState<File[]>([])
@@ -137,6 +137,7 @@ export default function ChatInput() {
 
         if (inputValue.trim() !== '' || allFiles.length > 0) {
             setLoading(true)
+            setAutoScroll(true)
 
             const user = await getCurrentUser()
             const token = await user.getIdToken()
