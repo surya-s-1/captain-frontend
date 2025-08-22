@@ -2,9 +2,7 @@
 const nextConfig = {
     devIndicators: false,
     output: 'export',
-    images: {
-        unoptimized: true
-    }
+    basePath: '/app'
 }
 
 export default nextConfig
