@@ -8,11 +8,11 @@
     ],
     "rewrites": [
       {
-        "source": "/app/",
+        "source": "/",
         "destination": "/index.html"
       },
       {
-        "source": "/app/:path*",
+        "source": "/:path*",
         "destination": "/:path*.html"
       }
     ]
