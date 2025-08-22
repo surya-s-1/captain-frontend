@@ -37,7 +37,7 @@ export const chatSlice = createSlice({
         updateMessage: (state: ChatState, action: PayloadAction<{ msg_id: string, text: string }>) => {
             const msg = state.messages.find(m => m.msg_id === action.payload.msg_id)
             if (msg) {
-                msg.text = action.payload.text
+                msg.text = action.payload.text.trim()
             }
         }
     }

@@ -4,6 +4,7 @@ import React, { useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import breaks from 'remark-breaks'
 
 import { getIdToken } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
@@ -89,7 +90,7 @@ export default function ChatMessages() {
                                     'self-end bg-tertiary text-black-500 max-w-[70%]' : 
                                     'self-start bg-primary text-color-primary'}
                                 `}>
-                                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                    <ReactMarkdown remarkPlugins={[remarkGfm, breaks]}>
                                         {cleanText}
                                     </ReactMarkdown>
                                 </div>

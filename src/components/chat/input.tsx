@@ -216,8 +216,14 @@ export default function ChatInput() {
                 const { done, value } = await reader.read()
                 if (done) break
                 const textChunk = decoder.decode(value, { stream: true })
-                fullText += textChunk
-                dispatch(updateMessage({ msg_id: modelMsgId, text: fullText }))
+
+                const chunks = textChunk.split(' ')
+
+                for (let chunk of chunks) {
+                    fullText += `${chunk} `
+                    dispatch(updateMessage({ msg_id: modelMsgId, text: fullText }))
+                    await new Promise(resolve => setTimeout(resolve, 50))
+                }
             }
             setLoading(false)
         }
