@@ -1,8 +1,9 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import { useEffect } from 'react'
 import { usePathname } from 'next/navigation'
+import { Menu } from 'lucide-react'
 
 import StoreProvider from '@/components/store-provider'
 import AuthGuard from '@/components/auth-gaurd'
@@ -18,6 +19,7 @@ listenToAuthChanges()
 
 export default function RootLayout({ children }) {
     const pathname = usePathname()
+    const [sidebarExpanded, setSidebarExpanded] = useState(false)
 
     useEffect(() => {
         document.title = 'Sage App'
@@ -28,11 +30,37 @@ export default function RootLayout({ children }) {
             <body>
                 <StoreProvider>
                     <AuthGuard>
-                        <div className='flex min-h-screen'>
-                            {pathname!=='/login' && <Sidebar />}
-                            <div className='w-full h-screen flex flex-col'>
-                                <Branding />
-                                <div className='w-full h-full flex flex-col items-center flex-1 overflow-hidden'>
+                        <div className='flex h-screen'>
+                            {pathname !== '/login' && (
+                                <>
+                                    <Sidebar
+                                        sidebarExpanded={sidebarExpanded}
+                                        setSidebarExpanded={setSidebarExpanded}
+                                    />
+                                    {sidebarExpanded && (
+                                        <div
+                                            className='fixed inset-0 bg-black opacity-50 z-20 lg:hidden'
+                                        ></div>
+                                    )}
+                                </>
+                            )}
+                            <div className={`flex flex-col`}>
+                                {pathname !== '/login' && 
+                                <>
+                                    <div className='md:hidden flex items-center justify-between bg-primary'>
+                                        <button 
+                                            onClick={() => { setSidebarExpanded(!sidebarExpanded) }} 
+                                            className='ml-4 text-color-primary'
+                                        >
+                                            <Menu size={24} />
+                                        </button>
+                                        <Branding />
+                                    </div>
+                                    <div className='hidden md:block'>
+                                        <Branding />
+                                    </div>
+                                </>}
+                                <div className='w-full flex flex-col flex-1 items-center overflow-hidden'>
                                     {children}
                                 </div>
                             </div>

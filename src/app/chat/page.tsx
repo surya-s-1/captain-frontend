@@ -8,7 +8,7 @@ export default function Chat() {
     const [autoScroll, setAutoScroll] = useState(true)
 
     return(
-        <div className='w-[60%] h-screen flex flex-col items-center scrollbar-none overflow-hidden pb-6'>
+        <div className='flex flex-col items-center w-full md:w-[60%] h-full scrollbar-none overflow-hidden md:pb-6'>
             <ChatMessages autoScroll={autoScroll} setAutoScroll={setAutoScroll} />
             <ChatInput setAutoScroll={setAutoScroll} />
         </div>

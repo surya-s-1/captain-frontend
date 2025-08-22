@@ -69,7 +69,7 @@ export default function ChatMessages({ autoScroll, setAutoScroll }) {
     }
 
     return (
-        <div className='w-full flex-1 space-y-2 overflow-y-auto scrollbar' style={{ display: 'flex', flexDirection: 'column' }}>
+        <div className='w-full flex flex-col flex-1 space-y-2 max-h-full overflow-y-auto scrollbar'>
             {messages.length === 0 ? (
                 <div className='flex w-full h-full items-center justify-center bg-primary text-color-primary/50 text-7xl pb-52'>
                     {appUser.name ? (
@@ -82,7 +82,7 @@ export default function ChatMessages({ autoScroll, setAutoScroll }) {
                     )}
                 </div>
             ) : (
-                <div className='flex flex-col gap-2 p-4 scrollbar' style={{ flex: 1, overflowY: 'auto' }}>
+                <div className='flex flex-col flex-1 overflow-y-auto gap-2 md:p-4 scrollbar'>
                     {showLoadMore ? (
                         <button
                             onClick={() => {
@@ -106,7 +106,7 @@ export default function ChatMessages({ autoScroll, setAutoScroll }) {
                         if (!msg.text) return <></>
 
                         const className = `
-                            px-4 py-2 w-fit max-w-full rounded-xl
+                            mx-4 md:mx-0 px-4 py-2 w-fit max-w-full rounded-xl
                             ${msg.role === 'user' ?
                             'self-end bg-tertiary text-black-500 max-w-[70%] rounded-br-none' :
                             'self-start bg-primary text-color-primary'}

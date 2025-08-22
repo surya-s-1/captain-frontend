@@ -238,7 +238,7 @@ export default function ChatInput({ setAutoScroll }) {
     };
 
     return (
-        <div className='w-full h-fit p-4 bg-secondary rounded-2xl'>
+        <div className='sticky bottom-0 z-10 w-full h-fit p-4 bg-secondary rounded-2xl'>
             <textarea
                 className='w-full p-0 mb-2 outline-0 resize-none overflow-y-auto scrollbar'
                 autoFocus
