@@ -7,6 +7,7 @@ import { Paperclip, Camera, Send, X as Remove } from 'lucide-react'
 import Webcam from 'react-webcam'
 
 import { pushMessage, updateMessage } from '@/lib/slices/chat'
+import { getCurrentUser } from '@/lib/firebase/utilities'
 
 const MODEL_ENDPOINT = process.env.NEXT_PUBLIC_MODEL_ENDPOINT
 
@@ -136,21 +137,29 @@ export default function ChatInput() {
 
         if (inputValue.trim() !== '' || allFiles.length > 0) {
             setLoading(true)
+
+            const user = await getCurrentUser()
+            const token = await user.getIdToken()
             
             const formData = new FormData()
 
             formData.append('text', inputValue)
+
             for (const file of allFiles) {
                 formData.append('files', file)
             }
 
             const newMsgRes = await fetch(`${MODEL_ENDPOINT}/new-message`, {
                 method: 'POST',
-                body: formData
+                body: formData,
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
             })
 
             if (!newMsgRes.ok) {
                 alert('Failed to send message.')
+                setLoading(false)
                 return
             }
 
@@ -185,11 +194,15 @@ export default function ChatInput() {
     }
 
     async function getStreamingResponse(chat_id: string, modelMsgId: string) {
+        const user = await getCurrentUser()
+        const token = await user.getIdToken()
+
         const response = await fetch(`${MODEL_ENDPOINT}/streaming-response`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'text/plain'
+                'Accept': 'text/plain',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({ chat_id: chat_id || '' })
         })
@@ -318,7 +331,6 @@ export default function ChatInput() {
                         onChange={handleCaptureChange}
                     /> */}
 
-                    {!loading &&
                     <button
                         onClick={() => handleFileUpload()}
                         className='flex gap-2 bg-tertiary hover:bg-quaternary rounded-full p-2 cursor-pointer transition-all duration-200'
@@ -327,7 +339,7 @@ export default function ChatInput() {
                     >
                         <Paperclip size={20} />
                         <span className='text-sm'>Upload</span>
-                    </button>}
+                    </button>
 
                     {/* <button
                         onClick={() => {

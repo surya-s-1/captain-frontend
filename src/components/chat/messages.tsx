@@ -5,6 +5,10 @@ import { useSelector, useDispatch } from 'react-redux'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
+import { getIdToken } from 'firebase/auth'
+import { auth } from '@/lib/firebase'
+import { getCurrentUser } from '@/lib/firebase/utilities'
+
 import { RootState } from '@/lib/store'
 import { pushMessage } from '@/lib/slices/chat'
 import { clearMessages } from '@/lib/slices/chat'
@@ -17,6 +21,7 @@ export default function ChatMessages() {
     const appUser = useSelector((state: RootState) => state.user)
     const messages = useSelector((state: RootState) => state.chat.messages)
     const messagesEndRef = useRef<HTMLDivElement | null>(null)
+    
     useEffect(() => {
         if (messagesEndRef.current) {
             messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
@@ -28,7 +33,20 @@ export default function ChatMessages() {
 
         const fetchHistory = async () => {
             try {
-                const res = await fetch(`${MODEL_ENDPOINT}/chat-history`)
+                const user = await getCurrentUser()
+
+                if (!user) return
+
+                const token = await user.getIdToken()
+                
+                const res = await fetch(`${MODEL_ENDPOINT}/chat-history`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                })
+
                 if (!res.ok) return
 
                 const data = await res.json()
