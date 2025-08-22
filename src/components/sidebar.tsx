@@ -31,7 +31,7 @@ const Sidebar = () => {
     }
 
     const navItems = [
-        { label: 'New Chat', icon: SquarePen, link: '/chat' },
+        { label: 'Chat', icon: SquarePen, link: '/chat' },
         { label: 'Dashboard', icon: LayoutDashboard, link: '/dashboard' }
     ]
 
