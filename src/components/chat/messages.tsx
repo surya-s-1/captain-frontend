@@ -103,15 +103,29 @@ export default function ChatMessages({ autoScroll, setAutoScroll }) {
                     )}
 
                     {messages.map((msg) => {
+                        if (!msg.text) return <></>
+
+                        const className = `
+                            px-4 py-2 w-fit max-w-full rounded-xl
+                            ${msg.role === 'user' ?
+                            'self-end bg-tertiary text-black-500 max-w-[70%] rounded-br-none' :
+                            'self-start bg-primary text-color-primary'}
+                        `
+
+                        if (msg.text.startsWith('[error]:')) {
+                            return (
+                                <div key={msg.msg_id} className={`${className} text-red-500`}>
+                                    <ReactMarkdown remarkPlugins={[remarkGfm, breaks]}>
+                                        {msg.text.replaceAll('[error]:', '')}
+                                    </ReactMarkdown>
+                                </div>
+                            )
+                        }
+
                         const cleanText = msg.role === 'model' ? msg.text.replaceAll('[text]:', '') : msg.text
 
                         return (
-                            <div key={msg.msg_id} className={`
-                                px-4 py-2 w-fit max-w-full 
-                                ${msg.role === 'user' ?
-                                    'self-end bg-tertiary text-black-500 max-w-[70%] rounded-xl rounded-br-none' :
-                                    'self-start bg-primary text-color-primary'}
-                                `}>
+                            <div key={msg.msg_id} className={className}>
                                 <ReactMarkdown remarkPlugins={[remarkGfm, breaks]}>
                                     {cleanText}
                                 </ReactMarkdown>
