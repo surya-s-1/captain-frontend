@@ -81,7 +81,7 @@ export default function ChatMessages({ autoScroll, setAutoScroll }) {
                 </div>
             ) : (
                 <div className='flex flex-col gap-2 p-4 scrollbar' style={{ flex: 1, overflowY: 'auto' }}>
-                    {showLoadMore && (
+                    {showLoadMore ? (
                         <button
                             onClick={() => {
                                 fetchHistory(messages?.[0]?.msg_id || null)
@@ -92,6 +92,12 @@ export default function ChatMessages({ autoScroll, setAutoScroll }) {
                         >
                             Load More Messages
                         </button>
+                    ) : (
+                        <span
+                            className='self-center px-2 py-1 rounded-lg bg-transparent text-color-primary/50'
+                        >
+                            No more messages
+                        </span>
                     )}
 
                     {messages.map((msg) => {
