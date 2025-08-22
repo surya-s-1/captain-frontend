@@ -79,7 +79,7 @@ export default function ChatMessages() {
                     )}
                 </div>
             ) : (
-                    <div className='flex flex-col gap-2 p-4 scrollbar-hide' style={{ flex: 1, overflowY: 'auto' }}>
+                    <div className='flex flex-col gap-2 p-4 scrollbar' style={{ flex: 1, overflowY: 'auto' }}>
                         {messages.map((msg) => {
                             const cleanText = msg.role === 'model' ? msg.text.replaceAll('[text]:', '') : msg.text
 
