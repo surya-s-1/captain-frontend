@@ -45,7 +45,7 @@ export default function RootLayout({ children }) {
                                 </>
                             )}
                             <div className={`flex flex-col`}>
-                                {pathname !== '/login' && 
+                                {pathname !== '/login' ?
                                 <>
                                     <div className='md:hidden flex items-center justify-between bg-primary'>
                                         <button 
@@ -59,7 +59,8 @@ export default function RootLayout({ children }) {
                                     <div className='hidden md:block'>
                                         <Branding />
                                     </div>
-                                </>}
+                                </> :
+                                    <Branding />}
                                 <div className='w-full flex flex-col flex-1 items-center overflow-hidden'>
                                     {children}
                                 </div>
