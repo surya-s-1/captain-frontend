@@ -6,17 +6,6 @@
             "**/.*",
             "**/node_modules/**"
         ],
-        "redirects": [
-            {
-                "source": "/:path",
-                "destination": "/:path.html",
-                "type": 301
-            },
-            {
-                "source": "/:path.html",
-                "destination": "/:path.html",
-                "type": 200
-            }
-        ]
+        "cleanUrls": true
     }
 }
