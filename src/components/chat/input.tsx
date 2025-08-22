@@ -15,16 +15,16 @@ export default function ChatInput({ setAutoScroll }) {
     const [inputValue, setInputValue] = useState('')
     const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
     const [capturedFiles, setCapturedFiles] = useState<File[]>([])
-    // const [isCameraOpen, setIsCameraOpen] = useState(false)
-    // const [isRecording, setIsRecording] = useState(false)
-    // const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null)
-    // const [recordedChunks, setRecordedChunks] = useState<Blob[]>([])
+    const [isCameraOpen, setIsCameraOpen] = useState(false)
+    const [isRecording, setIsRecording] = useState(false)
+    const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null)
+    const [recordedChunks, setRecordedChunks] = useState<Blob[]>([])
     const [loading, setLoading] = useState<boolean>(false)
 
     const textareaRef = useRef<HTMLTextAreaElement>(null)
     const fileInputRef = useRef<HTMLInputElement>(null)
-    // const captureInputRef = useRef<HTMLInputElement>(null)
-    // const webcamRef = useRef<Webcam>(null)
+    const captureInputRef = useRef<HTMLInputElement>(null)
+    const webcamRef = useRef<Webcam>(null)
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -51,7 +51,7 @@ export default function ChatInput({ setAutoScroll }) {
             if (fileInputRef.current) fileInputRef.current.click()
         }
     }
-    /*
+    
     const handleCaptureMobile = () => {
         if (captureInputRef.current) {
             captureInputRef.current.value = ''
@@ -103,7 +103,7 @@ export default function ChatInput({ setAutoScroll }) {
                 const blob = new Blob(recordedChunks, { type: 'video/webm' })
                 const file = new File([blob], `video-${Date.now()}.webm`, { type: 'video/webm' })
                 setCapturedFiles(prev => [...prev, file])
-                setRecordedChunks([]) reset
+                setRecordedChunks([])
             }
 
             recorder.start()
@@ -123,7 +123,7 @@ export default function ChatInput({ setAutoScroll }) {
         setRecordedChunks([])
         mediaRecorder?.stop()
     }
-    */
+    
 
     const handleRemoveFile = (file) => {
         setUploadedFiles(prev => prev.filter(f => f !== file))
@@ -238,7 +238,7 @@ export default function ChatInput({ setAutoScroll }) {
     };
 
     return (
-        <div className='w-full h-fit p-4 bg-secondary rounded-2xl'>
+        <div className='sticky bottom-0 z-10 w-full h-fit p-4 bg-secondary rounded-2xl'>
             <textarea
                 className='w-full p-0 mb-2 outline-0 resize-none overflow-y-auto scrollbar'
                 autoFocus
@@ -272,7 +272,7 @@ export default function ChatInput({ setAutoScroll }) {
                     ))}
                 </div>}
 
-            {/* {isCameraOpen && (
+            {isCameraOpen && (
                 <div className='mb-2'>
                     <Webcam
                         ref={webcamRef}
@@ -316,7 +316,7 @@ export default function ChatInput({ setAutoScroll }) {
                         </button>
                     </div>
                 </div>
-            )} */}
+            )}
 
             <div className='flex justify-between items-center'>
                 <div className='flex gap-2'>
@@ -328,7 +328,7 @@ export default function ChatInput({ setAutoScroll }) {
                         accept='.pdf,.doc,.docx,.xls,.xlsx,.csv,image/*,video/*'
                         onChange={handleFileUpload}
                     />
-                    {/* <input
+                    <input
                         className='hidden'
                         type='file'
                         ref={captureInputRef}
@@ -336,7 +336,7 @@ export default function ChatInput({ setAutoScroll }) {
                         capture='environment'
                         multiple
                         onChange={handleCaptureChange}
-                    /> */}
+                    />
 
                     <button
                         onClick={() => handleFileUpload()}
@@ -348,7 +348,7 @@ export default function ChatInput({ setAutoScroll }) {
                         <span className='text-sm'>Upload</span>
                     </button>
 
-                    {/* <button
+                    <button
                         onClick={() => {
                             if (/Mobi|Android/i.test(navigator.userAgent)) {
                                 handleCaptureMobile()
@@ -356,13 +356,13 @@ export default function ChatInput({ setAutoScroll }) {
                                 handleOpenCameraDesktop()
                             }
                         }}
-                        className='flex gap-2 bg-tertiary hover:bg-quaternary rounded-full p-2 cursor-pointer transition-all duration-200'
+                        className='hidden md:flex gap-2 bg-tertiary hover:bg-quaternary rounded-full p-2 cursor-pointer transition-all duration-200'
                         aria-label='Capture image or video'
                         type='button'
                     >
                         <Camera size={20} />
                         <span className='text-sm'>Camera</span>
-                    </button> */}
+                    </button>
                 </div>
 
                 {!loading &&

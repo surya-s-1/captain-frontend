@@ -9,7 +9,6 @@ interface UserState {
     photoURL: string | null
     loading: boolean
     theme: Theme
-    sidebarExpanded: boolean
 }
 
 const initialState: UserState = {
@@ -18,8 +17,7 @@ const initialState: UserState = {
     email: null,
     photoURL: null,
     loading: true,
-    theme: 'light',
-    sidebarExpanded: true
+    theme: 'light'
 }
 
 export const userSlice = createSlice({
@@ -44,9 +42,6 @@ export const userSlice = createSlice({
         },
         toggleTheme: (state, action: PayloadAction<Theme>) => {
             state.theme = action.payload
-        },
-        toggleSidebar: (state) => {
-            state.sidebarExpanded = !state.sidebarExpanded
         }
     }
 })
@@ -55,8 +50,7 @@ export const {
     setUser,
     clearUser,
     setLoading,
-    toggleTheme,
-    toggleSidebar
+    toggleTheme
 } = userSlice.actions
 
 export default userSlice.reducer

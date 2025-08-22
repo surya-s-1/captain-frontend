@@ -2,19 +2,15 @@
 
 import React from 'react'
 import { useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { signOut } from 'firebase/auth'
 import { PanelLeft, LayoutDashboard, Settings, SquarePen, LogOut } from 'lucide-react'
 
 import { auth } from '@/lib/firebase'
 import { RootState } from '@/lib/store'
-import { toggleSidebar } from '@/lib/slices/user'
 
-const Sidebar = () => {
+const Sidebar = ({ sidebarExpanded, setSidebarExpanded }) => {
     const appUser = useSelector((state: RootState) => state.user)
-    const dispatch = useDispatch()
-
-    const isExpanded = appUser.sidebarExpanded
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -40,14 +36,14 @@ const Sidebar = () => {
 
     return (
         <div
-            className={`flex flex-col h-screen bg-secondary text-color-secondary transition-all duration-300 ease-in-out ${isExpanded ? 'w-80' : 'w-20'} p-4 text-sm`}
+            className={`fixed inset-y-0 left-0 z-30 flex flex-col h-screen bg-secondary text-color-secondary transition-all duration-300 ease-in-out md:relative md:translate-x-0 ${sidebarExpanded ? 'w-64 translate-x-0' : '-translate-x-full w-0 md:w-20'} p-4 text-sm`}
         >
             <div className='flex justify-between mb-4'>
                 <button
-                    onClick={() => dispatch(toggleSidebar())}
+                    onClick={() => setSidebarExpanded(!sidebarExpanded)}
                     className={iconClass}
                 >
-                    <PanelLeft size={24} className={`transition-transform duration-300 ${isExpanded ? '' : 'rotate-180'}`} />
+                    <PanelLeft size={24} className={`transition-transform duration-300 ${sidebarExpanded ? 'block' : 'hidden md:block rotate-180'}`} />
                 </button>
             </div>
 
@@ -60,7 +56,7 @@ const Sidebar = () => {
                                 className={navButtonClass}
                             >
                                 <item.icon size={20} />
-                                {isExpanded &&
+                                {sidebarExpanded &&
                                     <span className='whitespace-nowrap overflow-hidden transition-opacity duration-300'>
                                         {item.label}
                                     </span>}
@@ -76,7 +72,7 @@ const Sidebar = () => {
                     className={navButtonClass}
                 >
                     <Settings size={20} />
-                    {isExpanded &&
+                    {sidebarExpanded &&
                         <span className='whitespace-nowrap overflow-hidden transition-opacity duration-300'>
                             Settings
                         </span>}
@@ -86,7 +82,7 @@ const Sidebar = () => {
                     onClick={handleLogout}
                 >
                     <LogOut size={20} />
-                    {isExpanded &&
+                    {sidebarExpanded &&
                         <span className='whitespace-nowrap overflow-hidden transition-opacity duration-300'>
                             Logout
                         </span>}
