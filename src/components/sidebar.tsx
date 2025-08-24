@@ -2,15 +2,18 @@
 
 import React from 'react'
 import { useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { signOut } from 'firebase/auth'
 import { PanelLeft, LayoutDashboard, Settings, SquarePen, LogOut } from 'lucide-react'
 
 import { auth } from '@/lib/firebase'
 import { RootState } from '@/lib/store'
+import { clearMessages } from '@/lib/slices/chat'
+import { clearUser } from '@/lib/slices/user'
 
 const Sidebar = ({ sidebarExpanded, setSidebarExpanded }) => {
     const appUser = useSelector((state: RootState) => state.user)
+    const dispatch = useDispatch()
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -23,6 +26,8 @@ const Sidebar = ({ sidebarExpanded, setSidebarExpanded }) => {
     }, [appUser])
 
     const handleLogout = async () => {
+        dispatch(clearMessages())
+        dispatch(clearUser())
         localStorage.clear()
         await signOut(auth)
     }
