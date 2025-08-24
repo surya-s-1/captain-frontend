@@ -42,14 +42,14 @@ const Sidebar = ({ sidebarExpanded, setSidebarExpanded }) => {
 
     return (
         <div
-            className={`fixed inset-y-0 left-0 z-30 flex flex-col h-screen bg-secondary text-color-secondary transition-all duration-300 ease-in-out md:relative md:translate-x-0 ${sidebarExpanded ? 'w-64 translate-x-0' : '-translate-x-full w-0 md:w-20'} p-4 text-sm`}
+            className={`fixed inset-y-0 left-0 z-30 flex flex-col h-full bg-secondary text-color-secondary transition-all duration-300 ease-in-out lg:relative lg:translate-x-0 ${sidebarExpanded ? 'w-64 lg:w-96 translate-x-0' : '-translate-x-full w-0 lg:w-20'} p-4 text-sm`}
         >
             <div className='flex justify-between mb-4'>
                 <button
                     onClick={() => setSidebarExpanded(!sidebarExpanded)}
                     className={iconClass}
                 >
-                    <PanelLeft size={24} className={`transition-transform duration-300 ${sidebarExpanded ? 'block' : 'hidden md:block rotate-180'}`} />
+                    <PanelLeft size={24} className={`transition-transform duration-300 ${sidebarExpanded ? 'block' : 'hidden lg:block rotate-180'}`} />
                 </button>
             </div>
 

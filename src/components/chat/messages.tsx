@@ -68,8 +68,20 @@ export default function ChatMessages({ autoScroll, setAutoScroll }) {
         }
     }
 
+    const preComponentPlugin = {
+        pre: ({ children }) => (
+            <pre
+                className='bg-secondary text-color-secondary
+                border rounded-lg p-4 my-4
+                overflow-x-auto font-mono scrollbar'
+            >
+                {children}
+            </pre>
+        )
+    }
+
     return (
-        <div className='w-full flex flex-col flex-1 space-y-2 max-h-full overflow-y-auto scrollbar'>
+        <div className='w-full flex flex-col flex-1 gap-2 max-h-full overflow-y-auto scrollbar'>
             {messages.length === 0 ? (
                 <div className='flex w-full h-full items-center justify-center bg-primary text-color-primary/50 text-7xl pb-52'>
                     {appUser.name ? (
@@ -108,8 +120,8 @@ export default function ChatMessages({ autoScroll, setAutoScroll }) {
                         const className = `
                             mx-4 md:mx-0 px-4 py-2 w-fit max-w-full rounded-xl
                             ${msg.role === 'user' ?
-                            'self-end bg-tertiary text-black-500 max-w-[70%] rounded-br-none' :
-                            'self-start bg-primary text-color-primary'}
+                                'self-end bg-tertiary text-black-500 max-w-[70%] rounded-br-none' :
+                                'self-start bg-primary text-color-primary'}
                         `
 
                         if (msg.text.startsWith('[error]:')) {
@@ -125,8 +137,15 @@ export default function ChatMessages({ autoScroll, setAutoScroll }) {
                         const cleanText = msg.role === 'model' ? msg.text.replaceAll('[text]:', '') : msg.text
 
                         return (
-                            <div key={msg.msg_id} className={className}>
-                                <ReactMarkdown remarkPlugins={[remarkGfm, breaks]}>
+                            <div
+                                key={msg.msg_id}
+                                className={className}
+                                style={{ wordWrap: 'break-word' }}
+                            >
+                                <ReactMarkdown 
+                                    remarkPlugins={[remarkGfm, breaks]}
+                                    components={{ ...preComponentPlugin }}
+                                >
                                     {cleanText}
                                 </ReactMarkdown>
                             </div>

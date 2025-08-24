@@ -47,7 +47,7 @@ export default function RootLayout({ children }) {
                             <div className={`flex flex-col`}>
                                 {pathname !== '/login' ?
                                 <>
-                                    <div className='md:hidden flex items-center justify-between bg-primary'>
+                                    <div className='lg:hidden flex items-center justify-between bg-primary'>
                                         <button 
                                             onClick={() => { setSidebarExpanded(!sidebarExpanded) }} 
                                             className='ml-4 text-color-primary'
@@ -56,7 +56,7 @@ export default function RootLayout({ children }) {
                                         </button>
                                         <Branding />
                                     </div>
-                                    <div className='hidden md:block'>
+                                    <div className='hidden lg:block'>
                                         <Branding />
                                     </div>
                                 </> :
