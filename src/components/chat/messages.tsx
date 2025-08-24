@@ -27,9 +27,9 @@ export default function ChatMessages({ autoScroll, setAutoScroll }) {
     }, [messages, autoScroll])
 
     useEffect(() => {
-        if (messages.length === 0) {
+        // if (messages.length === 0) {
             fetchHistory()
-        }
+        // }
     }, [])
 
     const fetchHistory = async (msgId: string | null = null) => {

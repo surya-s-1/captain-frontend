@@ -44,7 +44,7 @@ export default function RootLayout({ children }) {
                                     )}
                                 </>
                             )}
-                            <div className={`flex flex-col`}>
+                            <div className={`flex flex-col w-full`}>
                                 {pathname !== '/login' ?
                                 <>
                                     <div className='lg:hidden flex items-center justify-between bg-primary'>
