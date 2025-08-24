@@ -23,6 +23,7 @@ const Sidebar = ({ sidebarExpanded, setSidebarExpanded }) => {
     }, [appUser])
 
     const handleLogout = async () => {
+        localStorage.clear()
         await signOut(auth)
     }
 
