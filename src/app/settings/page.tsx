@@ -12,7 +12,7 @@ export default function Settings() {
     const dispatch = useDispatch()
 
     return (
-        <div className='w-full h-full flex flex-col pl-40 mt-8 gap-8'>
+        <div className='w-full h-full flex flex-col pl-4 lg:pl-40 mt-8 gap-4 lg:gap-8'>
             {appUser?.photoURL ?
                 <img src={appUser.photoURL} className='rounded-full w-20' /> :
                 <UserRound className='text-color-secondary bg-secondary rounded-full' size={72} />
