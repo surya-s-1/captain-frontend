@@ -8,7 +8,7 @@ import breaks from 'remark-breaks'
 
 import { getCurrentUser } from '@/lib/firebase/utilities'
 import { RootState } from '@/lib/store'
-import { pushMessage } from '@/lib/slices/chat'
+import { clearMessages, pushMessage } from '@/lib/slices/chat'
 
 const MODEL_ENDPOINT = process.env.NEXT_PUBLIC_MODEL_ENDPOINT
 
@@ -28,6 +28,7 @@ export default function ChatMessages({ autoScroll, setAutoScroll }) {
 
     useEffect(() => {
         // if (messages.length === 0) {
+            dispatch(clearMessages())
             fetchHistory()
         // }
     }, [])
@@ -39,6 +40,7 @@ export default function ChatMessages({ autoScroll, setAutoScroll }) {
             if (!user) return
 
             const token = await user.getIdToken()
+
             const url = msgId ? `${MODEL_ENDPOINT}/chat-history?msg_id=${msgId}` : `${MODEL_ENDPOINT}/chat-history`
 
             const res = await fetch(url, {
