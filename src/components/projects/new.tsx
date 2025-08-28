@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
+import { getCurrentUser } from '@/lib/firebase/utilities'
+
 const MODEL_ENDPOINT = process.env.NEXT_PUBLIC_MODEL_ENDPOINT
 
 export default function NewProjectForm() {
@@ -33,9 +35,20 @@ export default function NewProjectForm() {
         })
 
         try {
+            const user = await getCurrentUser()
+            if (!user) return
+
+            const token = await user?.getIdToken()
+            if (!token) return
+
+            if (!token) return
+
             const response = await fetch(`/${MODEL_ENDPOINT}/projects/create`, {
                 method: 'POST',
                 body: formData,
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
             })
 
             if (!response.ok) {
