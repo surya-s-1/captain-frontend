@@ -1,0 +1,108 @@
+'use client'
+
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+
+const MODEL_ENDPOINT = process.env.NEXT_PUBLIC_MODEL_ENDPOINT
+
+export default function NewProjectForm() {
+    const router = useRouter()
+    const [projectName, setProjectName] = useState('')
+    const [jiraKey, setJiraKey] = useState('')
+    const [files, setFiles] = useState<File[]>([])
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState<string | null>(null)
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files) {
+            setFiles(Array.from(event.target.files))
+        }
+    }
+
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault()
+        setLoading(true)
+        setError(null)
+
+        const formData = new FormData()
+        formData.append('tool', 'jira')
+        formData.append('projectName', projectName)
+        formData.append('projectId', jiraKey)
+        files.forEach((file) => {
+            formData.append('files', file)
+        })
+
+        try {
+            const response = await fetch(`/${MODEL_ENDPOINT}/projects/create`, {
+                method: 'POST',
+                body: formData,
+            })
+
+            if (!response.ok) {
+                const errorData = await response.json()
+                throw new Error(errorData.message || 'Failed to create project')
+            }
+
+            router.push('/projects')
+        } catch (err: any) {
+            setError(err.message)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    return (
+        <form onSubmit={handleSubmit} className='space-y-4 p-4 border rounded-lg shadow-md'>
+            {error && <div className='text-red-500 text-sm'>{error}</div>}
+            <div>
+                <label htmlFor='projectName' className='block text-sm font-medium text-gray-700'>
+                    Project Name
+                </label>
+                <input
+                    type='text'
+                    id='projectName'
+                    value={projectName}
+                    onChange={(e) => setProjectName(e.target.value)}
+                    required
+                    className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline'
+                />
+            </div>
+            <div>
+                <label htmlFor='jiraKey' className='block text-sm font-medium text-gray-700'>
+                    Jira Key (Optional)
+                </label>
+                <input
+                    type='text'
+                    id='jiraKey'
+                    value={jiraKey}
+                    onChange={(e) => setJiraKey(e.target.value)}
+                    className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline'
+                />
+            </div>
+            <div>
+                <label htmlFor='files' className='block text-sm font-medium text-gray-700'>
+                    Upload Files (Optional)
+                </label>
+                <input
+                    type='file'
+                    id='files'
+                    multiple
+                    onChange={handleFileChange}
+                    className='mt-1 block w-full text-sm text-gray-500
+                                file:mr-4 file:py-2 file:px-4
+                                file:rounded-full file:border-0
+                                file:text-sm file:font-semibold
+                                file:bg-blue-50 file:text-blue-700
+                                hover:file:bg-blue-100'
+                />
+            </div>
+            <button
+                type='submit'
+                disabled={loading}
+                className='w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50'
+            >
+                {loading ? 'Creating...' : 'Create Project'}
+            </button>
+        </form>
+    )
+}

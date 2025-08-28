@@ -1,103 +1,113 @@
 @import "tailwindcss";
 
 :root {
-  --primary-bg: #ffffff;
-  /* Pure white – clean, minimal base */
-  --secondary-bg: #f5f5f5;
-  /* Very light gray – subtle contrast for sections */
-  --tertiary-bg: #eaeaea;
-  /* Light gray – for cards or secondary surfaces */
-  --quaternary-bg: #dddddd;
-  /* Slightly darker gray – dividers, outlines */
+    --primary-bg: #ffffff;
+    /* Pure white – clean, minimal base */
+    --secondary-bg: #f5f5f5;
+    /* Very light gray – subtle contrast for sections */
+    --tertiary-bg: #eaeaea;
+    /* Light gray – for cards or secondary surfaces */
+    --quaternary-bg: #dddddd;
+    /* Slightly darker gray – dividers, outlines */
 
-  --primary-text: #1e1e1e;
-  /* Almost black – excellent readability */
-  --secondary-text: #4a4a4a;
-  /* Deep gray – for secondary content */
-  --tertiary-text: #6f6f6f;
-  /* Medium gray – subtle descriptions */
-  --quaternary-text: #a3a3a3;
-  /* Light gray – for placeholders, meta info */
+    --primary-text: #1e1e1e;
+    /* Almost black – excellent readability */
+    --secondary-text: #4a4a4a;
+    /* Deep gray – for secondary content */
+    --tertiary-text: #6f6f6f;
+    /* Medium gray – subtle descriptions */
+    --quaternary-text: #a3a3a3;
+    /* Light gray – for placeholders, meta info */
+
+    --primary-bg-contrast: #000000;
+
+    --primary-text-contrast: #ffffff;
 }
 
 .dark {
-  --primary-bg: #1e1e1e;
-  /* Deep gray-black – soft on the eyes, not pure black */
-  --secondary-bg: #2a2a2a;
-  /* Slightly lighter – for content surfaces */
-  --tertiary-bg: #3a3a3a;
-  /* Mid-gray – cards, panels, UI elements */
-  --quaternary-bg: #505050;
-  /* Lighter gray – borders, dividers */
+    --primary-bg: #1e1e1e;
+    /* Deep gray-black – soft on the eyes, not pure black */
+    --secondary-bg: #2a2a2a;
+    /* Slightly lighter – for content surfaces */
+    --tertiary-bg: #3a3a3a;
+    /* Mid-gray – cards, panels, UI elements */
+    --quaternary-bg: #505050;
+    /* Lighter gray – borders, dividers */
 
-  --primary-text: #ffffff;
-  /* Bright white – for strong contrast */
-  --secondary-text: #e0e0e0;
-  /* Light gray – secondary content */
-  --tertiary-text: #b3b3b3;
-  /* Medium gray – subtle, still readable */
-  --quaternary-text: #7a7a7a;
-  /* Dimmer gray – for metadata, placeholders */
+    --primary-text: #ffffff;
+    /* Bright white – for strong contrast */
+    --secondary-text: #e0e0e0;
+    /* Light gray – secondary content */
+    --tertiary-text: #b3b3b3;
+    /* Medium gray – subtle, still readable */
+    --quaternary-text: #7a7a7a;
+    /* Dimmer gray – for metadata, placeholders */
+
+    --primary-bg-contrast: #ffffff;
+
+    --primary-text-contrast: #000000;
 }
 
 @theme inline {
-  --color-primary: var(--primary-bg);
-  --color-secondary: var(--secondary-bg);
-  --color-tertiary: var(--tertiary-bg);
-  --color-quaternary: var(--quaternary-bg);
-  --color-color-primary: var(--primary-text);
-  --color-color-secondary: var(--secondary-text);
-  --color-color-tertiary: var(--tertiary-text);
-  --color-color-quaternary: var(--quaternary-text);
+    --color-primary: var(--primary-bg);
+    --color-secondary: var(--secondary-bg);
+    --color-tertiary: var(--tertiary-bg);
+    --color-quaternary: var(--quaternary-bg);
+    --color-primary-contrast: var(--primary-bg-contrast);
+    --color-color-primary: var(--primary-text);
+    --color-color-secondary: var(--secondary-text);
+    --color-color-tertiary: var(--tertiary-text);
+    --color-color-quaternary: var(--quaternary-text);
+    --color-color-primary-contrast: var(--primary-text-contrast);
 }
 
 @layer utilities {
-  .scrollbar {
-    scrollbar-width: thin;
-    /* Firefox */
-    scrollbar-color: theme('colors.gray.500') transparent;
-    /* Firefox */
-  }
+    .scrollbar {
+        scrollbar-width: thin;
+        /* Firefox */
+        scrollbar-color: theme('colors.gray.500') transparent;
+        /* Firefox */
+    }
 
-  .scrollbar::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
+    .scrollbar::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
 
-  .scrollbar::-webkit-scrollbar-track {
-    background: transparent;
-  }
+    .scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+    }
 
-  .scrollbar::-webkit-scrollbar-thumb {
-    background-color: theme('colors.gray.500');
-    border-radius: 9999px;
-    /* Tailwind's full */
-    border: 2px solid transparent;
-    background-clip: content-box;
-  }
+    .scrollbar::-webkit-scrollbar-thumb {
+        background-color: theme('colors.gray.500');
+        border-radius: 9999px;
+        /* Tailwind's full */
+        border: 2px solid transparent;
+        background-clip: content-box;
+    }
 
-  .scrollbar::-webkit-scrollbar-button {
-    display: none;
-    width: 0;
-    height: 0;
-  }
+    .scrollbar::-webkit-scrollbar-button {
+        display: none;
+        width: 0;
+        height: 0;
+    }
 
-  .scrollbar::-webkit-scrollbar-corner {
-    background: transparent;
-  }
+    .scrollbar::-webkit-scrollbar-corner {
+        background: transparent;
+    }
 
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
+    .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
 
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
 }
 
 body {
-  background: var(--color-primary);
-  color: var(--color-color-primary);
-  font-family: Arial, Helvetica, sans-serif;
+    background: var(--color-primary);
+    color: var(--color-color-primary);
+    font-family: Arial, Helvetica, sans-serif;
 }
