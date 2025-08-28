@@ -43,7 +43,7 @@ export default function NewProjectForm() {
 
             if (!token) return
 
-            const response = await fetch(`/${MODEL_ENDPOINT}/projects/create`, {
+            const response = await fetch(`${MODEL_ENDPOINT}/projects/create`, {
                 method: 'POST',
                 body: formData,
                 headers: {
