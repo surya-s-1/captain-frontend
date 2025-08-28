@@ -8,8 +8,8 @@ const MODEL_ENDPOINT = process.env.NEXT_PUBLIC_MODEL_ENDPOINT
 
 interface Project {
     tool: string
-    projectName: string
-    projectId: string
+    project_name: string
+    project_id: string
 }
 
 export default function Projects() {
@@ -53,10 +53,10 @@ export default function Projects() {
             {projects.length === 0 ? (
                 <p>No projects found. Create a new one!</p>
             ) : (
-                <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-                    {projects.map((project) => (
-                        <div key={project.projectId} className='border p-4 rounded-md shadow-md'>
-                            <h2 className='text-xl font-semibold'>{project.projectName}</h2>
+                <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full'>
+                    {projects.map((project, idx) => (
+                        <div key={idx} className='border p-4 rounded-md shadow-md'>
+                            <h2 className='text-xl font-semibold'>{project.project_name}</h2>
                             <p className='text-gray-600'>{project.tool}</p>
                         </div>
                     ))}
