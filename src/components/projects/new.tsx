@@ -69,37 +69,37 @@ export default function NewProjectForm() {
             </div>
             <div>
                 <label htmlFor='jiraKey' className='block text-sm font-medium text-gray-700'>
-                    Jira Key (Optional)
+                    Jira Project Key
                 </label>
                 <input
                     type='text'
                     id='jiraKey'
                     value={jiraKey}
+                    required
                     onChange={(e) => setJiraKey(e.target.value)}
                     className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline'
                 />
             </div>
             <div>
                 <label htmlFor='files' className='block text-sm font-medium text-gray-700'>
-                    Upload Files (Optional)
+                    Upload Functional Specifications & User Journeys
                 </label>
                 <input
                     type='file'
                     id='files'
                     multiple
+                    required
                     onChange={handleFileChange}
-                    className='mt-1 block w-full text-sm text-gray-500
-                                file:mr-4 file:py-2 file:px-4
-                                file:rounded-full file:border-0
-                                file:text-sm file:font-semibold
-                                file:bg-blue-50 file:text-blue-700
-                                hover:file:bg-blue-100'
+                    className='mt-1 block w-full text-sm text-color-primary-500
+                                file:py-2 file:px-4 file:rounded-full file:cursor-pointer
+                                file:bg-primary-contrast file:text-color-primary-contrast
+                                hover:file:bg-color-primary/80'
                 />
             </div>
             <button
                 type='submit'
                 disabled={loading}
-                className='w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50'
+                className='w-full flex justify-center py-2 px-4 rounded-md text-color-primary-contrast bg-primary-contrast hover:bg-primary-contrast/80 disabled:opacity-50'
             >
                 {loading ? 'Creating...' : 'Create Project'}
             </button>
