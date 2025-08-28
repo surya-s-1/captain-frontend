@@ -28,8 +28,8 @@ export default function ChatMessages({ autoScroll, setAutoScroll }) {
 
     useEffect(() => {
         // if (messages.length === 0) {
-            dispatch(clearMessages())
-            fetchHistory()
+        dispatch(clearMessages())
+        fetchHistory()
         // }
     }, [])
 
@@ -70,7 +70,7 @@ export default function ChatMessages({ autoScroll, setAutoScroll }) {
         }
     }
 
-    const preComponentPlugin = {
+    const componentPlugin = {
         pre: ({ children }) => (
             <pre
                 className='bg-secondary text-color-secondary
@@ -79,6 +79,28 @@ export default function ChatMessages({ autoScroll, setAutoScroll }) {
             >
                 {children}
             </pre>
+        ),
+        hr: () => (
+            <>
+                <br />
+                <hr />
+                <br />
+            </>
+        ),
+        h1: ({ children }) => (
+            <h1 className='font-semibold text-2xl'>
+                {children}
+            </h1>
+        ),
+        h2: ({ children }) => (
+            <h2 className='font-semibold text-xl'>
+                {children}
+            </h2>
+        ),
+        h3: ({ children }) => (
+            <h2 className='font-semibold text-lg'>
+                {children}
+            </h2>
         )
     }
 
@@ -116,7 +138,7 @@ export default function ChatMessages({ autoScroll, setAutoScroll }) {
                         </span>
                     )}
 
-                    {messages.map((msg) => {
+                    {messages.map((msg, idx) => {
                         if (!msg.text) return <></>
 
                         const className = `
@@ -128,7 +150,7 @@ export default function ChatMessages({ autoScroll, setAutoScroll }) {
 
                         if (msg.text.startsWith('[error]:')) {
                             return (
-                                <div key={msg.msg_id} className={`${className} text-red-500`}>
+                                <div key={idx} className={`${className} text-red-500`}>
                                     <ReactMarkdown remarkPlugins={[remarkGfm, breaks]}>
                                         {msg.text.replaceAll('[error]:', '')}
                                     </ReactMarkdown>
@@ -138,19 +160,19 @@ export default function ChatMessages({ autoScroll, setAutoScroll }) {
 
                         return (
                             msg.text ?
-                            <div
-                                key={msg.msg_id}
-                                className={className}
-                                style={{ wordWrap: 'break-word' }}
-                            >
-                                <ReactMarkdown 
-                                    remarkPlugins={[remarkGfm, breaks]}
-                                    components={{ ...preComponentPlugin }}
+                                <div
+                                    key={idx}
+                                    className={className}
+                                    style={{ wordWrap: 'break-word' }}
                                 >
-                                    {msg.text}
-                                </ReactMarkdown>
-                            </div> : 
-                            <></>
+                                    <ReactMarkdown
+                                        remarkPlugins={[remarkGfm, breaks]}
+                                        components={{ ...componentPlugin }}
+                                    >
+                                        {msg.text}
+                                    </ReactMarkdown>
+                                </div> :
+                                <></>
                         )
                     })}
                     <div ref={messagesEndRef} />
