@@ -26,8 +26,8 @@ export default function NewProjectForm() {
 
         const formData = new FormData()
         formData.append('tool', 'jira')
-        formData.append('projectName', projectName)
-        formData.append('projectId', jiraKey)
+        formData.append('project_name', projectName)
+        formData.append('project_id', jiraKey)
         files.forEach((file) => {
             formData.append('files', file)
         })
