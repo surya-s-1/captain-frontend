@@ -19,7 +19,7 @@ listenToAuthChanges()
 
 export default function RootLayout({ children }) {
     const pathname = usePathname()
-    const [sidebarExpanded, setSidebarExpanded] = useState(false)
+    const [sidebarExpanded, setSidebarExpanded] = useState(true)
 
     useEffect(() => {
         document.title = 'Sage App'
