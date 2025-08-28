@@ -136,9 +136,8 @@ export default function ChatMessages({ autoScroll, setAutoScroll }) {
                             )
                         }
 
-                        const cleanText = msg.role === 'model' ? msg.text.replaceAll('[text]:', '') : msg.text
-
                         return (
+                            msg.text ?
                             <div
                                 key={msg.msg_id}
                                 className={className}
@@ -148,9 +147,10 @@ export default function ChatMessages({ autoScroll, setAutoScroll }) {
                                     remarkPlugins={[remarkGfm, breaks]}
                                     components={{ ...preComponentPlugin }}
                                 >
-                                    {cleanText}
+                                    {msg.text}
                                 </ReactMarkdown>
-                            </div>
+                            </div> : 
+                            <></>
                         )
                     })}
                     <div ref={messagesEndRef} />

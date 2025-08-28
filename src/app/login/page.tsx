@@ -16,7 +16,7 @@ export default function LoginPage() {
 
     useEffect(() => {
         if (appUser.uid) {
-            router.push('/chat')
+            router.push('/projects')
         }
     }, [])
 
@@ -24,7 +24,7 @@ export default function LoginPage() {
         try {
             const provider = new GoogleAuthProvider()
             await signInWithPopup(auth, provider)
-            router.push('/chat')
+            router.push('/projects')
         } catch (err) {
             console.error('Login error:', err)
         }
