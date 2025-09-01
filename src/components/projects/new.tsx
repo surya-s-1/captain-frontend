@@ -56,7 +56,13 @@ export default function NewProjectForm() {
                 throw new Error(errorData.message || 'Failed to create project')
             }
 
-            router.push('/projects')
+            const { projectId = null, version = null } = response.json() as any
+
+            if (!projectId || !version) {
+                router.push('/projects')
+            }
+
+            router.push(`/projects/details?projectId=${projectId}&version=${version}`)
         } catch (err: any) {
             setError(err.message)
         } finally {
@@ -95,7 +101,7 @@ export default function NewProjectForm() {
             </div>
             <div>
                 <label htmlFor='files' className='block text-sm font-medium text-gray-700'>
-                    Upload Functional Specifications & User Journeys
+                    Upload Requirements
                 </label>
                 <input
                     type='file'
