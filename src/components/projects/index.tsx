@@ -44,9 +44,6 @@ export default function Projects() {
                         <p className='text-gray-600'>{project.tool}</p>
                     </a>
                 ))}
-                <a href='/projects/new' className='flex items-center justify-center border min-h-40 cursor-pointer p-4 rounded-md shadow-md'>
-                    <p className='text-gray-600'>+ New Project</p>
-                </a>
             </div>
         </div>
     )

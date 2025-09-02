@@ -4,7 +4,7 @@ import React from 'react'
 import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { signOut } from 'firebase/auth'
-import { PanelLeft, LayoutDashboard, Settings, CircleQuestionMark, LogOut } from 'lucide-react'
+import { PanelLeft, Cable, LayoutDashboard, Settings, CircleQuestionMark, LogOut } from 'lucide-react'
 
 import { auth } from '@/lib/firebase'
 import { RootState } from '@/lib/store'
@@ -33,6 +33,7 @@ const Sidebar = ({ sidebarExpanded, setSidebarExpanded }) => {
     }
 
     const navItems = [
+        { label: 'Integrations', icon: Cable, link: '/integrations' },
         { label: 'Projects', icon: LayoutDashboard, link: '/projects' },
         { label: 'Ask Captain', icon: CircleQuestionMark, link: '/chat' }
     ]
