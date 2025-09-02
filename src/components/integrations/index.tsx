@@ -18,29 +18,29 @@ export default function Integrations() {
 
     const [jiraConnected, setJiraConnected] = useState(false)
 
-    useEffect(() => {
-        async function checkJiraConnection() {
-            const user = await getCurrentUser()
-            if (!user) return
+    async function checkJiraConnection() {
+        const user = await getCurrentUser()
+        if (!user) return
 
-            const token = await user.getIdToken()
-            if (!token) return
+        const token = await user.getIdToken()
+        if (!token) return
 
-            const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/tools/jira/status`, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-
-            if (response.ok) {
-                const result = await response.json()
-                setJiraConnected(result.connected)
-            } else {
-                console.error('Error checking Jira status')
+        const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/tools/jira/status`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
             }
-        }
+        })
 
+        if (response.ok) {
+            const result = await response.json()
+            setJiraConnected(result.connected)
+        } else {
+            console.error('Error checking Jira status')
+        }
+    }
+
+    useEffect(() => {
         checkJiraConnection()
     }, [])
 
@@ -57,18 +57,25 @@ export default function Integrations() {
             return
         }
 
-        await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/tools/jira/connect`, {
+        const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/tools/jira/connect`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
+
+        if (response.ok) {
+            const result = await response.json()
+            if (result.redirect_url) {
+                window.location.href = result.redirect_url
+            }
+        }
     }
 
     return (
         <div className='flex flex-col items-start gap-8 p-8 w-full'>
             <h2 className='text-2xl font-bold'>Integrations</h2>
-            <div className='flex items-center gap-12'>
+            <div className='flex items-center gap-44'>
                 <img 
                     src={appUser.theme === 'light' ? Jira_Light_Logo.src : Jira_Dark_Logo.src} 
                     alt='Jira Logo' 
