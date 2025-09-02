@@ -22,7 +22,7 @@ export default function RootLayout({ children }) {
     const [sidebarExpanded, setSidebarExpanded] = useState(true)
 
     useEffect(() => {
-        document.title = 'Sage App'
+        document.title = 'Captain App'
     }, [])
 
     return (
