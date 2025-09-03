@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useSearchParams } from 'next/navigation'
-import { collection, onSnapshot, query, where } from 'firebase/firestore'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { collection, doc, onSnapshot, query, where } from 'firebase/firestore'
 
 import DetailsBanner from '@/components/projects/versions/details/banner'
 
@@ -30,14 +30,41 @@ interface TestCase {
 
 
 export default function ProjectDetails() {
+    const router = useRouter()
     const searchParams = useSearchParams()
 
     const projectId = searchParams.get('projectId')
     const version = searchParams.get('version')
 
+    const [status, setStatus] = useState<string>('')
+    const [error, setError] = useState<string>('')
     const [requirements, setRequirements] = useState<Requirement[]>([])
     const [testcases, setTestcases] = useState<TestCase[]>([])
     const [tab, setTab] = useState<'requirements' | 'testcases'>('requirements')
+
+    async function fetchVersion() {
+        if (!projectId || !version) {
+            router.push('/projects')
+            return
+        }
+
+        const versionDocRef = doc(firestoreDb, 'projects', projectId, 'versions', version)
+
+        const unsubscribe = onSnapshot(versionDocRef, (docSnapshot) => {
+            if (docSnapshot.exists()) {
+                const data = docSnapshot.data();
+                setStatus(data.status || 'Unknown')
+            } else {
+                setError('Version not found!')
+                setTimeout(() => {
+                    router.push('/projects')
+                }, 2000)
+                return
+            }
+        })
+
+        return () => unsubscribe()
+    }
 
     async function fetchRequirements() {
         const reqQuery = query(
@@ -67,6 +94,7 @@ export default function ProjectDetails() {
     }
 
     useEffect(() => {
+        fetchVersion()
         fetchRequirements()
         fetchTestcases()
     }, [projectId, version])
