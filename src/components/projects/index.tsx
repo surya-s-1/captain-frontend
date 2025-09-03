@@ -1,13 +1,12 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { collection, getDocs, query, where } from 'firebase/firestore'
+import { use, useEffect, useState } from 'react'
+import { collection, onSnapshot, query, where } from 'firebase/firestore'
 
 import { ProjectView } from '@/components/projects/view'
 import { useJiraProjects } from '@/hooks/useJiraProjects'
 
 import { firestoreDb } from '@/lib/firebase'
-import { getCurrentUser } from '@/lib/firebase/utilities'
 
 export interface ConnectedProject {
     project_id: string
@@ -20,22 +19,33 @@ export interface ConnectedProject {
 export default function Projects() {
     const [connectedProjects, setConnectedProjects] = useState<ConnectedProject[]>([])
 
-    async function fetchConnectedProjects() {
-        const user = await getCurrentUser()
-        if (!user) return
-
+    const fetchConnectedProjects = () => {
         const projectsRef = collection(firestoreDb, 'projects')
-        const q = query(projectsRef, where('uid', '==', user.uid))
-        const querySnapshot = await getDocs(q)
-        const data = querySnapshot.docs.map(doc => doc.data())
-        setConnectedProjects(data as ConnectedProject[])
+        const q = query(projectsRef)
+
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            const data = querySnapshot.docs.map(doc => doc.data())
+            setConnectedProjects(data as ConnectedProject[])
+        })
+
+        return unsubscribe
     }
 
     useEffect(() => {
-        fetchConnectedProjects()
+        const unsubscribe = fetchConnectedProjects()
+        return () => unsubscribe && unsubscribe()
     }, [])
 
-    const { projects: jiraProjects, loading: jiraLoading, error: jiraError } = useJiraProjects(connectedProjects)
+    const { 
+        fetchProjects: fetchJiraProjects, 
+        projects: jiraProjects, 
+        loading: jiraLoading, 
+        error: jiraError 
+    } = useJiraProjects(connectedProjects)
+
+    useEffect(() => {
+        fetchJiraProjects()
+    }, [connectedProjects])
 
     return (
         <div className='w-full flex flex-col items-start p-8'>

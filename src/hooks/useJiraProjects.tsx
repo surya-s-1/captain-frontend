@@ -21,11 +21,12 @@ interface JiraProject extends JiraProjectResponse {
 }
 
 export function useJiraProjects(connectedProjects: ConnectedProject[]) {
+    const [fetchedProjects, setFetchedProjects] = useState<JiraProject[]>([])
     const [projects, setProjects] = useState<JiraProject[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState('')
 
-    async function fetchJiraProjects() {
+    async function fetchProjects() {
         try {
             const user = await getCurrentUser()
             if (!user) return
@@ -42,7 +43,7 @@ export function useJiraProjects(connectedProjects: ConnectedProject[]) {
 
             if (response.ok) {
                 const data: JiraProject[] = await response.json()
-                setProjects(data.map((d) => (
+                setFetchedProjects(data.map((d) => (
                     {
                         ...d,
                         connected: false,
@@ -63,12 +64,9 @@ export function useJiraProjects(connectedProjects: ConnectedProject[]) {
     }
 
     useEffect(() => {
-        fetchJiraProjects()
-    }, [])
+        const updatedProjects = fetchedProjects.map((project) => {
+            const connectedProject = connectedProjects.find((cp) => (cp.tool === 'jira' && cp.toolProjectKey === project.key))
 
-    useEffect(() => {
-        const updatedProjects = projects.map((project) => {
-            const connectedProject = connectedProjects.find((cp) => cp.toolProjectKey === project.key)
             if (connectedProject) {
                 return {
                     ...project, 
@@ -82,7 +80,7 @@ export function useJiraProjects(connectedProjects: ConnectedProject[]) {
 
         setProjects(updatedProjects)
 
-    }, [connectedProjects])
+    }, [fetchedProjects, connectedProjects])
 
-    return { projects, loading, error }
+    return { fetchProjects, projects, loading, error }
 }
