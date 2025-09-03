@@ -10,6 +10,6 @@ export const STATUS_MESSAGES = {
     COMPLETE_REQ_EXTRACT_P2: 'Requirement extraction (Phase 2) complete.',
     ERR_REQ_EXTRACT_P2: 'Error occurred during requirement extraction (Phase 2).',
     START_TESTCASE_CREATION: 'Started test case creation...',
-    COMPLETE_TESTCASE_CREATION: 'Confirm extracted test cases...',
+    CONFIRM_TESTCASE_CREATION: 'Confirm extracted test cases...',
     ERR_TESTCASE_CREATION: 'Error occurred during test case creation.'
 }

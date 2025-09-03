@@ -178,6 +178,21 @@ export default function ProjectDetails() {
                     </div>
                 </div>
             )}
+            {status === 'CONFIRM_TESTCASE_CREATION' && (
+                <div className='sticky bottom-0 p-4 bg-yellow-100 border-l-4 border-yellow-500 text-black flex items-center justify-between'>
+                    <div>
+                        <p className='font-semibold'>Verify the test cases</p>
+                        <p>Please verify the extracted test cases to go ahead with their creation in Jira.</p>
+                    </div>
+                    <div className='flex justify-end'>
+                        <button
+                            className='p-2 bg-black text-white rounded cursor-pointer'
+                        >
+                            Create on Jira
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }
