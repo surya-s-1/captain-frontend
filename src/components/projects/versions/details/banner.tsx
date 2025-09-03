@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { getDoc, doc, onSnapshot } from 'firebase/firestore'
 
+import { STATUS_MESSAGES } from '@/lib/utility'
 import { firestoreDb } from '@/lib/firebase'
 import { getCurrentUser } from '@/lib/firebase/utilities'
 
@@ -152,12 +153,12 @@ export default function DetailsBanner() {
                     <div>
                         <h2 className='text-2xl font-bold'>{projectName}</h2>
                         <h4 className='text-sm'>Version: {version}</h4>
-                        <p>{status}</p>
+                        <p>{STATUS_MESSAGES[status] || status}</p>
                     </div>
-                    {versionFiles.length === 0 &&
+                {(versionFiles.length === 0 || status.startsWith('ERR')) &&
                         <div className='flex flex-col gap-2'>
                             <label htmlFor='files' className='w-fit bg-primary-contrast text-color-primary-contrast rounded-full p-2 cursor-pointer'>
-                                Upload Files
+                            Upload Files {status.startsWith('ERR') && <span>(Retry)</span>}
                             </label>
                             <input
                                 type='file'
@@ -184,7 +185,7 @@ export default function DetailsBanner() {
                                     Submit
                                 </button>}
                         </div>}
-                    {versionFiles.length > 0 &&
+                    {versionFiles.length > 0 && !status.startsWith('ERR') &&
                         <div>
                             <h4 className='font-semibold'>Uploaded Files:</h4>
                             <ul>
