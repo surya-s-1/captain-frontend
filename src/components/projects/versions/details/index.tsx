@@ -10,13 +10,22 @@ import { firestoreDb } from '@/lib/firebase'
 import { getCurrentUser } from '@/lib/firebase/utilities'
 
 interface Requirement {
-    'requirement_id': string,
-    'requirement': string,
-    'requirement_type': string,
-    'sources': string[],
-    'regulations': string[],
-    'verified': boolean,
-    'deleted': boolean
+    requirement_id: string,
+    requirement: string,
+    requirement_type: string,
+    sources: string[],
+    regulations: string[],
+    verified: boolean,
+    deleted: boolean
+}
+
+interface TestCase {
+    title: string
+    description: string
+    acceptance_criteria: string
+    priority: string
+    testcase_id: string
+    requirement_id: string
 }
 
 const NEXT_PUBLIC_TOOL_ENDPOINT = process.env.NEXT_PUBLIC_TOOL_ENDPOINT || ''
@@ -40,9 +49,11 @@ export default function ProjectDetails() {
     const [error, setError] = useState('')
     const [status, setStatus] = useState('')
     const [projectName, setProjectName] = useState<string>('')
-    const [files, setFiles] = useState<any[]>([])
-    const [uploadedFiles, setUploadedFiles] = useState<any[]>([])
+    const [versionFiles, setVersionFiles] = useState<any[]>([])
     const [requirements, setRequirements] = useState<Requirement[]>([])
+    const [testcases, setTestcases] = useState<TestCase[]>([])
+    const [uploadedFiles, setUploadedFiles] = useState<any[]>([])
+    const [tab, setTab] = useState<'requirements' | 'testcases'>('requirements')
 
     async function fetchProjectName() {
         if (!projectId) {
@@ -72,7 +83,7 @@ export default function ProjectDetails() {
             if (docSnapshot.exists()) {
                 const data = docSnapshot.data();
                 setStatus(data.status || 'Unknown')
-                setFiles(data.files || [])
+                setVersionFiles(data.files || [])
             }
         })
 
@@ -93,6 +104,19 @@ export default function ProjectDetails() {
         return () => reqUnsubscribe()
     }
 
+    async function fetchTestcases() {
+        const reqQuery = query(
+            collection(firestoreDb, 'projects', projectId, 'versions', version, 'testcases')
+        )
+
+        const testsUnsubscribe = onSnapshot(reqQuery, (snapshot) => {
+            const testsList = snapshot.docs.map(d => ({ ...d.data() })) as TestCase[]
+            setTestcases(testsList)
+        })
+
+        return () => testsUnsubscribe()
+    }
+
     useEffect(() => {
         const loadRequirements = async () => {
             const unsubscribe = await fetchRequirements()
@@ -111,6 +135,7 @@ export default function ProjectDetails() {
         loadProjectName()
         loadStatus()
         loadRequirements()
+        fetchTestcases()
     }, [projectId, version])
 
     const handleFileUpload = (e?: React.ChangeEvent<HTMLInputElement>) => {
@@ -172,7 +197,7 @@ export default function ProjectDetails() {
                     <h4 className='text-sm'>{version}</h4>
                     <p>{status}</p>
                 </div>
-                {files.length === 0 &&
+                {versionFiles.length === 0 &&
                     <div className='flex flex-col gap-2'>
                         <label htmlFor='files' className='w-fit bg-primary-contrast text-color-primary-contrast rounded-full p-2 cursor-pointer'>
                             Upload Files
@@ -194,19 +219,19 @@ export default function ProjectDetails() {
                             ))}
                         </div>
                         {uploadedFiles.length > 0 &&
-                        <button 
-                            className='w-fit bg-secondary text-color-secondary rounded-full p-2 mt-2 cursor-pointer'
-                            onClick={() => handleSubmit()}
-                        >
-                            Submit
-                        </button>}
+                            <button
+                                className='w-fit bg-secondary text-color-secondary rounded-full p-2 mt-2 cursor-pointer'
+                                onClick={() => handleSubmit()}
+                            >
+                                Submit
+                            </button>}
                     </div>}
-                {files.length > 0 &&
+                {versionFiles.length > 0 &&
                     <div>
                         <h4 className='font-semibold'>Uploaded Files:</h4>
                         <ul>
-                            {files.map(file => (
-                                <li 
+                            {versionFiles.map(file => (
+                                <li
                                     key={file.name}
                                     className='list-disc ml-5'
                                 >
@@ -217,23 +242,64 @@ export default function ProjectDetails() {
                     </div>}
             </div>
             <div className='p-8 mb-16'>
-                <h2 className='font-bold text-2xl mb-8'>Requirements</h2>
-                {requirements.length > 0 ? (
-                    <div className='w-full flex flex-col gap-4'>
-                        {requirements.map(r => (
-                            <div
-                                className='p-2 shadow-xl border'
-                                key={r.requirement_id}
-                                onClick={() => { }}
-                            >
-                                <h2 className='font-semibold text-color-primary/50'>{r.requirement_id}</h2>
-                                <Markdown text={r.requirement} />
+                <div className='w-full sticky top-[160px] flex items-center justify-center gap-8 mb-8'>
+                    <button
+                        className={`p-2 rounded ${tab === 'requirements' ? 'bg-primary-contrast text-color-primary-contrast' : 'cursor-pointer'}`}
+                        onClick={() => setTab('requirements')}
+                    >
+                        Requirements
+                    </button>
+                    <button
+                        className={`p-2 rounded ${tab === 'testcases' ? 'bg-primary-contrast text-color-primary-contrast' : 'cursor-pointer'}`}
+                        onClick={() => setTab('testcases')}
+                    >
+                        Test Cases
+                    </button>
+                </div>
+                {
+                    tab === 'requirements' &&
+                    <>
+                        {requirements.length > 0 ? (
+                            <div className='w-full flex flex-col gap-4'>
+                                {requirements.map(r => (
+                                    <div
+                                        className='p-2 shadow-xl border'
+                                        key={r.requirement_id}
+                                        onClick={() => { }}
+                                    >
+                                        <h2 className='font-semibold text-color-primary/50'>{r.requirement_id}</h2>
+                                        <Markdown text={r.requirement} />
+                                    </div>
+                                ))}
                             </div>
-                        ))}
-                    </div>
-                ) : (
-                    <p>No requirements found.</p>
-                )}
+                        ) : (
+                            <p>No requirements found.</p>
+                        )}
+                    </>
+                }
+                {
+                    tab === 'testcases' &&
+                    <>
+                        {testcases.length > 0 ? (
+                            <div className='w-full flex flex-col gap-4'>
+                                {testcases.map(t => (
+                                    <div
+                                        className='p-2 shadow-xl border'
+                                        key={t.testcase_id}
+                                        onClick={() => { }}
+                                    >
+                                        <h2 className='font-semibold text-color-primary/50'>{t.testcase_id}</h2>
+                                        <h2 className='text-color-primary/50'>{t.requirement_id}</h2>
+                                        <Markdown text={t.title} />
+                                        <Markdown text={t.description} />
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <p>No test cases found.</p>
+                        )}
+                    </>
+                }
             </div>
         </div>
     )
