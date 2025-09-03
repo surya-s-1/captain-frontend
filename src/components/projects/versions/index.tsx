@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { collection, getDoc, doc, getDocs, query, where } from 'firebase/firestore'
+import { collection, getDoc, doc, getDocs, query } from 'firebase/firestore'
 
 import { firestoreDb } from '@/lib/firebase'
 import { getCurrentUser } from '@/lib/firebase/utilities'
