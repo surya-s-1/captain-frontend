@@ -103,21 +103,21 @@ export default function ProjectDetails() {
     return (
         <div className='w-full h-full overflow-y-auto scrollbar'>
             <DetailsBanner />
+            <div className='w-ful sticky top-[150px] backdrop-blur-xs bg-white/30 flex items-center justify-center gap-8 py-4'>
+                <button
+                    className={`p-2 rounded ${tab === 'requirements' ? 'bg-primary-contrast text-color-primary-contrast' : 'cursor-pointer'}`}
+                    onClick={() => setTab('requirements')}
+                >
+                    Requirements
+                </button>
+                <button
+                    className={`p-2 rounded ${tab === 'testcases' ? 'bg-primary-contrast text-color-primary-contrast' : 'cursor-pointer'}`}
+                    onClick={() => setTab('testcases')}
+                >
+                    Test Cases
+                </button>
+            </div>
             <div className='p-8 mb-16'>
-                <div className='w-full sticky top-[160px] flex items-center justify-center gap-8 mb-8'>
-                    <button
-                        className={`p-2 rounded ${tab === 'requirements' ? 'bg-primary-contrast text-color-primary-contrast' : 'cursor-pointer'}`}
-                        onClick={() => setTab('requirements')}
-                    >
-                        Requirements
-                    </button>
-                    <button
-                        className={`p-2 rounded ${tab === 'testcases' ? 'bg-primary-contrast text-color-primary-contrast' : 'cursor-pointer'}`}
-                        onClick={() => setTab('testcases')}
-                    >
-                        Test Cases
-                    </button>
-                </div>
                 {
                     tab === 'requirements' &&
                     <>
@@ -163,6 +163,21 @@ export default function ProjectDetails() {
                     </>
                 }
             </div>
+            {status === 'CONFIRM_REQ_EXTRACT_P2' && (
+                <div className='sticky bottom-0 p-4 bg-yellow-100 border-l-4 border-yellow-500 text-black flex items-center justify-between'>
+                    <div>
+                        <p className='font-semibold'>Manual Verification Selected</p>
+                        <p>Please verify the extracted requirements to go ahead with test cases creation.</p>
+                    </div>
+                    <div className='flex justify-end'>
+                        <button 
+                            className='p-2 bg-black text-white rounded cursor-pointer'
+                        >
+                            Proceed to Test Cases
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }
