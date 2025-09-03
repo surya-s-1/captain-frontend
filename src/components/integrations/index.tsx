@@ -75,7 +75,7 @@ export default function Integrations() {
     return (
         <div className='flex flex-col items-start gap-8 p-8 w-full'>
             <h2 className='text-2xl font-bold'>Integrations</h2>
-            <div className='flex items-center gap-44'>
+            <div className='flex items-center gap-32'>
                 <img 
                     src={appUser.theme === 'light' ? Jira_Light_Logo.src : Jira_Dark_Logo.src} 
                     alt='Jira Logo' 
@@ -84,13 +84,13 @@ export default function Integrations() {
                 {
                     jiraConnected ? (
                             <span 
-                                className='bg-green-200 text-green-600 p-2'
+                                className='text-success'
                             >
                                 Connected
                             </span>
                     ) : (
                             <button
-                                className='bg-blue-200 text-blue-600 p-2 cursor-pointer'
+                                className='text-link font-semibold cursor-pointer'
                                 onClick={() => connectJira()}
                             >
                                 Connect

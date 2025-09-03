@@ -1,0 +1,88 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+import { ConnectedProject } from '@/components/projects'
+import { getCurrentUser } from '@/lib/firebase/utilities'
+
+const NEXT_PUBLIC_TOOL_ENDPOINT = process.env.NEXT_PUBLIC_TOOL_ENDPOINT || ''
+
+interface JiraProjectResponse {
+    id: string
+    key: string
+    name: string
+    avatarUrls: object
+    uuid: string
+}
+
+interface JiraProject extends JiraProjectResponse {
+    connected: boolean
+    project_id: string | null
+    latest_version: string | null
+}
+
+export function useJiraProjects(connectedProjects: ConnectedProject[]) {
+    const [projects, setProjects] = useState<JiraProject[]>([])
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState('')
+
+    async function fetchJiraProjects() {
+        try {
+            const user = await getCurrentUser()
+            if (!user) return
+
+            const token = await user.getIdToken()
+            if (!token) return
+
+            const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/tools/jira/projects/list`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+
+            if (response.ok) {
+                const data: JiraProject[] = await response.json()
+                setProjects(data.map((d) => (
+                    {
+                        ...d,
+                        connected: false,
+                        project_id: null,
+                        latest_version: null
+                    }
+                ))
+                )
+                setLoading(false)
+            } else {
+                setError('Error fetching Jira projects')
+                setLoading(false)
+            }
+        } catch (err) {
+            setError('Error fetching Jira projects')
+            setLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        fetchJiraProjects()
+    }, [])
+
+    useEffect(() => {
+        const updatedProjects = projects.map((project) => {
+            const connectedProject = connectedProjects.find((cp) => cp.toolProjectKey === project.key)
+            if (connectedProject) {
+                return {
+                    ...project, 
+                    connected: true, 
+                    project_id: connectedProject.project_id,
+                    latest_version: connectedProject.latest_version
+                }
+            }
+            return project
+        })
+
+        setProjects(updatedProjects)
+
+    }, [connectedProjects])
+
+    return { projects, loading, error }
+}

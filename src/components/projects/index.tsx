@@ -3,22 +3,22 @@
 import { useEffect, useState } from 'react'
 import { collection, getDocs, query, where } from 'firebase/firestore'
 
-import JiraProjects from '@/components/projects/jira'
+import { ProjectView } from '@/components/projects/view'
+import { useJiraProjects } from '@/hooks/useJiraProjects'
 
 import { firestoreDb } from '@/lib/firebase'
 import { getCurrentUser } from '@/lib/firebase/utilities'
 
-const NEXT_PUBLIC_TOOL_ENDPOINT = process.env.NEXT_PUBLIC_TOOL_ENDPOINT || ''
-
-export interface Project {
-    tool: string,
-    tool_project_id: string,
-    tool_project_name: string
+export interface ConnectedProject {
     project_id: string
+    latest_version: string | null
+    tool: string
+    toolProjectKey: string
+    toolProjectName: string
 }
 
 export default function Projects() {
-    const [connectedProjects, setConnectedProjects] = useState<Project[]>([])
+    const [connectedProjects, setConnectedProjects] = useState<ConnectedProject[]>([])
 
     async function fetchConnectedProjects() {
         const user = await getCurrentUser()
@@ -28,16 +28,29 @@ export default function Projects() {
         const q = query(projectsRef, where('uid', '==', user.uid))
         const querySnapshot = await getDocs(q)
         const data = querySnapshot.docs.map(doc => doc.data())
-        setConnectedProjects(data as Project[])
+        setConnectedProjects(data as ConnectedProject[])
     }
 
     useEffect(() => {
         fetchConnectedProjects()
     }, [])
 
+    const { projects: jiraProjects, loading: jiraLoading, error: jiraError } = useJiraProjects(connectedProjects)
+
+    useEffect(() => {
+        console.log('jiraProjects', jiraProjects)
+        console.log('jiraLoading', jiraLoading)
+        console.log('jiraError', jiraError)
+    }, [jiraProjects, jiraLoading, jiraError])
+
     return (
         <div className='w-full flex flex-col items-start p-8'>
-            <JiraProjects connectedProjects={connectedProjects} />
+            <ProjectView
+                tool='Jira'
+                loading={jiraLoading}
+                error={jiraError}
+                projects={jiraProjects}
+            />
         </div>
     )
 }
