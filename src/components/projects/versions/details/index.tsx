@@ -34,6 +34,7 @@ export default function ProjectDetails() {
     ]
 
     const [error, setError] = useState('')
+    const [status, setStatus] = useState('')
     const [projectName, setProjectName] = useState<string>('')
     const [files, setFiles] = useState<any[]>([])
     const [uploadedFiles, setUploadedFiles] = useState<any[]>([])
@@ -69,6 +70,8 @@ export default function ProjectDetails() {
             }, 2000)
             return
         }
+
+        setStatus(versionSnap.data().status)
 
         const versionFiles = versionSnap.data().files || []
         setFiles(versionFiles)
@@ -153,6 +156,7 @@ export default function ProjectDetails() {
                 <div>
                     <h2 className='text-2xl font-bold'>{projectName}</h2>
                     <h4 className='text-sm'>{version}</h4>
+                    <p>{status}</p>
                 </div>
                 {files.length === 0 &&
                     <div className='flex flex-col gap-2'>
@@ -195,15 +199,15 @@ export default function ProjectDetails() {
             </div>
             <h2>Requirements</h2>
             {requirements.length > 0 ? (
-                <ul>
+                <div className='h-[400px] overflow-y-auto'>
                     {requirements.map(r => (
-                        <li
+                        <div
                             key={r.requirement_id}
                             onClick={() => { }}>
                             {r.requirement}
-                        </li>
+                        </div>
                     ))}
-                </ul>
+                </div>
             ) : (
                 <p>No requirements found.</p>
             )}
