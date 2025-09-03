@@ -29,6 +29,7 @@ export default function DetailsBanner() {
     const [uploadedFiles, setUploadedFiles] = useState<any[]>([])
     const [status, setStatus] = useState('')
     const [versionFiles, setVersionFiles] = useState<any[]>([])
+    const [uploadLoading, setUploadLoading] = useState(false)
 
     async function fetchProjectName() {
         if (!projectId) {
@@ -59,7 +60,7 @@ export default function DetailsBanner() {
             router.push('/projects')
             return
         }
-        
+
         const versionDocRef = doc(firestoreDb, 'projects', projectId, 'versions', version)
 
         const unsubscribe = onSnapshot(versionDocRef, (docSnapshot) => {
@@ -137,54 +138,57 @@ export default function DetailsBanner() {
 
     return (
         <div className='w-full h-[150px] sticky top-0 flex gap-40 items-center p-10 bg-gray-500 text-color-primary-contrast'>
-            <div>
-                <h2 className='text-2xl font-bold'>{projectName}</h2>
-                <h4 className='text-sm'>{version}</h4>
-                <p>{status}</p>
-            </div>
-            {versionFiles.length === 0 &&
-                <div className='flex flex-col gap-2'>
-                    <label htmlFor='files' className='w-fit bg-primary-contrast text-color-primary-contrast rounded-full p-2 cursor-pointer'>
-                        Upload Files
-                    </label>
-                    <input
-                        type='file'
-                        id='files'
-                        multiple
-                        required
-                        onChange={handleFileUpload}
-                        accept='.pdf,.doc,.docx,.xls,.xlsx,.csv'
-                        className='hidden'
-                    />
-                    <div className='flex flex-col gap-2 max-h-[100px] overflow-y-auto scrollbar'>
-                        {uploadedFiles.map(file => (
-                            <div key={file.name}>
-                                {file.name}
-                            </div>
-                        ))}
+            {projectName &&
+                <>
+                    <div>
+                        <h2 className='text-2xl font-bold'>{projectName}</h2>
+                        <h4 className='text-sm'>{version}</h4>
+                        <p>{status}</p>
                     </div>
-                    {uploadedFiles.length > 0 &&
-                        <button
-                            className='w-fit bg-secondary text-color-secondary rounded-full p-2 mt-2 cursor-pointer'
-                            onClick={() => handleSubmit()}
-                        >
-                            Submit
-                        </button>}
-                </div>}
-            {versionFiles.length > 0 &&
-                <div>
-                    <h4 className='font-semibold'>Uploaded Files:</h4>
-                    <ul>
-                        {versionFiles.map(file => (
-                            <li
-                                key={file.name}
-                                className='list-disc ml-5'
-                            >
-                                {file.name}
-                            </li>
-                        ))}
-                    </ul>
-                </div>}
+                    {versionFiles.length === 0 &&
+                        <div className='flex flex-col gap-2'>
+                            <label htmlFor='files' className='w-fit bg-primary-contrast text-color-primary-contrast rounded-full p-2 cursor-pointer'>
+                                Upload Files
+                            </label>
+                            <input
+                                type='file'
+                                id='files'
+                                multiple
+                                required
+                                onChange={handleFileUpload}
+                                accept='.pdf,.doc,.docx,.xls,.xlsx,.csv'
+                                className='hidden'
+                            />
+                            <div className='flex flex-col gap-2 max-h-[100px] overflow-y-auto scrollbar'>
+                                {uploadedFiles.map(file => (
+                                    <div key={file.name}>
+                                        {file.name}
+                                    </div>
+                                ))}
+                            </div>
+                            {uploadedFiles.length > 0 &&
+                                <button
+                                    className='w-fit bg-secondary text-color-secondary rounded-full p-2 mt-2 cursor-pointer'
+                                    onClick={() => handleSubmit()}
+                                >
+                                    Submit
+                                </button>}
+                        </div>}
+                    {versionFiles.length > 0 &&
+                        <div>
+                            <h4 className='font-semibold'>Uploaded Files:</h4>
+                            <ul>
+                                {versionFiles.map(file => (
+                                    <li
+                                        key={file.name}
+                                        className='list-disc ml-5'
+                                    >
+                                        {file.name}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>}
+                </>}
         </div>
     )
 }
