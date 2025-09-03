@@ -37,21 +37,29 @@ export default function DetailsBanner() {
         }
 
         const projectRef = doc(firestoreDb, 'projects', projectId)
-        const projectSnap = await getDoc(projectRef)
 
-        if (!projectSnap.exists()) {
-            setError('Project not found!')
-            setTimeout(() => {
-                router.push('/projects')
-            }, 2000)
-            return
-        }
+        const unsubscribe = onSnapshot(projectRef, (docSnapshot) => {
+            if (docSnapshot.exists()) {
+                const data = docSnapshot.data()
+                setProjectName(data.toolProjectName || '')
+            } else {
+                setError('Project not found!')
+                setTimeout(() => {
+                    router.push('/projects')
+                }, 2000)
+                return
+            }
+        })
 
-        const projectData = projectSnap.data()
-        setProjectName(projectData.toolProjectName)
+        return () => unsubscribe()
     }
 
     async function fetchVersion() {
+        if (!projectId || !version) {
+            router.push('/projects')
+            return
+        }
+        
         const versionDocRef = doc(firestoreDb, 'projects', projectId, 'versions', version)
 
         const unsubscribe = onSnapshot(versionDocRef, (docSnapshot) => {
@@ -59,6 +67,12 @@ export default function DetailsBanner() {
                 const data = docSnapshot.data();
                 setStatus(data.status || 'Unknown')
                 setVersionFiles(data.files || [])
+            } else {
+                setError('Version not found!')
+                setTimeout(() => {
+                    router.push('/projects')
+                }, 2000)
+                return
             }
         })
 
@@ -118,6 +132,7 @@ export default function DetailsBanner() {
 
     useEffect(() => {
         fetchProjectName()
+        fetchVersion()
     }, [projectId, version])
 
     return (
