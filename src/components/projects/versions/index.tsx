@@ -11,6 +11,7 @@ export default function ProjectVersions() {
     const router = useRouter()
     const searchParams = useSearchParams()
     const projectId = searchParams.get('projectId')
+    const [latestVersion, setLatestVersion] = useState('')
     const [versions, setVersions] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState('')
@@ -42,14 +43,7 @@ export default function ProjectVersions() {
             }
 
             const projectData = projectSnap.data()
-            if (projectData.uid !== user.uid) {
-                setError('Permission denied: User does not own this project.')
-                setLoading(false)
-                setTimeout(() => {
-                    router.push('/projects')
-                }, 2000)
-                return
-            }
+            setLatestVersion(projectData.latest_version)
             
             const versionsRef = collection(firestoreDb, 'projects', projectId, 'versions')
             const q = query(versionsRef)
@@ -80,9 +74,9 @@ export default function ProjectVersions() {
                         <a
                             key={ind}
                             href={`/projects/versions/details?projectId=${projectId}&version=${ver.version}`}
-                            className='w-[50%] border text-color-primary/80 cursor-pointer p-4 rounded-md shadow-md hover:shadow-lg'
+                            className='w-[50%] text-color-primary/80 cursor-pointer p-4 rounded-md shadow-md hover:shadow-lg'
                         >
-                            {ver.version}
+                            {ver.version} <span className='text-color-primary/50'>{ver.version === latestVersion ? '(Latest)' : ''}</span>
                         </a>
                     ))
                 ) : (

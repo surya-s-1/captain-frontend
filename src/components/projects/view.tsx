@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { getCurrentUser } from '@/lib/firebase/utilities'
 
@@ -22,6 +23,7 @@ const NEXT_PUBLIC_TOOL_ENDPOINT = process.env.NEXT_PUBLIC_TOOL_ENDPOINT || ''
 
 export function ProjectView({ tool, loading, error, projects }: ProjectViewInput) {
     const router = useRouter()
+    const [connectLoading, setConnectLoading] = useState(false)
     
     async function connectProject(projectName: string, projectKey: string) {
         try {
@@ -30,6 +32,8 @@ export function ProjectView({ tool, loading, error, projects }: ProjectViewInput
 
             const token = await user.getIdToken()
             if (!token) return
+
+            setConnectLoading(true)
 
             const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/connect`, {
                 method: 'POST',
@@ -47,6 +51,8 @@ export function ProjectView({ tool, loading, error, projects }: ProjectViewInput
             if (response.ok) {
                 console.log(await response.text())
             }
+
+            setConnectLoading(false)
         } catch (e) {
             console.error(e)
         }
@@ -65,7 +71,7 @@ export function ProjectView({ tool, loading, error, projects }: ProjectViewInput
                     projects.map((project, idx) => (
                         <a
                             key={idx}
-                            href={project.connected ? `/projects/versions?projectId=${project.project_id}&version=${project.latest_version}` : ''}
+                            href={project.connected ? `/projects/versions/details?projectId=${project.project_id}&version=${project.latest_version}` : ''}
                             className='flex flex-col justify-between gap-8 cursor-pointer p-4 rounded-md shadow-md'
                         >
                             <h2 className='text-xl'>{project.name}</h2>
@@ -73,11 +79,13 @@ export function ProjectView({ tool, loading, error, projects }: ProjectViewInput
                                 {project.connected ?
                                 <>
                                     <button
-                                        onClick={() => {
+                                        className='text-color-primary/80 cursor-pointer font-sans font-semibold'
+                                        onClick={(e) => {
+                                            e.preventDefault()
                                             router.push(`/projects/versions?projectId=${project.project_id}`)
                                         }}
                                     >
-                                        See versions
+                                        See versions {'>>'}
                                     </button>
                                     <span
                                         className='w-fit text-success p-2'
@@ -91,6 +99,7 @@ export function ProjectView({ tool, loading, error, projects }: ProjectViewInput
                                         e.preventDefault()
                                         connectProject(project.name, project.key)
                                     }}
+                                    disabled={connectLoading}
                                 >
                                     Connect
                                 </button>
