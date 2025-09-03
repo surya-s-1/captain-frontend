@@ -7,6 +7,7 @@ import { getCurrentUser } from '@/lib/firebase/utilities'
 export interface Project {
     name: string
     key: string
+    imageUrl: string
     connected: boolean
     project_id: string | null
     latest_version: string | null
@@ -74,7 +75,10 @@ export function ProjectView({ tool, loading, error, projects }: ProjectViewInput
                             href={project.connected ? `/projects/versions/details?projectId=${project.project_id}&version=${project.latest_version}` : ''}
                             className='flex flex-col justify-between gap-8 cursor-pointer p-4 rounded-md shadow-md'
                         >
-                            <h2 className='text-xl'>{project.name}</h2>
+                            <div className='w-full flex items-center gap-4'>
+                                <img src={project.imageUrl} className='h-8 rounded-full' />
+                                <h2 className='text-xl'>{project.name}</h2>
+                            </div>
                             <div className={`w-full flex items-center justify-between ${!project.connected && 'flex-row-reverse'}`}>
                                 {project.connected ?
                                 <>

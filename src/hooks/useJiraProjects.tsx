@@ -18,6 +18,7 @@ interface JiraProject extends JiraProjectResponse {
     connected: boolean
     project_id: string | null
     latest_version: string | null
+    imageUrl: string
 }
 
 export function useJiraProjects(connectedProjects: ConnectedProject[]) {
@@ -48,7 +49,8 @@ export function useJiraProjects(connectedProjects: ConnectedProject[]) {
                         ...d,
                         connected: false,
                         project_id: null,
-                        latest_version: null
+                        latest_version: null,
+                        imageUrl: (d.avatarUrls as any)['32x32'] || ''
                     }
                 ))
                 )
