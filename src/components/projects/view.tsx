@@ -26,28 +26,34 @@ export function ProjectView({ tool, loading, error, projects }: ProjectViewInput
                     projects.map((project, idx) => (
                         <a
                             key={idx}
-                            href={project.project_id && `/projects/versions?projectId=${project.project_id}`}
-                            className='flex flex-col justify-between gap-8 border cursor-pointer p-4 rounded-md shadow-md'
+                            href={project.connected && `/projects/versions?projectId=${project.project_id}&version=${project.latest_version}`}
+                            className='flex flex-col justify-between gap-8 cursor-pointer p-4 rounded-md shadow-md'
                         >
-                            <h2 className='text-xl font-semibold'>{project.name}</h2>
-                            {
-                                project.connected ? (
+                            <h2 className='text-xl'>{project.name}</h2>
+                            <div className={`w-full flex items-center justify-between ${!project.connected && 'flex-row-reverse'}`}>
+                                {project.connected ?
+                                <>
+                                    <a
+                                        href={`/projects/versions?projectId=${project.project_id}`}
+                                    >
+                                        See versions
+                                    </a>
                                     <span
                                         className='w-fit text-success p-2'
                                     >
                                         Connected
                                     </span>
-                                ) : (
-                                    <button
-                                        className='w-fit text-link font-semibold p-2 cursor-pointer'
-                                        onClick={(e) => {
-                                            e.preventDefault()
-                                        }}
-                                    >
-                                        Connect
-                                    </button>
-                                )
-                            }
+                                </>:
+                                <button
+                                    className='w-fit text-link font-sans font-semibold p-2 cursor-pointer'
+                                    onClick={(e) => {
+                                        e.preventDefault()
+                                    }}
+                                >
+                                    Connect
+                                </button>
+                                }
+                            </div>
                         </a>
                     ))}
             </div>

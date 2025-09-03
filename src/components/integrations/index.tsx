@@ -90,7 +90,7 @@ export default function Integrations() {
                             </span>
                     ) : (
                             <button
-                                className='text-link font-semibold cursor-pointer'
+                                className='text-link font-sans font-semibold cursor-pointer'
                                 onClick={() => connectJira()}
                             >
                                 Connect

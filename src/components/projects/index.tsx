@@ -37,12 +37,6 @@ export default function Projects() {
 
     const { projects: jiraProjects, loading: jiraLoading, error: jiraError } = useJiraProjects(connectedProjects)
 
-    useEffect(() => {
-        console.log('jiraProjects', jiraProjects)
-        console.log('jiraLoading', jiraLoading)
-        console.log('jiraError', jiraError)
-    }, [jiraProjects, jiraLoading, jiraError])
-
     return (
         <div className='w-full flex flex-col items-start p-8'>
             <ProjectView
