@@ -12,7 +12,9 @@ interface Requirement {
     'requirement': string,
     'requirement_type': string,
     'sources': string[],
-    'regulations': string[]
+    'regulations': string[],
+    'verified': boolean,
+    'deleted': boolean
 }
 
 const NEXT_PUBLIC_TOOL_ENDPOINT = process.env.NEXT_PUBLIC_TOOL_ENDPOINT || ''
@@ -40,8 +42,8 @@ export default function ProjectDetails() {
     const [uploadedFiles, setUploadedFiles] = useState<any[]>([])
     const [requirements, setRequirements] = useState<Requirement[]>([])
 
-    async function fetchRequirements() {
-        if (!projectId || !version) {
+    async function fetchProjectName() {
+        if (!projectId) {
             router.push('/projects')
             return
         }
@@ -59,23 +61,23 @@ export default function ProjectDetails() {
 
         const projectData = projectSnap.data()
         setProjectName(projectData.toolProjectName)
+    }
 
-        const versionRef = doc(firestoreDb, 'projects', projectId, 'versions', version)
-        const versionSnap = await getDoc(versionRef)
+    async function fetchVersion() {
+        const versionDocRef = doc(firestoreDb, 'projects', projectId, 'versions', version)
 
-        if (!versionSnap.exists()) {
-            setError('Version not found!')
-            setTimeout(() => {
-                router.push('/projects')
-            }, 2000)
-            return
-        }
+        const unsubscribe = onSnapshot(versionDocRef, (docSnapshot) => {
+            if (docSnapshot.exists()) {
+                const data = docSnapshot.data();
+                setStatus(data.status || 'Unknown')
+                setFiles(data.files || [])
+            }
+        })
 
-        setStatus(versionSnap.data().status)
+        return () => unsubscribe()
+    }
 
-        const versionFiles = versionSnap.data().files || []
-        setFiles(versionFiles)
-
+    async function fetchRequirements() {
         const reqQuery = query(
             collection(firestoreDb, 'projects', projectId, 'versions', version, 'requirements'),
             where('deleted', '==', false)
@@ -83,7 +85,6 @@ export default function ProjectDetails() {
 
         const reqUnsubscribe = onSnapshot(reqQuery, (snapshot) => {
             const reqsList = snapshot.docs.map(d => ({ ...d.data() })) as Requirement[]
-            console.log(reqsList)
             setRequirements(reqsList)
         })
 
@@ -91,12 +92,23 @@ export default function ProjectDetails() {
     }
 
     useEffect(() => {
-        const loadData = async () => {
+        const loadRequirements = async () => {
             const unsubscribe = await fetchRequirements()
             return unsubscribe
         }
 
-        loadData()
+        const loadProjectName = async () => {
+            await fetchProjectName()
+        }
+
+        const loadStatus = async () => {
+            const unsubscribe = await fetchVersion()
+            return unsubscribe
+        }
+
+        loadProjectName()
+        loadStatus()
+        loadRequirements()
     }, [projectId, version])
 
     const handleFileUpload = (e?: React.ChangeEvent<HTMLInputElement>) => {
@@ -151,8 +163,8 @@ export default function ProjectDetails() {
     }
 
     return (
-        <div className='w-full'>
-            <div className='w-full h-[200px] flex gap-40 items-center p-10 bg-primary-contrast/50 text-color-primary-contrast'>
+        <div className='w-full h-full overflow-y-auto scrollbar'>
+            <div className='w-full h-[150px] sticky top-0 flex gap-40 items-center p-10 bg-gray-500 text-color-primary-contrast'>
                 <div>
                     <h2 className='text-2xl font-bold'>{projectName}</h2>
                     <h4 className='text-sm'>{version}</h4>
@@ -189,17 +201,22 @@ export default function ProjectDetails() {
                     </div>}
                 {files.length > 0 &&
                     <div>
-                        <h4>Uploaded Files:</h4>
-                        {files.map(file => (
-                            <div key={file.name}>
-                                {file.name}
-                            </div>
-                        ))}
+                        <h4 className='font-semibold'>Uploaded Files:</h4>
+                        <ul>
+                            {files.map(file => (
+                                <li 
+                                    key={file.name}
+                                    className='list-disc ml-5'
+                                >
+                                    {file.name}
+                                </li>
+                            ))}
+                        </ul>
                     </div>}
             </div>
             <h2>Requirements</h2>
             {requirements.length > 0 ? (
-                <div className='h-[400px] overflow-y-auto'>
+                <div>
                     {requirements.map(r => (
                         <div
                             key={r.requirement_id}
