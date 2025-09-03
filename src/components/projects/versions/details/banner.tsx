@@ -29,7 +29,7 @@ export default function DetailsBanner() {
     const [uploadedFiles, setUploadedFiles] = useState<any[]>([])
     const [status, setStatus] = useState('')
     const [versionFiles, setVersionFiles] = useState<any[]>([])
-    const [uploadLoading, setUploadLoading] = useState(false)
+    const [submitLoading, setSubmitLoading] = useState(false)
 
     async function fetchProjectName() {
         if (!projectId) {
@@ -65,7 +65,8 @@ export default function DetailsBanner() {
 
         const unsubscribe = onSnapshot(versionDocRef, (docSnapshot) => {
             if (docSnapshot.exists()) {
-                const data = docSnapshot.data();
+                const data = docSnapshot.data()
+                console.log(data)
                 setStatus(data.status || 'Unknown')
                 setVersionFiles(data.files || [])
             } else {
@@ -89,8 +90,9 @@ export default function DetailsBanner() {
 
             const validFiles = files.filter(file => (file.size <= maxSize && VALID_FILE_TYPES.includes(file.type)))
 
-            if (validFiles.length < files.length) {
-                alert('Some files were not uploaded due to type/size restrictions.')
+            if ((validFiles.length < files.length) || (validFiles.length > 5)) {
+                alert('You can upload only 5 files each upto 30 MB')
+                return
             }
 
             setUploadedFiles(prev => [...prev, ...validFiles])
@@ -98,8 +100,12 @@ export default function DetailsBanner() {
     }
 
     async function handleSubmit() {
-        if (uploadedFiles.length > 0 && uploadedFiles.length < 5) {
+        if (uploadedFiles.length > 0 && uploadedFiles.length <= 5 && !submitLoading) {
+
+            setSubmitLoading(true)
+
             const formData = new FormData()
+
             uploadedFiles.forEach(file => {
                 formData.append('files', file)
             })
@@ -123,10 +129,13 @@ export default function DetailsBanner() {
                     throw new Error('File upload failed')
                 }
 
-                const data = await response.text()
-                console.log('Upload successful:', data)
+                setSubmitLoading(false)
+
             } catch (error) {
                 console.error('Error uploading files:', error)
+
+                setError('Error uploading files. Please try again.')
+                setSubmitLoading(false)
             }
         }
     }
@@ -142,7 +151,7 @@ export default function DetailsBanner() {
                 <>
                     <div>
                         <h2 className='text-2xl font-bold'>{projectName}</h2>
-                        <h4 className='text-sm'>{version}</h4>
+                        <h4 className='text-sm'>Version: {version}</h4>
                         <p>{status}</p>
                     </div>
                     {versionFiles.length === 0 &&
@@ -168,8 +177,9 @@ export default function DetailsBanner() {
                             </div>
                             {uploadedFiles.length > 0 &&
                                 <button
-                                    className='w-fit bg-secondary text-color-secondary rounded-full p-2 mt-2 cursor-pointer'
+                                className={`w-fit bg-secondary text-color-secondary rounded-full p-2 mt-2 cursor-pointer ${ submitLoading && 'bg-secondary/50' }`}
                                     onClick={() => handleSubmit()}
+                                    disabled={submitLoading}
                                 >
                                     Submit
                                 </button>}
