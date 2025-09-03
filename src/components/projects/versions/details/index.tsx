@@ -4,6 +4,8 @@ import { useEffect, useState, useRef } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { collection, doc, getDoc, onSnapshot, query, where } from 'firebase/firestore'
 
+import { Markdown } from '@/lib/utility/Markdown'
+
 import { firestoreDb } from '@/lib/firebase'
 import { getCurrentUser } from '@/lib/firebase/utilities'
 
@@ -214,20 +216,25 @@ export default function ProjectDetails() {
                         </ul>
                     </div>}
             </div>
-            <h2>Requirements</h2>
-            {requirements.length > 0 ? (
-                <div>
-                    {requirements.map(r => (
-                        <div
-                            key={r.requirement_id}
-                            onClick={() => { }}>
-                            {r.requirement}
-                        </div>
-                    ))}
-                </div>
-            ) : (
-                <p>No requirements found.</p>
-            )}
+            <div className='p-8 mb-16'>
+                <h2 className='font-bold text-2xl mb-8'>Requirements</h2>
+                {requirements.length > 0 ? (
+                    <div className='w-full flex flex-col gap-4'>
+                        {requirements.map(r => (
+                            <div
+                                className='p-2 shadow-xl border'
+                                key={r.requirement_id}
+                                onClick={() => { }}
+                            >
+                                <h2 className='font-semibold text-color-primary/50'>{r.requirement_id}</h2>
+                                <Markdown text={r.requirement} />
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <p>No requirements found.</p>
+                )}
+            </div>
         </div>
     )
 }
