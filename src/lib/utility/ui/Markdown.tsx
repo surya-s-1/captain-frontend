@@ -33,6 +33,11 @@ const componentPlugin = {
         <h2 className='font-semibold text-lg'>
             {children}
         </h2>
+    ),
+    ul: ({ children }) => (
+        <ul className='list-disc ml-5'>
+            {children}
+        </ul>
     )
 }
 

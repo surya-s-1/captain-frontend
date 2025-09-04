@@ -2,11 +2,14 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { getDoc, doc, onSnapshot } from 'firebase/firestore'
+import { doc, onSnapshot } from 'firebase/firestore'
 
-import { STATUS_MESSAGES } from '@/lib/utility'
+import { Modal } from '@/lib/utility/ui/Modal'
+
+import { STATUS_MESSAGES, STATUS_SHOW_LOADER } from '@/lib/utility'
 import { firestoreDb } from '@/lib/firebase'
 import { getCurrentUser } from '@/lib/firebase/utilities'
+import { Loader2 } from 'lucide-react'
 
 const NEXT_PUBLIC_TOOL_ENDPOINT = process.env.NEXT_PUBLIC_TOOL_ENDPOINT || ''
 const VALID_FILE_TYPES = [
@@ -27,10 +30,12 @@ export default function DetailsBanner() {
 
     const [error, setError] = useState<string>('')
     const [projectName, setProjectName] = useState<string>('')
+    const [manualVerification, setManualVerification] = useState<boolean>(true)
     const [uploadedFiles, setUploadedFiles] = useState<any[]>([])
     const [status, setStatus] = useState('')
     const [versionFiles, setVersionFiles] = useState<any[]>([])
     const [submitLoading, setSubmitLoading] = useState(false)
+    const [isModalOpen, setIsModalOpen] = useState(false)
 
     async function fetchProjectName() {
         if (!projectId) {
@@ -107,6 +112,8 @@ export default function DetailsBanner() {
 
             const formData = new FormData()
 
+            formData.append('manual_verification', String(manualVerification))
+
             uploadedFiles.forEach(file => {
                 formData.append('files', file)
             })
@@ -131,12 +138,16 @@ export default function DetailsBanner() {
                 }
 
                 setSubmitLoading(false)
+                setIsModalOpen(false)
+                setUploadedFiles([])
 
             } catch (error) {
                 console.error('Error uploading files:', error)
 
                 setError('Error uploading files. Please try again.')
                 setSubmitLoading(false)
+                setIsModalOpen(false)
+                setUploadedFiles([])
             }
         }
     }
@@ -147,44 +158,67 @@ export default function DetailsBanner() {
     }, [projectId, version])
 
     return (
-        <div className='w-full h-[150px] sticky top-0 flex gap-40 items-center p-10 bg-gray-500 text-color-primary-contrast'>
+        <div className='w-full h-[150px] flex items-center justify-between sticky top-0 p-10 bg-gray-500 text-color-primary-contrast z-10'>
             {projectName &&
                 <>
                     <div>
                         <h2 className='text-2xl font-bold'>{projectName}</h2>
                         <h4 className='text-sm'>Version: {version}</h4>
-                        <p>{STATUS_MESSAGES[status] || status}</p>
+                        <div className='flex items-center gap-2 mt-2'>
+                            Status: {STATUS_MESSAGES[status] || status}
+                            {STATUS_SHOW_LOADER[status] && <Loader2 className='animate-spin' size={20} />}
+                        </div>
                     </div>
-                {(versionFiles.length === 0 || status.startsWith('ERR')) &&
-                        <div className='flex flex-col gap-2'>
-                            <label htmlFor='files' className='w-fit bg-primary-contrast text-color-primary-contrast rounded-full p-2 cursor-pointer'>
-                            Upload Files {status.startsWith('ERR') && <span>(Retry)</span>}
-                            </label>
-                            <input
-                                type='file'
-                                id='files'
-                                multiple
-                                required
-                                onChange={handleFileUpload}
-                                accept='.pdf,.doc,.docx,.xls,.xlsx,.csv'
-                                className='hidden'
-                            />
-                            <div className='flex flex-col gap-2 max-h-[100px] overflow-y-auto scrollbar'>
-                                {uploadedFiles.map(file => (
-                                    <div key={file.name}>
-                                        {file.name}
+                    {(versionFiles.length === 0 || status.startsWith('ERR')) && (
+                        <div>
+                            <button
+                                className='w-fit bg-primary-contrast text-color-primary-contrast rounded-full p-2 cursor-pointer'
+                                onClick={() => setIsModalOpen(true)}
+                            >
+                                Upload Requirements {status.startsWith('ERR') && <span>(Retry)</span>}
+                            </button>
+                            <Modal isOpen={isModalOpen} closeModal={() => setIsModalOpen(false)}>
+                                <h2 className='text-xl font-bold mb-4'>Upload Requirements</h2>
+                                <div className='flex flex-col gap-4'>
+                                    <label htmlFor='files' className='w-fit bg-primary-contrast text-color-primary-contrast rounded-full p-2 cursor-pointer'>
+                                        Select Files
+                                    </label>
+                                    <input
+                                        type='file'
+                                        id='files'
+                                        multiple
+                                        required
+                                        onChange={handleFileUpload}
+                                        accept='.pdf,.doc,.docx,.xls,.xlsx,.csv'
+                                        className='hidden'
+                                    />
+                                    <div className='flex flex-col gap-2 max-h-[100px] overflow-y-auto scrollbar'>
+                                        {uploadedFiles.map(file => (
+                                            <div key={file.name}>
+                                                {file.name}
+                                            </div>
+                                        ))}
                                     </div>
-                                ))}
-                            </div>
-                            {uploadedFiles.length > 0 &&
-                                <button
-                                className={`w-fit bg-secondary text-color-secondary rounded-full p-2 mt-2 cursor-pointer ${ submitLoading && 'bg-secondary/50' }`}
-                                    onClick={() => handleSubmit()}
-                                    disabled={submitLoading}
-                                >
-                                    Submit
-                                </button>}
-                        </div>}
+                                    <div className='flex items-center gap-2'>
+                                        <input
+                                            type='checkbox'
+                                            id='manualVerification'
+                                            checked={manualVerification}
+                                            onChange={(e) => setManualVerification(e.target.checked)}
+                                        />
+                                        <label htmlFor='manualVerification'>Manual Verification</label>
+                                    </div>
+                                    {uploadedFiles.length > 0 &&
+                                        <button
+                                            className={`w-fit bg-primary-contrast text-color-primary-contrast rounded-full p-2 mt-2 cursor-pointer ${submitLoading && 'bg-primary-contrast/50'}`}
+                                            onClick={() => handleSubmit()}
+                                            disabled={submitLoading}
+                                        >
+                                            Submit
+                                        </button>}
+                                </div>
+                            </Modal>
+                        </div>)}
                     {versionFiles.length > 0 && !status.startsWith('ERR') &&
                         <div>
                             <h4 className='font-semibold'>Uploaded Files:</h4>

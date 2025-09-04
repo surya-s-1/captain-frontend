@@ -5,9 +5,13 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { collection, doc, onSnapshot, query, where } from 'firebase/firestore'
 
 import DetailsBanner from '@/components/projects/versions/details/banner'
+import { SquareX } from 'lucide-react'
 
-import { Markdown } from '@/lib/utility/Markdown'
+import { Markdown } from '@/lib/utility/ui/Markdown'
+import { Notice } from '@/lib/utility/ui/Notice'
+
 import { firestoreDb } from '@/lib/firebase'
+import { getCurrentUser } from '@/lib/firebase/utilities'
 
 interface Requirement {
     requirement_id: string,
@@ -28,6 +32,7 @@ interface TestCase {
     requirement_id: string
 }
 
+const NEXT_PUBLIC_TOOL_ENDPOINT = process.env.NEXT_PUBLIC_TOOL_ENDPOINT || ''
 
 export default function ProjectDetails() {
     const router = useRouter()
@@ -41,6 +46,10 @@ export default function ProjectDetails() {
     const [requirements, setRequirements] = useState<Requirement[]>([])
     const [testcases, setTestcases] = useState<TestCase[]>([])
     const [tab, setTab] = useState<'requirements' | 'testcases'>('requirements')
+    const [submitLoading, setSubmitLoading] = useState(false)
+    const [deleteLoading, setDeleteLoading] = useState(false)
+
+    const HIDE_TABS = status === 'CREATED' || status.startsWith('ERR')
 
     async function fetchVersion() {
         if (!projectId || !version) {
@@ -82,7 +91,8 @@ export default function ProjectDetails() {
 
     async function fetchTestcases() {
         const reqQuery = query(
-            collection(firestoreDb, 'projects', projectId, 'versions', version, 'testcases')
+            collection(firestoreDb, 'projects', projectId, 'versions', version, 'testcases'),
+            where('deleted', '==', false)
         )
 
         const testsUnsubscribe = onSnapshot(reqQuery, (snapshot) => {
@@ -99,24 +109,136 @@ export default function ProjectDetails() {
         fetchTestcases()
     }, [projectId, version])
 
+    async function confirmRequirements() {
+        try {
+            setSubmitLoading(true)
+
+            const user = await getCurrentUser()
+            if (!user) return
+
+            const token = await user.getIdToken()
+            if (!token) return
+
+            const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/${projectId}/v/${version}/requirements/confirm`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+
+            if (!response.ok) {
+                console.error('Could not confirm requirements')
+            } else {
+                setTab('testcases')
+            }
+
+            setSubmitLoading(false)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async function confirmTestcases() {
+        try {
+            setSubmitLoading(true)
+
+            const user = await getCurrentUser()
+            if (!user) return
+
+            const token = await user.getIdToken()
+            if (!token) return
+
+            setTimeout(async () => {
+                const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/${projectId}/v/${version}/testcases/confirm`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+
+                if (!response.ok) {
+                    console.error('Could not confirm testcases')
+                }
+
+                setSubmitLoading(false)
+            }, 2000)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async function deleteRequirement(reqId: string) {
+        try {
+            setDeleteLoading(true)
+
+            const user = await getCurrentUser()
+            if (!user) return
+
+            const token = await user.getIdToken()
+            if (!token) return
+
+            const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/${projectId}/v/${version}/r/${reqId}/delete`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+
+            if (!response.ok) {
+                console.error('Could not delete requirement')
+            }
+
+            setDeleteLoading(false)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async function deleteTestcase(tcId: string) {
+        try {
+            setDeleteLoading(true)
+
+            const user = await getCurrentUser()
+            if (!user) return
+
+            const token = await user.getIdToken()
+            if (!token) return
+
+            const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/${projectId}/v/${version}/t/${tcId}/delete`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+
+            if (!response.ok) {
+                console.error('Could not delete testcase')
+            }
+
+            setDeleteLoading(false)
+        } catch (error) {
+            console.error(error)
+        }
+    }
 
     return (
         <div className='w-full h-full overflow-y-auto scrollbar'>
             <DetailsBanner />
-            <div className='w-ful sticky top-[150px] backdrop-blur-xs bg-white/30 flex items-center justify-center gap-8 py-4'>
-                <button
-                    className={`p-2 rounded ${tab === 'requirements' ? 'bg-primary-contrast text-color-primary-contrast' : 'cursor-pointer'}`}
-                    onClick={() => setTab('requirements')}
-                >
-                    Requirements
-                </button>
-                <button
-                    className={`p-2 rounded ${tab === 'testcases' ? 'bg-primary-contrast text-color-primary-contrast' : 'cursor-pointer'}`}
-                    onClick={() => setTab('testcases')}
-                >
-                    Test Cases
-                </button>
-            </div>
+            {!HIDE_TABS &&
+                <div className='w-ful sticky top-[150px] backdrop-blur-xs bg-white/30 flex items-center justify-center gap-8 py-2 shadow-xl z-10'>
+                    <button
+                        className={`p-2 rounded ${tab === 'requirements' ? 'bg-primary-contrast text-color-primary-contrast' : 'cursor-pointer'}`}
+                        onClick={() => setTab('requirements')}
+                    >
+                        Requirements
+                    </button>
+                    <button
+                        className={`p-2 rounded ${tab === 'testcases' ? 'bg-primary-contrast text-color-primary-contrast' : 'cursor-pointer'}`}
+                        onClick={() => setTab('testcases')}
+                    >
+                        Test Cases
+                    </button>
+                </div>}
             <div className='p-8 mb-16'>
                 {
                     tab === 'requirements' &&
@@ -124,13 +246,48 @@ export default function ProjectDetails() {
                         {requirements.length > 0 ? (
                             <div className='w-full flex flex-col gap-4'>
                                 {requirements.map(r => (
-                                    <div
-                                        className='p-2 shadow-xl border'
-                                        key={r.requirement_id}
-                                        onClick={() => { }}
-                                    >
+                                    <div key={r.requirement_id} className='relative p-2 shadow-xl border'>
+                                        <button
+                                            className='text-red-500 absolute top-2 right-2 cursor-pointer'
+                                            onClick={() => deleteRequirement(r.requirement_id)}
+                                            disabled={deleteLoading}
+                                        >
+                                            Remove
+                                        </button>
                                         <h2 className='font-semibold text-color-primary/50'>{r.requirement_id}</h2>
                                         <Markdown text={r.requirement} />
+                                        <div className='flex flex-col gap-2 mt-4'>
+                                            {r.sources && r.sources.length > 0 && (
+                                                <div>
+                                                    <h3 className='font-semibold'>Sources</h3>
+                                                    <ul className='flex flex-col gap-2'>
+                                                        {r.sources.map((source, index) => (
+                                                            <li
+                                                                key={index}
+                                                                className='list-disc ml-5'
+                                                            >
+                                                                {source.split('_')?.[1] || source.split('_')?.[0]}
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+                                            )}
+                                            {r.regulations && r.regulations.length > 0 && (
+                                                <div>
+                                                    <h3 className='font-semibold'>Regulations</h3>
+                                                    <ul className='flex flex-col gap-2'>
+                                                        {r.regulations.map((regulation, index) => (
+                                                            <li
+                                                                key={index}
+                                                                className='list-disc ml-5'
+                                                            >
+                                                                {regulation}
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                 ))}
                             </div>
@@ -145,15 +302,24 @@ export default function ProjectDetails() {
                         {testcases.length > 0 ? (
                             <div className='w-full flex flex-col gap-4'>
                                 {testcases.map(t => (
-                                    <div
-                                        className='p-2 shadow-xl border'
-                                        key={t.testcase_id}
-                                        onClick={() => { }}
-                                    >
+                                    <div key={t.testcase_id} className='relative p-2 shadow-xl border'>
+                                        <button
+                                            className='text-red-500 absolute top-2 right-2 cursor-pointer'
+                                            onClick={() => deleteTestcase(t.testcase_id)}
+                                            disabled={deleteLoading}
+                                        >
+                                            Remove
+                                        </button>
                                         <h2 className='font-semibold text-color-primary/50'>{t.testcase_id}</h2>
-                                        <h2 className='text-color-primary/50'>{t.requirement_id}</h2>
+                                        <h2 className='text-color-primary/50 text-xs'>Created for requirement {t.requirement_id}</h2>
+                                        <p><b>Title:</b></p>
                                         <Markdown text={t.title} />
+                                        <p><b>Description:</b></p>
                                         <Markdown text={t.description} />
+                                        <p><b>Acceptance Criteria:</b></p>
+                                        <Markdown text={t.acceptance_criteria} />
+                                        <p><b>Priority:</b></p>
+                                        <Markdown text={t.priority} />
                                     </div>
                                 ))}
                             </div>
@@ -164,34 +330,22 @@ export default function ProjectDetails() {
                 }
             </div>
             {status === 'CONFIRM_REQ_EXTRACT_P2' && (
-                <div className='sticky bottom-0 p-4 bg-yellow-100 border-l-4 border-yellow-500 text-black flex items-center justify-between'>
-                    <div>
-                        <p className='font-semibold'>Manual Verification Selected</p>
-                        <p>Please verify the extracted requirements to go ahead with test cases creation.</p>
-                    </div>
-                    <div className='flex justify-end'>
-                        <button 
-                            className='p-2 bg-black text-white rounded cursor-pointer'
-                        >
-                            Proceed to Test Cases
-                        </button>
-                    </div>
-                </div>
+                <Notice
+                    title='Manual Verification Selected'
+                    content='Please remove any unwanted requirement from the extracted requirements and confirm to go ahead with test cases creation.'
+                    buttonLabel='Confirm'
+                    loading={submitLoading}
+                    callback={() => confirmRequirements()}
+                />
             )}
             {status === 'CONFIRM_TESTCASE_CREATION' && (
-                <div className='sticky bottom-0 p-4 bg-yellow-100 border-l-4 border-yellow-500 text-black flex items-center justify-between'>
-                    <div>
-                        <p className='font-semibold'>Verify the test cases</p>
-                        <p>Please verify the extracted test cases to go ahead with their creation in Jira.</p>
-                    </div>
-                    <div className='flex justify-end'>
-                        <button
-                            className='p-2 bg-black text-white rounded cursor-pointer'
-                        >
-                            Create on Jira
-                        </button>
-                    </div>
-                </div>
+                <Notice
+                    title='Verify the test cases'
+                    content='Please remove any unwanted test case from the proposed test cases and confirm to go ahead with their creation on Jira project.'
+                    buttonLabel='Confirm'
+                    loading={submitLoading}
+                    callback={() => confirmTestcases()}
+                />
             )}
         </div>
     )
