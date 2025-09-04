@@ -336,7 +336,7 @@ export default function ProjectDetails() {
             {status === 'CONFIRM_REQ_EXTRACT_P2' && (
                 <Notice
                     title='Manual Verification Selected'
-                    content='Please remove any unwanted requirement from the extracted requirements and confirm to go ahead with test cases creation.'
+                    content='Please remove any unwanted requirement from the extracted requirements and click confirm to go ahead with test cases creation.'
                     buttonLabel='Confirm'
                     loading={submitLoading}
                     callback={() => confirmRequirements()}
@@ -345,7 +345,7 @@ export default function ProjectDetails() {
             {status === 'CONFIRM_TESTCASE_CREATION' && (
                 <Notice
                     title='Verify the test cases'
-                    content='Please remove any unwanted test case from the proposed test cases and confirm to go ahead with their creation on Jira project.'
+                    content='Please remove any unwanted test case from the proposed test cases and click confirm to go ahead with their creation on Jira project.'
                     buttonLabel='Confirm'
                     loading={submitLoading}
                     callback={() => confirmTestcases()}
