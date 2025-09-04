@@ -11,6 +11,7 @@ import { Notice } from '@/lib/utility/ui/Notice'
 
 import { firestoreDb } from '@/lib/firebase'
 import { getCurrentUser } from '@/lib/firebase/utilities'
+import { stat } from 'fs'
 
 interface Requirement {
     requirement_id: string,
@@ -49,6 +50,8 @@ export default function ProjectDetails() {
     const [deleteLoading, setDeleteLoading] = useState(false)
 
     const HIDE_TABS = status === 'CREATED' || status.startsWith('ERR')
+    const SHOW_DEL_REQ_BTN = status === 'CONFIRM_REQ_EXTRACT_P2'
+    const SHOW_DEL_TC_BTN = status === 'CONFIRM_TESTCASE_CREATION'
 
     async function fetchVersion() {
         if (!projectId || !version) {
@@ -246,13 +249,14 @@ export default function ProjectDetails() {
                             <div className='w-full flex flex-col gap-4'>
                                 {requirements.map(r => (
                                     <div key={r.requirement_id} className='relative p-2 shadow-xl border'>
+                                        {SHOW_DEL_REQ_BTN  &&
                                         <button
                                             className='text-red-500 absolute top-2 right-2 cursor-pointer'
                                             onClick={() => deleteRequirement(r.requirement_id)}
                                             disabled={deleteLoading}
                                         >
                                             Remove
-                                        </button>
+                                        </button>}
                                         <h2 className='font-semibold text-color-primary/50'>{r.requirement_id}</h2>
                                         <Markdown text={r.requirement} />
                                         <div className='flex flex-col gap-2 mt-4'>
@@ -302,13 +306,14 @@ export default function ProjectDetails() {
                             <div className='w-full flex flex-col gap-4'>
                                 {testcases.map(t => (
                                     <div key={t.testcase_id} className='relative p-2 shadow-xl border'>
+                                        {SHOW_DEL_TC_BTN &&
                                         <button
                                             className='text-red-500 absolute top-2 right-2 cursor-pointer'
                                             onClick={() => deleteTestcase(t.testcase_id)}
                                             disabled={deleteLoading}
                                         >
                                             Remove
-                                        </button>
+                                        </button>}
                                         <h2 className='font-semibold text-color-primary/50'>{t.testcase_id}</h2>
                                         <h2 className='text-color-primary/50 text-xs'>Created for requirement {t.requirement_id}</h2>
                                         <p><b>Title:</b></p>
