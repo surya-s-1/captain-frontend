@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { Loader2 } from 'lucide-react'
+
 import { getCurrentUser } from '@/lib/firebase/utilities'
 
 export interface Project {
@@ -66,7 +68,7 @@ export function ProjectView({ tool, loading, error, projects }: ProjectViewInput
                 {(loading || error) ?
                     <div>
                         {loading ?
-                            <p>Loading...</p> :
+                            <div className='flex items-center gap-2'>Loading <Loader2 className='animate-spin' size={20} /></div> :
                             <p className='text-error font-semibold'>{error}</p>}
                     </div> :
                     projects.map((project, idx) => (

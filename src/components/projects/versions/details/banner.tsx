@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { Loader2 } from 'lucide-react'
 import { doc, onSnapshot } from 'firebase/firestore'
 
 import { Modal } from '@/lib/utility/ui/Modal'
@@ -9,7 +10,6 @@ import { Modal } from '@/lib/utility/ui/Modal'
 import { STATUS_MESSAGES, STATUS_SHOW_LOADER } from '@/lib/utility'
 import { firestoreDb } from '@/lib/firebase'
 import { getCurrentUser } from '@/lib/firebase/utilities'
-import { Loader2 } from 'lucide-react'
 
 const NEXT_PUBLIC_TOOL_ENDPOINT = process.env.NEXT_PUBLIC_TOOL_ENDPOINT || ''
 const VALID_FILE_TYPES = [

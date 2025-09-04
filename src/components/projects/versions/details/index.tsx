@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { collection, doc, onSnapshot, query, where } from 'firebase/firestore'
 
 import DetailsBanner from '@/components/projects/versions/details/banner'
-import { SquareX } from 'lucide-react'
 
 import { Markdown } from '@/lib/utility/ui/Markdown'
 import { Notice } from '@/lib/utility/ui/Notice'
