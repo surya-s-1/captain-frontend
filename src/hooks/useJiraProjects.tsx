@@ -12,6 +12,8 @@ interface JiraProjectResponse {
     name: string
     avatarUrls: object
     uuid: string
+    siteId: string
+    siteDomain: string
 }
 
 interface JiraProject extends JiraProjectResponse {

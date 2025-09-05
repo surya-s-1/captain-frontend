@@ -11,6 +11,8 @@ export interface Project {
     key: string
     imageUrl: string
     connected: boolean
+    siteId: string
+    siteDomain: string
     project_id: string | null
     latest_version: string | null
 }
@@ -27,8 +29,8 @@ const NEXT_PUBLIC_TOOL_ENDPOINT = process.env.NEXT_PUBLIC_TOOL_ENDPOINT || ''
 export function ProjectView({ tool, loading, error, projects }: ProjectViewInput) {
     const router = useRouter()
     const [connectLoading, setConnectLoading] = useState(false)
-    
-    async function connectProject(projectName: string, projectKey: string) {
+
+    async function connectProject(siteId: string, siteDomain: string, projectName: string, projectKey: string) {
         try {
             const user = await getCurrentUser()
             if (!user) return
@@ -46,6 +48,8 @@ export function ProjectView({ tool, loading, error, projects }: ProjectViewInput
                 },
                 body: JSON.stringify({
                     tool: tool.toLowerCase(),
+                    siteId,
+                    siteDomain,
                     projectName,
                     projectKey
                 })
@@ -83,32 +87,37 @@ export function ProjectView({ tool, loading, error, projects }: ProjectViewInput
                             </div>
                             <div className={`w-full flex items-center justify-between ${!project.connected && 'flex-row-reverse'}`}>
                                 {project.connected ?
-                                <>
+                                    <>
+                                        <button
+                                            className='text-color-primary/80 cursor-pointer font-sans font-semibold'
+                                            onClick={(e) => {
+                                                e.preventDefault()
+                                                router.push(`/projects/versions?projectId=${project.project_id}`)
+                                            }}
+                                        >
+                                            See versions {'>>'}
+                                        </button>
+                                        <span
+                                            className='w-fit text-success p-2'
+                                        >
+                                            Connected
+                                        </span>
+                                    </> :
                                     <button
-                                        className='text-color-primary/80 cursor-pointer font-sans font-semibold'
+                                        className='w-fit text-link font-sans font-semibold p-2 cursor-pointer'
                                         onClick={(e) => {
                                             e.preventDefault()
-                                            router.push(`/projects/versions?projectId=${project.project_id}`)
+                                            connectProject(
+                                                project.siteId, 
+                                                project.siteDomain, 
+                                                project.name, 
+                                                project.key
+                                            )
                                         }}
+                                        disabled={connectLoading}
                                     >
-                                        See versions {'>>'}
+                                        Connect
                                     </button>
-                                    <span
-                                        className='w-fit text-success p-2'
-                                    >
-                                        Connected
-                                    </span>
-                                </>:
-                                <button
-                                    className='w-fit text-link font-sans font-semibold p-2 cursor-pointer'
-                                    onClick={(e) => {
-                                        e.preventDefault()
-                                        connectProject(project.name, project.key)
-                                    }}
-                                    disabled={connectLoading}
-                                >
-                                    Connect
-                                </button>
                                 }
                             </div>
                         </a>

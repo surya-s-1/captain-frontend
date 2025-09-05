@@ -1,4 +1,5 @@
 export const STATUS_MESSAGES = {
+    CREATED: 'Created',
     START_TEXT_EXTRACT: 'Started text extraction',
     COMPLETE_TEXT_EXTRACT: 'Text extraction complete',
     ERR_TEXT_EXTRACT: 'Error occurred during text extraction',
@@ -11,10 +12,17 @@ export const STATUS_MESSAGES = {
     ERR_REQ_EXTRACT_P2: 'Error occurred during requirement extraction (Phase 2)',
     START_TESTCASE_CREATION: 'Started test case creation',
     CONFIRM_TESTCASE_CREATION: 'Confirm proposed test cases',
-    ERR_TESTCASE_CREATION: 'Error occurred during test case creation'
+    ERR_TESTCASE_CREATION: 'Error occurred during test case creation',
+    START_JIRA_CREATION: 'Creating test cases on Jira',
+    COMPLETE_JIRA_CREATION: 'Completed creating test cases on Jira',
+    ERR_JIRA_CREATION: 'Error occurred during testcase creation on Jira',
+    START_JIRA_SYNC: 'Started syncing the testcases with Jira',
+    COMPLETE_JIRA_SYNC: 'Completed syncing the testcases',
+    ERR_JIRA_SYNC: 'Error occurred during testcases sync',
 }
 
 export const STATUS_SHOW_LOADER = {
+    CREATED: false,
     START_TEXT_EXTRACT: true,
     COMPLETE_TEXT_EXTRACT: true,
     ERR_TEXT_EXTRACT: false,
@@ -27,5 +35,11 @@ export const STATUS_SHOW_LOADER = {
     ERR_REQ_EXTRACT_P2: false,
     START_TESTCASE_CREATION: true,
     CONFIRM_TESTCASE_CREATION: false,
-    ERR_TESTCASE_CREATION: false
+    ERR_TESTCASE_CREATION: false,
+    START_JIRA_CREATION: true,
+    COMPLETE_JIRA_CREATION: false,
+    ERR_JIRA_CREATION: false,
+    START_JIRA_SYNC: true,
+    COMPLETE_JIRA_SYNC: false,
+    ERR_JIRA_SYNC: false,
 }

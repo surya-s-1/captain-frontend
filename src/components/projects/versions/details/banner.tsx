@@ -7,7 +7,7 @@ import { doc, onSnapshot } from 'firebase/firestore'
 
 import { Modal } from '@/lib/utility/ui/Modal'
 
-import { STATUS_MESSAGES, STATUS_SHOW_LOADER } from '@/lib/utility'
+import { STATUS_MESSAGES, STATUS_SHOW_LOADER } from '@/lib/utility/constants'
 import { firestoreDb } from '@/lib/firebase'
 import { getCurrentUser } from '@/lib/firebase/utilities'
 

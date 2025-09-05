@@ -19,7 +19,6 @@ interface Requirement {
     requirement_type: string,
     sources: string[],
     regulations: string[],
-    verified: boolean,
     deleted: boolean
 }
 
@@ -30,6 +29,8 @@ interface TestCase {
     priority: string
     testcase_id: string
     requirement_id: string
+    toolIssueLink: string
+    deleted: boolean
 }
 
 const NEXT_PUBLIC_TOOL_ENDPOINT = process.env.NEXT_PUBLIC_TOOL_ENDPOINT || ''
@@ -137,6 +138,7 @@ export default function ProjectDetails() {
             setSubmitLoading(false)
         } catch (error) {
             console.error(error)
+            setSubmitLoading(false)
         }
     }
 
@@ -166,6 +168,7 @@ export default function ProjectDetails() {
             }, 2000)
         } catch (error) {
             console.error(error)
+            setSubmitLoading(false)
         }
     }
 
@@ -232,13 +235,13 @@ export default function ProjectDetails() {
                         className={`p-2 rounded ${tab === 'requirements' ? 'bg-primary-contrast text-color-primary-contrast' : 'cursor-pointer'}`}
                         onClick={() => setTab('requirements')}
                     >
-                        Requirements
+                        Requirements ({requirements.length})
                     </button>
                     <button
                         className={`p-2 rounded ${tab === 'testcases' ? 'bg-primary-contrast text-color-primary-contrast' : 'cursor-pointer'}`}
                         onClick={() => setTab('testcases')}
                     >
-                        Test Cases
+                        Test Cases ({testcases.length})
                     </button>
                 </div>}
             <div className='p-8 mb-16'>
@@ -324,6 +327,12 @@ export default function ProjectDetails() {
                                         <Markdown text={t.acceptance_criteria} />
                                         <p><b>Priority:</b></p>
                                         <Markdown text={t.priority} />
+                                        {t.toolIssueLink && (
+                                            <>
+                                                <p><b>Tool Issue Link:</b></p>
+                                                <Markdown text={t.toolIssueLink} />
+                                            </>
+                                        )}
                                     </div>
                                 ))}
                             </div>

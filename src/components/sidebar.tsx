@@ -43,7 +43,7 @@ const Sidebar = ({ sidebarExpanded, setSidebarExpanded }) => {
 
     return (
         <div
-            className={`fixed inset-y-0 left-0 z-30 flex flex-col h-full bg-secondary text-color-secondary transition-all duration-300 ease-in-out lg:relative lg:translate-x-0 ${sidebarExpanded ? 'w-64 lg:w-80 translate-x-0' : '-translate-x-full w-0 lg:w-20'} p-4 text-sm`}
+            className={`fixed inset-y-0 left-0 z-10 flex flex-col h-full bg-secondary text-color-secondary transition-all duration-300 ease-in-out lg:relative lg:translate-x-0 ${sidebarExpanded ? 'w-64 lg:w-80 translate-x-0' : '-translate-x-full w-0 lg:w-20'} p-4 text-sm`}
         >
             <div className='flex justify-between mb-4'>
                 <button

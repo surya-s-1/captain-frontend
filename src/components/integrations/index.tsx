@@ -87,11 +87,21 @@ export default function Integrations() {
                 />
                 {
                     jiraConnected ?
-                        <span 
-                            className='text-success'
+                        <div
+                            className='flex flex-col gap-2'
                         >
-                            Connected
-                        </span>
+                            <span
+                                className='text-success'
+                            >
+                                Connected
+                            </span>
+                            <button
+                                className='text-link font-sans font-semibold cursor-pointer'
+                                onClick={() => connectJira()}
+                            >
+                                Having issues? Reconnect
+                            </button>
+                        </div>
                     : jiraLoading ? 
                         <span
                             className='text-color-primary'
