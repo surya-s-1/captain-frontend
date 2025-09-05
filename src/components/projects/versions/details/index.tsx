@@ -354,7 +354,7 @@ export default function ProjectDetails() {
             {status === 'CONFIRM_TESTCASE_CREATION' && (
                 <Notice
                     title='Verify the test cases'
-                    content='Please remove any unwanted test case from the proposed test cases and click confirm to go ahead with their creation on Jira project.'
+                    content='Please remove any unwanted test cases from the proposed ones and click confirm to go ahead with their creation on Jira project.'
                     buttonLabel='Confirm'
                     loading={submitLoading}
                     callback={() => confirmTestcases()}
