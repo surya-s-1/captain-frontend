@@ -112,6 +112,12 @@ export default function ProjectDetails() {
         fetchTestcases()
     }, [projectId, version])
 
+    useEffect(() => {
+        if (status === 'START_TESTCASE_CREATION') {
+            setTab('testcases')
+        }
+    }, [status])
+
     async function confirmRequirements() {
         try {
             setSubmitLoading(true)
@@ -131,15 +137,12 @@ export default function ProjectDetails() {
 
             if (!response.ok) {
                 console.error('Could not confirm requirements')
-            } else {
-                setTab('testcases')
             }
-
-            setSubmitLoading(false)
         } catch (error) {
             console.error(error)
-            setSubmitLoading(false)
         }
+
+        setSubmitLoading(false)
     }
 
     async function confirmTestcases() {
@@ -152,24 +155,22 @@ export default function ProjectDetails() {
             const token = await user.getIdToken()
             if (!token) return
 
-            setTimeout(async () => {
-                const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/${projectId}/v/${version}/testcases/confirm`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                })
 
-                if (!response.ok) {
-                    console.error('Could not confirm testcases')
+            const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/${projectId}/v/${version}/testcases/confirm`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
                 }
+            })
 
-                setSubmitLoading(false)
-            }, 2000)
+            if (!response.ok) {
+                console.error('Could not confirm testcases')
+            }
         } catch (error) {
             console.error(error)
-            setSubmitLoading(false)
         }
+
+        setSubmitLoading(false)
     }
 
     async function deleteRequirement(reqId: string) {
@@ -252,14 +253,14 @@ export default function ProjectDetails() {
                             <div className='w-full flex flex-col gap-4'>
                                 {requirements.map(r => (
                                     <div key={r.requirement_id} className='relative p-2 shadow-xl border'>
-                                        {SHOW_DEL_REQ_BTN  &&
-                                        <button
-                                            className='text-red-500 absolute top-2 right-2 cursor-pointer'
-                                            onClick={() => deleteRequirement(r.requirement_id)}
-                                            disabled={deleteLoading}
-                                        >
-                                            Remove
-                                        </button>}
+                                        {SHOW_DEL_REQ_BTN &&
+                                            <button
+                                                className='text-red-500 absolute top-2 right-2 cursor-pointer'
+                                                onClick={() => deleteRequirement(r.requirement_id)}
+                                                disabled={deleteLoading}
+                                            >
+                                                Remove
+                                            </button>}
                                         <h2 className='font-semibold text-color-primary/50'>{r.requirement_id}</h2>
                                         <Markdown text={r.requirement} />
                                         <div className='flex flex-col gap-2 mt-4'>
@@ -310,13 +311,13 @@ export default function ProjectDetails() {
                                 {testcases.map(t => (
                                     <div key={t.testcase_id} className='relative p-2 shadow-xl border'>
                                         {SHOW_DEL_TC_BTN &&
-                                        <button
-                                            className='text-red-500 absolute top-2 right-2 cursor-pointer'
-                                            onClick={() => deleteTestcase(t.testcase_id)}
-                                            disabled={deleteLoading}
-                                        >
-                                            Remove
-                                        </button>}
+                                            <button
+                                                className='text-red-500 absolute top-2 right-2 cursor-pointer'
+                                                onClick={() => deleteTestcase(t.testcase_id)}
+                                                disabled={deleteLoading}
+                                            >
+                                                Remove
+                                            </button>}
                                         <h2 className='font-semibold text-color-primary/50'>{t.testcase_id}</h2>
                                         <h2 className='text-color-primary/50 text-xs'>Created for requirement {t.requirement_id}</h2>
                                         <p><b>Title:</b></p>

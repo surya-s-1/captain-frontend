@@ -1,3 +1,5 @@
+export const STANDARD_APP_NAME = 'Captain App'
+
 export const STATUS_MESSAGES = {
     CREATED: 'Created',
     START_TEXT_EXTRACT: 'Started text extraction',
@@ -10,9 +12,9 @@ export const STATUS_MESSAGES = {
     CONFIRM_REQ_EXTRACT_P2: 'Confirm extracted requirements',
     COMPLETE_REQ_EXTRACT_P2: 'Requirement extraction (Phase 2) complete',
     ERR_REQ_EXTRACT_P2: 'Error occurred during requirement extraction (Phase 2)',
-    START_TESTCASE_CREATION: 'Started test case creation',
+    START_TESTCASE_CREATION: 'Started proposed test cases creation',
     CONFIRM_TESTCASE_CREATION: 'Confirm proposed test cases',
-    ERR_TESTCASE_CREATION: 'Error occurred during test case creation',
+    ERR_TESTCASE_CREATION: 'Error occurred during proposed test cases creation',
     START_JIRA_CREATION: 'Creating test cases on Jira',
     COMPLETE_JIRA_CREATION: 'Completed creating test cases on Jira',
     ERR_JIRA_CREATION: 'Error occurred during testcase creation on Jira',

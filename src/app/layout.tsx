@@ -12,6 +12,7 @@ import Sidebar from '@/components/sidebar'
 import Branding from '@/components/branding'
 
 import { listenToAuthChanges } from '@/lib/firebase/utilities'
+import { STANDARD_APP_NAME } from '@/lib/utility/constants'
 
 import './globals.css'
 
@@ -22,7 +23,7 @@ export default function RootLayout({ children }) {
     const [sidebarExpanded, setSidebarExpanded] = useState(true)
 
     useEffect(() => {
-        document.title = 'Captain App'
+        document.title = STANDARD_APP_NAME
     }, [])
 
     return (

@@ -7,7 +7,7 @@ import { doc, onSnapshot } from 'firebase/firestore'
 
 import { Modal } from '@/lib/utility/ui/Modal'
 
-import { STATUS_MESSAGES, STATUS_SHOW_LOADER } from '@/lib/utility/constants'
+import { STANDARD_APP_NAME, STATUS_MESSAGES, STATUS_SHOW_LOADER } from '@/lib/utility/constants'
 import { firestoreDb } from '@/lib/firebase'
 import { getCurrentUser } from '@/lib/firebase/utilities'
 
@@ -36,6 +36,12 @@ export default function DetailsBanner() {
     const [versionFiles, setVersionFiles] = useState<any[]>([])
     const [submitLoading, setSubmitLoading] = useState(false)
     const [isModalOpen, setIsModalOpen] = useState(false)
+
+    useEffect(() => {
+        if (projectName) {
+            document.title = `${projectName} | ${STANDARD_APP_NAME}`
+        }
+    }, [projectName])
 
     async function fetchProjectName() {
         if (!projectId) {
@@ -72,7 +78,6 @@ export default function DetailsBanner() {
         const unsubscribe = onSnapshot(versionDocRef, (docSnapshot) => {
             if (docSnapshot.exists()) {
                 const data = docSnapshot.data()
-                console.log(data)
                 setStatus(data.status || 'Unknown')
                 setVersionFiles(data.files || [])
             } else {
