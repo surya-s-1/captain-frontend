@@ -116,7 +116,7 @@ export default function TestCases({
                             {t.created === 'FAILED' &&
                                 <div className='flex items-center gap-1 text-xs text-red-500 my-1'>
                                     <TriangleAlert size={14} />
-                                    Sorry, I was not able to create this issue on {tool}. Can you go ahead and create it.
+                                    Sorry, I was not able to create this issue on {tool}. Can you go ahead and create it please?
                                 </div>}
                             <h2 className='text-lg font-semibold my-2'>
                                 <Markdown text={t.title} />
