@@ -104,7 +104,7 @@ export function ProjectView({ tool, loading, error, projects }: ProjectViewInput
                                         </span>
                                     </> :
                                     <button
-                                        className='w-fit text-link font-sans font-semibold p-2 cursor-pointer'
+                                        className='flex items-center gap-2 w-fit text-link font-sans font-semibold p-2 cursor-pointer'
                                         onClick={(e) => {
                                             e.preventDefault()
                                             connectProject(
@@ -116,7 +116,9 @@ export function ProjectView({ tool, loading, error, projects }: ProjectViewInput
                                         }}
                                         disabled={connectLoading}
                                     >
-                                        Connect
+                                        <span>Connect</span>
+                                        {connectLoading && 
+                                            <Loader2 size={16} />}
                                     </button>
                                 }
                             </div>
