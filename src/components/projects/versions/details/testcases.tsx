@@ -93,7 +93,7 @@ export default function TestCases({
                                         <a
                                             href={t.toolIssueLink}
                                             target='_blank'
-                                            className='flex items-center gap-2 p-1 border rounded-md shadow-sm hover:shadow-md shadow-black/30 transition-shadow'
+                                            className='flex items-center gap-2 p-1 rounded-md shadow-sm hover:shadow-md shadow-black/30 dark:shadow-black/50 transition-shadow'
                                         >
                                             <img
                                                 src={JIRA_ICON.src}
