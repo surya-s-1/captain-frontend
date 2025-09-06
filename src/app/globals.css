@@ -31,9 +31,9 @@
 }
 
 .dark {
-    --primary-bg: #1e1e1e;
+    --primary-bg: #2a2a2a;
     /* Deep gray-black – soft on the eyes, not pure black */
-    --secondary-bg: #2a2a2a;
+    --secondary-bg: #1e1e1e;
     /* Slightly lighter – for content surfaces */
     --tertiary-bg: #3a3a3a;
     /* Mid-gray – cards, panels, UI elements */

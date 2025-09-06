@@ -79,7 +79,7 @@ export function ProjectView({ tool, loading, error, projects }: ProjectViewInput
                         <a
                             key={idx}
                             href={project.connected ? `/projects/versions/details?projectId=${project.project_id}&version=${project.latest_version}&tool=${tool}` : ''}
-                            className='flex flex-col justify-between gap-8 cursor-pointer p-4 rounded-md shadow-md'
+                            className='flex flex-col justify-between gap-8 cursor-pointer p-4 rounded-md shadow-md hover:shadow-lg transition-shadow dark:shadow-black/50'
                         >
                             <div className='w-full flex items-center gap-4'>
                                 <img src={project.imageUrl} className='h-8 rounded-full' />

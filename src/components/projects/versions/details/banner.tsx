@@ -163,7 +163,7 @@ export default function DetailsBanner() {
     }, [projectId, version])
 
     return (
-        <div className='w-full h-[150px] flex items-center justify-between sticky top-0 p-10 bg-gray-500 text-color-primary-contrast z-10'>
+        <div className='w-full h-[150px] flex items-center justify-between sticky top-0 p-10 bg-gray-500 text-white z-10'>
             {projectName &&
                 <>
                     <div>
@@ -177,7 +177,7 @@ export default function DetailsBanner() {
                     {(versionFiles.length === 0 || status.startsWith('ERR')) && (
                         <div>
                             <button
-                                className='w-fit bg-primary-contrast text-color-primary-contrast rounded-full p-2 cursor-pointer'
+                                className='w-fit bg-primary-contrast rounded-full p-2 cursor-pointer'
                                 onClick={() => setIsModalOpen(true)}
                             >
                                 Upload Requirements {status.startsWith('ERR') && <span>(Retry)</span>}
@@ -215,7 +215,7 @@ export default function DetailsBanner() {
                                     </div>
                                     {uploadedFiles.length > 0 &&
                                         <button
-                                            className={`w-fit bg-primary-contrast text-color-primary-contrast rounded-full p-2 mt-2 cursor-pointer ${submitLoading && 'bg-primary-contrast/50'}`}
+                                        className={`w-fit bg-primary-contrast text-color-primary-contrast rounded-full p-2 mt-2 cursor-pointer ${submitLoading && 'bg-primary-contrast/50'}`}
                                             onClick={() => handleSubmit()}
                                             disabled={submitLoading}
                                         >

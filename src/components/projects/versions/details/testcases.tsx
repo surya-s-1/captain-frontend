@@ -73,7 +73,7 @@ export default function TestCases({
             {testcases.length > 0 ? (
                 <div className='w-full flex flex-col gap-4'>
                     {testcases.map((t) => (
-                        <div key={t.testcase_id} className='relative p-4 shadow-md shadow-black/30 rounded-lg'>
+                        <div key={t.testcase_id} className='relative p-4 shadow-md shadow-black/30 dark:shadow-black/50 rounded-lg'>
                             <div className='w-full flex items-center justify-between'>
                                 <div className='flex items-center gap-1 text-color-primary/50 text-xs'>
                                     <span>
@@ -93,7 +93,7 @@ export default function TestCases({
                                         <a
                                             href={t.toolIssueLink}
                                             target='_blank'
-                                            className='flex items-center gap-2 p-1 border rounded shadow-sm hover:shadow-md shadow-black/30 transition-shadow'
+                                            className='flex items-center gap-2 p-1 border rounded-md shadow-sm hover:shadow-md shadow-black/30 transition-shadow'
                                         >
                                             <img
                                                 src={JIRA_ICON.src}
