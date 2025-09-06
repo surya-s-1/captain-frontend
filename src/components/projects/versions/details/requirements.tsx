@@ -74,12 +74,19 @@ export default function Requirements({
         }
     }
 
+    useEffect(() => {
+        if (requirements.length > 0 && window.location.hash) {
+            const el = document.querySelector(window.location.hash)
+            el?.scrollIntoView({ behavior: "smooth" })
+        }
+    }, [requirements])
+
     return (
         <>
             {requirements.length > 0 ? (
                 <div className='w-full flex flex-col gap-4'>
                     {requirements.map((r) => (
-                        <div key={r.requirement_id} className='relative p-2 shadow-md shadow-black/30 rounded-lg'>
+                        <div id={r.requirement_id} key={r.requirement_id} className='relative p-2 shadow-md shadow-black/30 rounded-lg scroll-mt-[210px]'>
                             {canDelete && (
                                 <button
                                     className='text-red-500 absolute top-2 right-2 cursor-pointer'

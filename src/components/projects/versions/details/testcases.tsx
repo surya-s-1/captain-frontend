@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react'
 import { collection, onSnapshot, query, where } from 'firebase/firestore'
+import { MoveUpRight } from 'lucide-react'
 
 import { firestoreDb } from '@/lib/firebase'
 import { getCurrentUser } from '@/lib/firebase/utilities'
@@ -88,11 +89,23 @@ export default function TestCases({
                     {testcases.map((t) => (
                         <div key={t.testcase_id} className='relative p-4 shadow-md shadow-black/30 rounded-lg'>
                             <div className='w-full flex items-center justify-between'>
-                                <div>
-                                    <h2 className='font-semibold text-color-primary/50'>{t.testcase_id}</h2>
-                                    <h2 className='text-color-primary/50 text-xs'>
-                                        Created for requirement {t.requirement_id}
-                                    </h2>
+                                <div className='flex items-center gap-2'>
+                                    <div>
+                                        <h2 className='font-semibold text-color-primary/50'>{t.testcase_id}</h2>
+                                        <h2 className='flex items-center gap-1 text-color-primary/50 text-xs'>
+                                            <span>
+                                                Created for requirement {t.requirement_id}.
+                                            </span>
+                                            <a
+                                                href={`#${t.requirement_id}`}
+                                                target='_blank'
+                                                className='flex items-center gap-1 border-b-2 border-dotted'
+                                            >
+                                                <span>Open Requirement</span>
+                                                <MoveUpRight size={14} />
+                                            </a>
+                                        </h2>
+                                    </div>
                                 </div>
                                 <div className='flex items-center gap-2'>
                                     {t.toolIssueLink &&
