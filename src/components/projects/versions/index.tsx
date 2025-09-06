@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { collection, getDoc, doc, getDocs, query } from 'firebase/firestore'
+import { collection, getDoc, doc, getDocs, query, where } from 'firebase/firestore'
 
 import { firestoreDb } from '@/lib/firebase'
 import { getCurrentUser } from '@/lib/firebase/utilities'
@@ -22,16 +22,8 @@ export default function ProjectVersions() {
     const [error, setError] = useState('')
 
 
-    useEffect(() => {
-        setLoading(true)
-        
-        if (!projectId || !tool || !Object.values(SUPPORTED_TOOLS).includes(tool)) {
-            router.push('/projects')
-            setLoading(false)
-            return
-        }
-
-        const fetchVersions = async () => {
+    const fetchVersions = async () => {
+        try {
             const user = await getCurrentUser()
             if (!user) return
 
@@ -41,22 +33,46 @@ export default function ProjectVersions() {
             if (!projectSnap.exists()) {
                 setError('Project not found!')
                 setLoading(false)
-                setTimeout(() => {
-                    router.push('/projects')
-                }, 2000)
+                setTimeout(() => router.push('/projects'), 2000)
                 return
             }
 
             const projectData = projectSnap.data()
-            setLatestVersion(projectData.latest_version)
-            
+
+            if (!projectData.uids || !projectData.uids.includes(user.uid)) {
+                setError('You do not have access to this project.')
+                setLoading(false)
+                setTimeout(() => router.push('/projects'), 2000)
+                return
+            }
+
+            setLatestVersion(projectData.latest_version || null)
+
             const versionsRef = collection(firestoreDb, 'projects', projectId, 'versions')
-            const q = query(versionsRef)
-            const querySnapshot = await getDocs(q)
-            const data = querySnapshot.docs.map(doc => doc.data())
-            
-            setVersions(data)
+            const querySnapshot = await getDocs(versionsRef)
+
+            const versions = querySnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data(),
+            }))
+
+            setVersions(versions)
             setLoading(false)
+        } catch (err) {
+            console.error('Error fetching versions:', err)
+            setError('Something went wrong!')
+            setLoading(false)
+        }
+    }
+
+
+    useEffect(() => {
+        setLoading(true)
+
+        if (!projectId || !tool || !Object.values(SUPPORTED_TOOLS).includes(tool)) {
+            router.push('/projects')
+            setLoading(false)
+            return
         }
 
         fetchVersions()
@@ -67,10 +83,10 @@ export default function ProjectVersions() {
     }
 
     if (error) {
-        return <div>{error}</div>
+        return <div className='text-error font-semibold'>{error}</div>
     }
 
-    return(
+    return (
         <div className='flex flex-col items-start w-full p-8 gap-8'>
             <h1 className='text-2xl font-bold'>Project Versions</h1>
             <div className='flex flex-col items-start w-full gap-4'>
