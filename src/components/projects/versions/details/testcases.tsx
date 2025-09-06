@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import { collection, onSnapshot, query, where } from 'firebase/firestore'
-import { MoveUpRight } from 'lucide-react'
+import { MoveUpRight, TriangleAlert } from 'lucide-react'
 
 import { firestoreDb } from '@/lib/firebase'
 import { getCurrentUser } from '@/lib/firebase/utilities'
@@ -19,6 +19,7 @@ export interface TestCaseInterface {
     requirement_id: string
     toolIssueLink: string
     deleted: boolean
+    created: string | null
 }
 
 interface TestCasesProps {
@@ -127,6 +128,11 @@ export default function TestCases({
                                     )}
                                 </div>
                             </div>
+                            {t.created === 'FAILED' &&
+                                <div className='flex items-center gap-1 text-xs text-red-500 my-1'>
+                                    <TriangleAlert size={14} />
+                                    Sorry, I was not able to create this issue on {tool}. Can you go ahead and create it.
+                                </div>}
                             <h2 className='text-lg font-semibold my-2'>
                                 <Markdown text={t.title} />
                             </h2>
