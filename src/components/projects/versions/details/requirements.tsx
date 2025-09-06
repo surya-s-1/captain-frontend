@@ -1,8 +1,7 @@
 'use client'
 
-import { useEffect } from 'react'
-import { collection, onSnapshot, query, where } from 'firebase/firestore'
-import { firestoreDb } from '@/lib/firebase'
+import { useState, useEffect } from 'react'
+
 import { getCurrentUser } from '@/lib/firebase/utilities'
 import { Markdown } from '@/lib/utility/ui/Markdown'
 
@@ -18,11 +17,8 @@ export interface RequirementInterface {
 interface RequirementsProps {
     projectId: string
     version: string
+    status: string
     requirements: RequirementInterface[]
-    setRequirements: (reqs: RequirementInterface[]) => void
-    deleteLoading: boolean
-    setDeleteLoading: (val: boolean) => void
-    canDelete: boolean
 }
 
 const NEXT_PUBLIC_TOOL_ENDPOINT = process.env.NEXT_PUBLIC_TOOL_ENDPOINT || ''
@@ -30,25 +26,14 @@ const NEXT_PUBLIC_TOOL_ENDPOINT = process.env.NEXT_PUBLIC_TOOL_ENDPOINT || ''
 export default function Requirements({
     projectId,
     version,
-    requirements,
-    setRequirements,
-    deleteLoading,
-    setDeleteLoading,
-    canDelete
+    status,
+    requirements
 }: RequirementsProps) {
-    useEffect(() => {
-        const reqQuery = query(
-            collection(firestoreDb, 'projects', projectId, 'versions', version, 'requirements'),
-            where('deleted', '==', false)
-        )
 
-        const unsubscribe = onSnapshot(reqQuery, (snapshot) => {
-            const reqsList = snapshot.docs.map(d => ({ ...d.data() })) as RequirementInterface[]
-            setRequirements(reqsList)
-        })
+    const [deleteLoading, setDeleteLoading] = useState(false)
 
-        return () => unsubscribe()
-    }, [projectId, version, setRequirements])
+    const canDelete = status === 'CONFIRM_REQ_EXTRACT_P2'
+
 
     async function deleteRequirement(reqId: string) {
         try {
@@ -74,12 +59,14 @@ export default function Requirements({
         }
     }
 
+
     useEffect(() => {
         if (requirements.length > 0 && window.location.hash) {
             const el = document.querySelector(window.location.hash)
             el?.scrollIntoView({ behavior: "smooth" })
         }
     }, [requirements])
+
 
     return (
         <>
@@ -96,7 +83,7 @@ export default function Requirements({
                                     Remove
                                 </button>
                             )}
-                            <h2 className='font-semibold text-color-primary/50'>{r.requirement_id}</h2>
+                            <h2 className='text-color-primary/50 text-sm mb-1'>{r.requirement_id}</h2>
                             <Markdown text={r.requirement} />
                             <div className='flex flex-col gap-2 mt-4'>
                                 {r.sources?.length > 0 && (

@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { doc, onSnapshot } from 'firebase/firestore'
+import { doc, onSnapshot, query, collection, where } from 'firebase/firestore'
 
 import DetailsBanner from '@/components/projects/versions/details/banner'
-import Requirements, { RequirementInterface} from '@/components/projects/versions/details/requirements'
+import Requirements, { RequirementInterface } from '@/components/projects/versions/details/requirements'
 import TestCases, { TestCaseInterface } from '@/components/projects/versions/details/testcases'
 
 import { Notice } from '@/lib/utility/ui/Notice'
@@ -31,11 +31,8 @@ export default function ProjectDetails() {
     const [testcases, setTestcases] = useState<TestCaseInterface[]>([])
     const [tab, setTab] = useState<Tab>('requirements')
     const [submitLoading, setSubmitLoading] = useState(false)
-    const [deleteLoading, setDeleteLoading] = useState(false)
 
     const HIDE_TABS = status === 'CREATED' || status.startsWith('ERR')
-    const SHOW_DEL_REQ_BTN = status === 'CONFIRM_REQ_EXTRACT_P2'
-    const SHOW_DEL_TC_BTN = status === 'CONFIRM_TESTCASE_CREATION'
 
     async function fetchVersion() {
         const versionDocRef = doc(firestoreDb, 'projects', projectId, 'versions', version)
@@ -54,14 +51,47 @@ export default function ProjectDetails() {
     }
 
 
+    async function fetchRequirements() {
+        const reqQuery = query(
+            collection(firestoreDb, 'projects', projectId, 'versions', version, 'requirements'),
+            where('deleted', '==', false)
+        )
+
+        const unsubscribe = onSnapshot(reqQuery, (snapshot) => {
+            const reqsList = snapshot.docs.map(d => ({ ...d.data() })) as RequirementInterface[]
+            setRequirements(reqsList)
+        })
+
+        return () => unsubscribe()
+    }
+
+
+    async function fetchTestcases() {
+        const testcaseQuery = query(
+            collection(firestoreDb, 'projects', projectId, 'versions', version, 'testcases'),
+            where('deleted', '==', false)
+        )
+
+        const unsubscribe = onSnapshot(testcaseQuery, (snapshot) => {
+            const testsList = snapshot.docs.map(d => ({ ...d.data() })) as TestCaseInterface[]
+            setTestcases(testsList)
+        })
+
+        return () => unsubscribe()
+    }
+
+
     useEffect(() => {
-        if (!projectId || !version || !tool || !Object.values(SUPPORTED_TOOLS).includes(tool) ) {
+        if (!projectId || !version || !tool || !Object.values(SUPPORTED_TOOLS).includes(tool)) {
             router.push('/projects')
             return
         }
 
         fetchVersion()
+        fetchRequirements()
+        fetchTestcases()
     }, [projectId, version])
+
 
     useEffect(() => {
         if (status === 'START_TESTCASE_CREATION') setTab('testcases')
@@ -88,6 +118,7 @@ export default function ProjectDetails() {
             setSubmitLoading(false)
         }
     }
+
 
     async function confirmTestcases() {
         try {
@@ -136,11 +167,8 @@ export default function ProjectDetails() {
                     <Requirements
                         projectId={projectId!}
                         version={version!}
+                        status={status}
                         requirements={requirements}
-                        setRequirements={setRequirements}
-                        deleteLoading={deleteLoading}
-                        setDeleteLoading={setDeleteLoading}
-                        canDelete={SHOW_DEL_REQ_BTN}
                     />
                 )}
 
@@ -148,12 +176,9 @@ export default function ProjectDetails() {
                     <TestCases
                         projectId={projectId!}
                         version={version!}
-                        testcases={testcases}
-                        setTestcases={setTestcases}
-                        deleteLoading={deleteLoading}
-                        setDeleteLoading={setDeleteLoading}
-                        canDelete={SHOW_DEL_TC_BTN}
                         tool={tool}
+                        status={status}
+                        testcases={testcases}
                     />
                 )}
             </div>

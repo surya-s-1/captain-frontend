@@ -1,10 +1,8 @@
 'use client'
 
-import { useEffect } from 'react'
-import { collection, onSnapshot, query, where } from 'firebase/firestore'
+import { useState } from 'react'
 import { MoveUpRight, TriangleAlert } from 'lucide-react'
 
-import { firestoreDb } from '@/lib/firebase'
 import { getCurrentUser } from '@/lib/firebase/utilities'
 import { Markdown } from '@/lib/utility/ui/Markdown'
 
@@ -26,11 +24,8 @@ interface TestCasesProps {
     projectId: string
     version: string
     tool: string
+    status: string
     testcases: TestCaseInterface[]
-    setTestcases: (tests: TestCaseInterface[]) => void
-    deleteLoading: boolean
-    setDeleteLoading: (val: boolean) => void
-    canDelete: boolean
 }
 
 const NEXT_PUBLIC_TOOL_ENDPOINT = process.env.NEXT_PUBLIC_TOOL_ENDPOINT || ''
@@ -38,26 +33,15 @@ const NEXT_PUBLIC_TOOL_ENDPOINT = process.env.NEXT_PUBLIC_TOOL_ENDPOINT || ''
 export default function TestCases({
     projectId,
     version,
-    testcases,
-    setTestcases,
-    deleteLoading,
-    setDeleteLoading,
-    canDelete,
-    tool
+    tool,
+    status,
+    testcases
 }: TestCasesProps) {
-    useEffect(() => {
-        const testcaseQuery = query(
-            collection(firestoreDb, 'projects', projectId, 'versions', version, 'testcases'),
-            where('deleted', '==', false)
-        )
 
-        const unsubscribe = onSnapshot(testcaseQuery, (snapshot) => {
-            const testsList = snapshot.docs.map(d => ({ ...d.data() })) as TestCaseInterface[]
-            setTestcases(testsList)
-        })
+    const [deleteLoading, setDeleteLoading] = useState(false)
 
-        return () => unsubscribe()
-    }, [projectId, version, setTestcases])
+    const canDelete = status === 'CONFIRM_TESTCASE_CREATION'
+
 
     async function deleteTestcase(tcId: string) {
         try {
@@ -82,6 +66,7 @@ export default function TestCases({
             setDeleteLoading(false)
         }
     }
+
 
     return (
         <>
