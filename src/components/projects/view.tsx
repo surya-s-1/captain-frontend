@@ -78,7 +78,7 @@ export function ProjectView({ tool, loading, error, projects }: ProjectViewInput
                     projects.map((project, idx) => (
                         <a
                             key={idx}
-                            href={project.connected ? `/projects/versions/details?projectId=${project.project_id}&version=${project.latest_version}` : ''}
+                            href={project.connected ? `/projects/versions/details?projectId=${project.project_id}&version=${project.latest_version}&tool=${tool}` : ''}
                             className='flex flex-col justify-between gap-8 cursor-pointer p-4 rounded-md shadow-md'
                         >
                             <div className='w-full flex items-center gap-4'>
@@ -92,7 +92,7 @@ export function ProjectView({ tool, loading, error, projects }: ProjectViewInput
                                             className='text-color-primary/80 cursor-pointer font-sans font-semibold'
                                             onClick={(e) => {
                                                 e.preventDefault()
-                                                router.push(`/projects/versions?projectId=${project.project_id}`)
+                                                router.push(`/projects/versions?projectId=${project.project_id}&tool=${tool}`)
                                             }}
                                         >
                                             See versions {'>>'}
@@ -108,9 +108,9 @@ export function ProjectView({ tool, loading, error, projects }: ProjectViewInput
                                         onClick={(e) => {
                                             e.preventDefault()
                                             connectProject(
-                                                project.siteId, 
-                                                project.siteDomain, 
-                                                project.name, 
+                                                project.siteId,
+                                                project.siteDomain,
+                                                project.name,
                                                 project.key
                                             )
                                         }}

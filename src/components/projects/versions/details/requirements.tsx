@@ -77,27 +77,27 @@ export default function Requirements({
     return (
         <>
             {requirements.length > 0 ? (
-                <div className="w-full flex flex-col gap-4">
+                <div className='w-full flex flex-col gap-4'>
                     {requirements.map((r) => (
-                        <div key={r.requirement_id} className="relative p-2 shadow-xl border">
+                        <div key={r.requirement_id} className='relative p-2 shadow-md shadow-black/30 rounded-lg'>
                             {canDelete && (
                                 <button
-                                    className="text-red-500 absolute top-2 right-2 cursor-pointer"
+                                    className='text-red-500 absolute top-2 right-2 cursor-pointer'
                                     onClick={() => deleteRequirement(r.requirement_id)}
                                     disabled={deleteLoading}
                                 >
                                     Remove
                                 </button>
                             )}
-                            <h2 className="font-semibold text-color-primary/50">{r.requirement_id}</h2>
+                            <h2 className='font-semibold text-color-primary/50'>{r.requirement_id}</h2>
                             <Markdown text={r.requirement} />
-                            <div className="flex flex-col gap-2 mt-4">
+                            <div className='flex flex-col gap-2 mt-4'>
                                 {r.sources?.length > 0 && (
                                     <div>
-                                        <h3 className="font-semibold">Sources</h3>
-                                        <ul className="flex flex-col gap-2">
+                                        <h3 className='font-semibold'>Sources</h3>
+                                        <ul className='flex flex-col gap-2'>
                                             {r.sources.map((source, index) => (
-                                                <li key={index} className="list-disc ml-5">
+                                                <li key={index} className='list-disc ml-5'>
                                                     {source.split('_')?.[1] || source.split('_')?.[0]}
                                                 </li>
                                             ))}
@@ -106,10 +106,10 @@ export default function Requirements({
                                 )}
                                 {r.regulations?.length > 0 && (
                                     <div>
-                                        <h3 className="font-semibold">Regulations</h3>
-                                        <ul className="flex flex-col gap-2">
+                                        <h3 className='font-semibold'>Regulations</h3>
+                                        <ul className='flex flex-col gap-2'>
                                             {r.regulations.map((regulation, index) => (
-                                                <li key={index} className="list-disc ml-5">
+                                                <li key={index} className='list-disc ml-5'>
                                                     {regulation}
                                                 </li>
                                             ))}

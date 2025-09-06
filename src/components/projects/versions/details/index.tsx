@@ -11,6 +11,7 @@ import TestCases, { TestCaseInterface } from '@/components/projects/versions/det
 import { Notice } from '@/lib/utility/ui/Notice'
 import { firestoreDb } from '@/lib/firebase'
 import { getCurrentUser } from '@/lib/firebase/utilities'
+import { SUPPORTED_TOOLS } from '@/lib/utility/constants'
 
 const NEXT_PUBLIC_TOOL_ENDPOINT = process.env.NEXT_PUBLIC_TOOL_ENDPOINT || ''
 
@@ -22,6 +23,7 @@ export default function ProjectDetails() {
 
     const projectId = searchParams.get('projectId')
     const version = searchParams.get('version')
+    const tool = searchParams.get('tool')
 
     const [status, setStatus] = useState<string>('')
     const [error, setError] = useState<string>('')
@@ -36,11 +38,6 @@ export default function ProjectDetails() {
     const SHOW_DEL_TC_BTN = status === 'CONFIRM_TESTCASE_CREATION'
 
     async function fetchVersion() {
-        if (!projectId || !version) {
-            router.push('/projects')
-            return
-        }
-
         const versionDocRef = doc(firestoreDb, 'projects', projectId, 'versions', version)
 
         const unsubscribe = onSnapshot(versionDocRef, (docSnapshot) => {
@@ -55,6 +52,21 @@ export default function ProjectDetails() {
 
         return () => unsubscribe()
     }
+
+
+    useEffect(() => {
+        if (!projectId || !version || !tool || !Object.values(SUPPORTED_TOOLS).includes(tool) ) {
+            router.push('/projects')
+            return
+        }
+
+        fetchVersion()
+    }, [projectId, version])
+
+    useEffect(() => {
+        if (status === 'START_TESTCASE_CREATION') setTab('testcases')
+    }, [status])
+
 
     async function confirmRequirements() {
         try {
@@ -97,14 +109,6 @@ export default function ProjectDetails() {
             setSubmitLoading(false)
         }
     }
-
-    useEffect(() => {
-        fetchVersion()
-    }, [projectId, version])
-
-    useEffect(() => {
-        if (status === 'START_TESTCASE_CREATION') setTab('testcases')
-    }, [status])
 
     return (
         <div className='w-full h-full overflow-y-auto scrollbar'>
@@ -149,6 +153,7 @@ export default function ProjectDetails() {
                         deleteLoading={deleteLoading}
                         setDeleteLoading={setDeleteLoading}
                         canDelete={SHOW_DEL_TC_BTN}
+                        tool={tool}
                     />
                 )}
             </div>

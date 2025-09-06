@@ -6,11 +6,16 @@ import { collection, getDoc, doc, getDocs, query } from 'firebase/firestore'
 
 import { firestoreDb } from '@/lib/firebase'
 import { getCurrentUser } from '@/lib/firebase/utilities'
+import { SUPPORTED_TOOLS } from '@/lib/utility/constants'
+
 
 export default function ProjectVersions() {
     const router = useRouter()
     const searchParams = useSearchParams()
+
     const projectId = searchParams.get('projectId')
+    const tool = searchParams.get('tool')
+
     const [latestVersion, setLatestVersion] = useState('')
     const [versions, setVersions] = useState([])
     const [loading, setLoading] = useState(true)
@@ -20,7 +25,7 @@ export default function ProjectVersions() {
     useEffect(() => {
         setLoading(true)
         
-        if (!projectId) {
+        if (!projectId || !tool || !Object.values(SUPPORTED_TOOLS).includes(tool)) {
             router.push('/projects')
             setLoading(false)
             return
@@ -73,7 +78,7 @@ export default function ProjectVersions() {
                     versions.map((ver, ind) => (
                         <a
                             key={ind}
-                            href={`/projects/versions/details?projectId=${projectId}&version=${ver.version}`}
+                            href={`/projects/versions/details?projectId=${projectId}&version=${ver.version}&tool=${tool}`}
                             className='w-[50%] text-color-primary/80 cursor-pointer p-4 rounded-md shadow-md hover:shadow-lg'
                         >
                             {ver.version} <span className='text-color-primary/50'>{ver.version === latestVersion ? '(Latest)' : ''}</span>

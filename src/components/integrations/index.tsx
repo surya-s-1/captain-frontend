@@ -2,10 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { collection, getDocs, query, where } from 'firebase/firestore'
 
 import { RootState } from '@/lib/store'
-import { firestoreDb } from '@/lib/firebase'
 import { getCurrentUser } from '@/lib/firebase/utilities'
 
 import Jira_Light_Logo from '@/../public/Jira_Logo_light.png'

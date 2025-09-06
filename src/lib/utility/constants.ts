@@ -1,4 +1,7 @@
 export const STANDARD_APP_NAME = 'Captain App'
+export const SUPPORTED_TOOLS = {
+    JIRA: 'Jira'
+}
 
 export const STATUS_MESSAGES = {
     CREATED: 'Created',
