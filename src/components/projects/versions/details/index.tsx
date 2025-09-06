@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { doc, onSnapshot, query, collection, where } from 'firebase/firestore'
+import { doc, getDoc, onSnapshot, query, collection, where } from 'firebase/firestore'
 
 import DetailsBanner from '@/components/projects/versions/details/banner'
 import Requirements, { RequirementInterface } from '@/components/projects/versions/details/requirements'
@@ -34,20 +34,47 @@ export default function ProjectDetails() {
 
     const HIDE_TABS = status === 'CREATED' || status.startsWith('ERR')
 
+
     async function fetchVersion() {
-        const versionDocRef = doc(firestoreDb, 'projects', projectId, 'versions', version)
+        try {
+            const user = await getCurrentUser()
+            if (!user) return
 
-        const unsubscribe = onSnapshot(versionDocRef, (docSnapshot) => {
-            if (docSnapshot.exists()) {
-                const data = docSnapshot.data()
-                setStatus(data.status || 'Unknown')
-            } else {
-                setError('Version not found!')
+            const projectRef = doc(firestoreDb, 'projects', projectId)
+            const projectSnap = await getDoc(projectRef)
+
+            if (!projectSnap.exists()) {
+                setError('Project not found!')
                 setTimeout(() => router.push('/projects'), 2000)
+                return
             }
-        })
 
-        return () => unsubscribe()
+            const projectData = projectSnap.data()
+
+            if (!projectData.uids || !projectData.uids.includes(user.uid)) {
+                setError('You do not have access to this project.')
+                setTimeout(() => router.push('/projects'), 2000)
+                return
+            }
+
+            const versionDocRef = doc(firestoreDb, 'projects', projectId, 'versions', version)
+
+            const unsubscribe = onSnapshot(versionDocRef, (docSnapshot) => {
+                if (docSnapshot.exists()) {
+                    const data = docSnapshot.data()
+                    setStatus(data.status || 'Unknown')
+                } else {
+                    setError('Version not found!')
+                    setTimeout(() => router.push('/projects'), 2000)
+                }
+            })
+
+            return () => unsubscribe()
+        } catch (err) {
+            console.error('Error fetching version:', err)
+            setError('Something went wrong!')
+            setTimeout(() => router.push('/projects'), 2000)
+        }
     }
 
 
@@ -90,6 +117,7 @@ export default function ProjectDetails() {
         fetchVersion()
         fetchRequirements()
         fetchTestcases()
+        
     }, [projectId, version])
 
 
@@ -139,6 +167,12 @@ export default function ProjectDetails() {
         } finally {
             setSubmitLoading(false)
         }
+    }
+
+    if (error) {
+        return (
+            <div className='text-error font-semibold'>{error}</div>
+        )
     }
 
     return (
