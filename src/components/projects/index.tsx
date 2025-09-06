@@ -8,6 +8,7 @@ import { useJiraProjects } from '@/hooks/useJiraProjects'
 
 import { firestoreDb } from '@/lib/firebase'
 import { SUPPORTED_TOOLS } from '@/lib/utility/constants'
+import { getCurrentUser } from '@/lib/firebase/utilities'
 
 export interface ConnectedProject {
     project_id: string
@@ -20,9 +21,12 @@ export interface ConnectedProject {
 export default function Projects() {
     const [connectedProjects, setConnectedProjects] = useState<ConnectedProject[]>([])
 
-    const fetchConnectedProjects = () => {
+    async function fetchConnectedProjects() {
+        const user = await getCurrentUser()
+        if (!user) return
+
         const projectsRef = collection(firestoreDb, 'projects')
-        const q = query(projectsRef)
+        const q = query(projectsRef, where('uids', 'array-contains', user.uid))
 
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             const data = querySnapshot.docs.map(doc => doc.data())
@@ -33,8 +37,12 @@ export default function Projects() {
     }
 
     useEffect(() => {
-        const unsubscribe = fetchConnectedProjects()
-        return () => unsubscribe && unsubscribe()
+        async function loadProjects() {
+            const unsubscribe = await fetchConnectedProjects()
+            return () => unsubscribe && unsubscribe()
+        }
+
+        loadProjects()
     }, [])
 
     const { 
