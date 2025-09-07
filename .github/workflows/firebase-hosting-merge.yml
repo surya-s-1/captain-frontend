@@ -18,6 +18,7 @@ jobs:
           NEXT_PUBLIC_FB_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_FB_PROJECT_ID }}
           NEXT_PUBLIC_FB_APP_ID: ${{ secrets.NEXT_PUBLIC_FB_APP_ID }}
           NEXT_PUBLIC_MODEL_ENDPOINT: ${{ secrets.NEXT_PUBLIC_MODEL_ENDPOINT }}
+          NEXT_PUBLIC_TOOL_ENDPOINT: ${{ secrets.NEXT_PUBLIC_TOOL_ENDPOINT }}
         run: npm i && npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
