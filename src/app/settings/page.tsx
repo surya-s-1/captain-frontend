@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import Image from 'next/image'
 import { UserRound } from 'lucide-react'
 
 import { auth } from '@/lib/firebase'
@@ -41,7 +42,7 @@ export default function Settings() {
     return (
         <div className='w-full h-full flex flex-col pl-4 lg:pl-40 mt-8 gap-4 lg:gap-8'>
             {appUser?.photoURL ?
-                <img src={appUser.photoURL} className='rounded-full w-20' /> :
+                <Image src={appUser.photoURL} alt='User' width={60} height={60} className='rounded-full' /> :
                 <UserRound className='text-color-secondary bg-secondary rounded-full' size={72} />
             }
             <div className='flex items-center gap-8 text-xl'>

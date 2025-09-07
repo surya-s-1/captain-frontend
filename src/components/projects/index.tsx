@@ -1,67 +1,69 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { collection, onSnapshot, query, where } from 'firebase/firestore'
 
+import { ProjectView } from '@/components/projects/view'
+import { useJiraProjects } from '@/hooks/useJiraProjects'
+
+import { firestoreDb } from '@/lib/firebase'
+import { SUPPORTED_TOOLS } from '@/lib/utility/constants'
 import { getCurrentUser } from '@/lib/firebase/utilities'
 
-const MODEL_ENDPOINT = process.env.NEXT_PUBLIC_MODEL_ENDPOINT
-
-interface Project {
-    tool: string
-    project_name: string
+export interface ConnectedProject {
     project_id: string
+    latest_version: string | null
+    tool: string
+    toolProjectKey: string
+    toolProjectName: string
 }
 
 export default function Projects() {
-    const [projects, setProjects] = useState<Project[]>([])
+    const [connectedProjects, setConnectedProjects] = useState<ConnectedProject[]>([])
+
+    async function fetchConnectedProjects() {
+        const user = await getCurrentUser()
+        if (!user) return
+
+        const projectsRef = collection(firestoreDb, 'projects')
+        const q = query(projectsRef, where('uids', 'array-contains', user.uid))
+
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            const data = querySnapshot.docs.map(doc => doc.data())
+            setConnectedProjects(data as ConnectedProject[])
+        })
+
+        return unsubscribe
+    }
 
     useEffect(() => {
-        async function fetchProjects() {
-            const user = await getCurrentUser()
-            if (!user) return
-
-            const token = await user?.getIdToken()
-            if (!token) return
-
-            const response = await fetch(`${MODEL_ENDPOINT}/projects/list`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                }
-            })
-
-            if (response.ok) {
-                const data = await response.json()
-                setProjects(data)
-            } else {
-                console.error('Failed to fetch projects')
-            }
+        async function loadProjects() {
+            const unsubscribe = await fetchConnectedProjects()
+            return () => unsubscribe && unsubscribe()
         }
-        fetchProjects()
+
+        loadProjects()
     }, [])
 
+    const { 
+        fetchProjects: fetchJiraProjects, 
+        projects: jiraProjects, 
+        loading: jiraLoading, 
+        error: jiraError 
+    } = useJiraProjects(connectedProjects)
+
+    useEffect(() => {
+        fetchJiraProjects()
+    }, [connectedProjects])
+
     return (
-        <div className='flex flex-col items-start p-8 w-full'>
-            <div className='flex justify-end mb-4 w-full'>
-                <a
-                    href='/projects/new'
-                    className='bg-primary-contrast text-color-primary-contrast hover:bg-primary-contrast/80 transition-colors cursor-pointer px-4 py-2 rounded-md'
-                >
-                    New Project
-                </a>
-            </div>
-            <h1 className='text-2xl font-bold mb-4'>My Projects</h1>
-            {projects.length === 0 ? (
-                <p>No projects found. Create a new one!</p>
-            ) : (
-                <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full'>
-                    {projects.map((project, idx) => (
-                        <div key={idx} className='border p-4 rounded-md shadow-md'>
-                            <h2 className='text-xl font-semibold'>{project.project_name}</h2>
-                            <p className='text-gray-600'>{project.tool}</p>
-                        </div>
-                    ))}
-                </div>
-            )}
+        <div className='w-full flex flex-col items-start p-8'>
+            <ProjectView
+                tool={SUPPORTED_TOOLS.JIRA}
+                loading={jiraLoading}
+                error={jiraError}
+                projects={jiraProjects}
+            />
         </div>
     )
 }

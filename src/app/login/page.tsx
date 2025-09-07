@@ -32,12 +32,14 @@ export default function LoginPage() {
 
     return (
         <div className='flex flex-col lg:flex-row w-full h-full items-center justify-evenly bg-primary pb-20 lg:pb-40 pt-10 lg:pt-0'>
-            <div className='flex flex-col gap-4 lg:gap-8 w-full lg:w-[60%] px-5 lg:px-20 text-center lg:text-left'>
-                <p className='text-3xl sm:text-4xl lg:text-5xl font-extrabold font-mono text-color-primary/25'>
-                    The only true wisdom is in knowing you know nothing.<br />- Socrates
-                </p>
+            <div className='flex flex-col items-center gap-4 lg:gap-8 w-full lg:w-[40%]'>
+                <div className='text-4xl lg:text-8xl font-bold'>
+                    Get.<br />
+                    Set.<br />
+                    Go.<br />
+                </div>
             </div>
-            <div className='flex flex-col w-full lg:w-[40%] mt-10 lg:mt-0 items-center lg:items-start'>
+            <div className='flex flex-col w-full lg:w-[60%] mt-10 lg:mt-0 items-center lg:items-start'>
                 <div className='flex flex-col gap-4 lg:gap-8 w-fit px-5 lg:pl-20'>
                     <h1 className='text-4xl lg:text-5xl text-color-primary/50'>Login</h1>
                     <button

@@ -4,7 +4,7 @@ import React from 'react'
 import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { signOut } from 'firebase/auth'
-import { PanelLeft, LayoutDashboard, Settings, CircleQuestionMark, LogOut } from 'lucide-react'
+import { PanelLeft, Cable, LayoutDashboard, Settings, CircleQuestionMark, LogOut } from 'lucide-react'
 
 import { auth } from '@/lib/firebase'
 import { RootState } from '@/lib/store'
@@ -33,8 +33,9 @@ const Sidebar = ({ sidebarExpanded, setSidebarExpanded }) => {
     }
 
     const navItems = [
+        { label: 'Integrations', icon: Cable, link: '/integrations' },
         { label: 'Projects', icon: LayoutDashboard, link: '/projects' },
-        { label: 'Ask Me Anything', icon: CircleQuestionMark, link: '/chat' }
+        { label: 'Ask Captain', icon: CircleQuestionMark, link: '/chat' }
     ]
 
     const iconClass = 'p-2 rounded-full hover:bg-tertiary hover:text-color-tertiary transition-colors duration-200 cursor-pointer'
@@ -42,7 +43,7 @@ const Sidebar = ({ sidebarExpanded, setSidebarExpanded }) => {
 
     return (
         <div
-            className={`fixed inset-y-0 left-0 z-30 flex flex-col h-full bg-secondary text-color-secondary transition-all duration-300 ease-in-out lg:relative lg:translate-x-0 ${sidebarExpanded ? 'w-64 lg:w-80 translate-x-0' : '-translate-x-full w-0 lg:w-20'} p-4 text-sm`}
+            className={`fixed inset-y-0 left-0 z-10 flex flex-col h-full bg-secondary text-color-secondary transition-all duration-300 ease-in-out lg:relative lg:translate-x-0 ${sidebarExpanded ? 'w-64 lg:w-80 translate-x-0' : '-translate-x-full w-0 lg:w-20'} p-4 text-sm`}
         >
             <div className='flex justify-between mb-4'>
                 <button

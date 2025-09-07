@@ -246,7 +246,7 @@ export default function ChatInput({ setAutoScroll }) {
                 value={inputValue}
                 onChange={e => setInputValue(e.target.value)}
                 onKeyDown={handleTextareaKeyDown}
-                placeholder='Ask Sage'
+                placeholder='Ask Captain'
                 rows={1}
             />
 

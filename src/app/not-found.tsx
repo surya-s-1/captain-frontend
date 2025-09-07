@@ -9,7 +9,7 @@ export default function NotFound() {
     const [countdown, setCountdown] = useState(3)
 
     function redirectPage() {
-        router.push('/chat')
+        router.push('/projects')
     }
 
     useEffect(() => {

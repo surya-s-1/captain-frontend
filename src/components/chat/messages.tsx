@@ -2,9 +2,8 @@
 
 import React, { useState, useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
-import breaks from 'remark-breaks'
+
+import { Markdown } from '@/lib/utility/ui/Markdown'
 
 import { getCurrentUser } from '@/lib/firebase/utilities'
 import { RootState } from '@/lib/store'
@@ -70,40 +69,6 @@ export default function ChatMessages({ autoScroll, setAutoScroll }) {
         }
     }
 
-    const componentPlugin = {
-        pre: ({ children }) => (
-            <pre
-                className='bg-secondary text-color-secondary
-                border rounded-lg p-4 my-4
-                overflow-x-auto font-mono scrollbar'
-            >
-                {children}
-            </pre>
-        ),
-        hr: () => (
-            <>
-                <br />
-                <hr />
-                <br />
-            </>
-        ),
-        h1: ({ children }) => (
-            <h1 className='font-semibold text-2xl'>
-                {children}
-            </h1>
-        ),
-        h2: ({ children }) => (
-            <h2 className='font-semibold text-xl'>
-                {children}
-            </h2>
-        ),
-        h3: ({ children }) => (
-            <h2 className='font-semibold text-lg'>
-                {children}
-            </h2>
-        )
-    }
-
     return (
         <div className='w-full flex flex-col flex-1 gap-2 max-h-full overflow-y-auto scrollbar'>
             {messages.length === 0 ? (
@@ -151,9 +116,7 @@ export default function ChatMessages({ autoScroll, setAutoScroll }) {
                         if (msg.text.startsWith('[error]:')) {
                             return (
                                 <div key={idx} className={`${className} text-red-500`}>
-                                    <ReactMarkdown remarkPlugins={[remarkGfm, breaks]}>
-                                        {msg.text.replaceAll('[error]:', '')}
-                                    </ReactMarkdown>
+                                    <Markdown text={msg.text.replaceAll('[error]:', '')} />
                                 </div>
                             )
                         }
@@ -165,12 +128,7 @@ export default function ChatMessages({ autoScroll, setAutoScroll }) {
                                     className={className}
                                     style={{ wordWrap: 'break-word' }}
                                 >
-                                    <ReactMarkdown
-                                        remarkPlugins={[remarkGfm, breaks]}
-                                        components={{ ...componentPlugin }}
-                                    >
-                                        {msg.text}
-                                    </ReactMarkdown>
+                                    <Markdown text={msg.text} />
                                 </div> :
                                 <></>
                         )

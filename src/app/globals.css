@@ -18,6 +18,12 @@
     /* Medium gray – subtle descriptions */
     --quaternary-text: #a3a3a3;
     /* Light gray – for placeholders, meta info */
+    --link-text: #1e90ff;
+    /* Bright blue – for links */
+    --success-text: #28a745;
+    /* Green – for success messages */
+    --error-text: #dc3545;
+    /* Red – for error messages */
 
     --primary-bg-contrast: #000000;
 
@@ -25,23 +31,29 @@
 }
 
 .dark {
-    --primary-bg: #1e1e1e;
+    --primary-bg: #2a2a2a;
     /* Deep gray-black – soft on the eyes, not pure black */
-    --secondary-bg: #2a2a2a;
+    --secondary-bg: #1e1e1e;
     /* Slightly lighter – for content surfaces */
     --tertiary-bg: #3a3a3a;
     /* Mid-gray – cards, panels, UI elements */
     --quaternary-bg: #505050;
     /* Lighter gray – borders, dividers */
 
-    --primary-text: #ffffff;
+    --primary-text: #e2e2e2;
     /* Bright white – for strong contrast */
-    --secondary-text: #e0e0e0;
+    --secondary-text: #cecece;
     /* Light gray – secondary content */
     --tertiary-text: #b3b3b3;
     /* Medium gray – subtle, still readable */
     --quaternary-text: #7a7a7a;
     /* Dimmer gray – for metadata, placeholders */
+    --link-text: #1e90ff;
+    /* Bright blue – for links */
+    --success-text: #28a745;
+    /* Green – for success messages */
+    --error-text: #dc3545;
+    /* Red – for error messages */
 
     --primary-bg-contrast: #ffffff;
 
@@ -59,6 +71,9 @@
     --color-color-tertiary: var(--tertiary-text);
     --color-color-quaternary: var(--quaternary-text);
     --color-color-primary-contrast: var(--primary-text-contrast);
+    --color-link: var(--link-text);
+    --color-success: var(--success-text);
+    --color-error: var(--error-text);
 }
 
 @layer utilities {
