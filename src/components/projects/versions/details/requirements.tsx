@@ -50,7 +50,7 @@ export default function Requirements({
     const [expandedSources, setExpandedSources] = useState<Record<string, Record<string, boolean>>>({})
     const [expandedRegs, setExpandedRegs] = useState<Record<string, Record<string, boolean>>>({})
 
-    const canDelete = status === 'CONFIRM_REQ_EXTRACT_P2'
+    const canDelete = status === 'CONFIRM_REQ_EXTRACT'
 
     async function deleteRequirement(reqId: string) {
         try {
