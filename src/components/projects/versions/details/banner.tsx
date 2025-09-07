@@ -30,7 +30,6 @@ export default function DetailsBanner() {
 
     const [error, setError] = useState<string>('')
     const [projectName, setProjectName] = useState<string>('')
-    const [manualVerification, setManualVerification] = useState<boolean>(true)
     const [uploadedFiles, setUploadedFiles] = useState<any[]>([])
     const [status, setStatus] = useState('')
     const [versionFiles, setVersionFiles] = useState<any[]>([])
@@ -117,8 +116,6 @@ export default function DetailsBanner() {
 
             const formData = new FormData()
 
-            formData.append('manual_verification', String(manualVerification))
-
             uploadedFiles.forEach(file => {
                 formData.append('files', file)
             })
@@ -203,15 +200,6 @@ export default function DetailsBanner() {
                                                 {file.name}
                                             </div>
                                         ))}
-                                    </div>
-                                    <div className='flex items-center gap-2'>
-                                        <input
-                                            type='checkbox'
-                                            id='manualVerification'
-                                            checked={manualVerification}
-                                            onChange={(e) => setManualVerification(e.target.checked)}
-                                        />
-                                        <label htmlFor='manualVerification'>Manual Verification</label>
                                     </div>
                                     {uploadedFiles.length > 0 &&
                                         <button

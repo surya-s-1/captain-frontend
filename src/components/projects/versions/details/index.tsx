@@ -219,7 +219,7 @@ export default function ProjectDetails() {
 
             {status === 'CONFIRM_REQ_EXTRACT_P2' && (
                 <Notice
-                    title='Manual Verification Selected'
+                    title='Verify the proposed requirements'
                     content='Please remove any unwanted requirement from the extracted requirements and click confirm to go ahead with test cases creation.'
                     buttonLabel='Confirm'
                     loading={submitLoading}
