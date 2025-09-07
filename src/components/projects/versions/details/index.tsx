@@ -217,7 +217,7 @@ export default function ProjectDetails() {
                 )}
             </div>
 
-            {status === 'CONFIRM_REQ_EXTRACT_P2' && (
+            {status === 'CONFIRM_REQ_EXTRACT' && (
                 <Notice
                     title='Verify the proposed requirements'
                     content='Please remove any unwanted requirement from the extracted requirements and click confirm to go ahead with test cases creation.'
