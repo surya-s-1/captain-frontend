@@ -114,7 +114,7 @@ export default function TestCases({
                                 </div>
                             </div>
                             {t.created === 'SUCCESS' &&
-                                <div className='flex items-center gap-1 text-xs my-1'>
+                                <div className='flex items-center gap-1 text-color-primary/50 text-xs my-1'>
                                     <SquareCheckBig size={14} />
                                     Created this testcase on {tool}.
                                 </div>}
