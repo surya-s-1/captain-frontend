@@ -40,7 +40,7 @@ export default function TestCases({
 
     const [deleteLoading, setDeleteLoading] = useState(false)
 
-    const canDelete = status === 'CONFIRM_TESTCASE_CREATION'
+    const canDelete = status === 'COMPLETE_TESTCASE_CREATION'
 
 
     async function deleteTestcase(tcId: string) {

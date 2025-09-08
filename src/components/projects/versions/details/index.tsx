@@ -227,7 +227,7 @@ export default function ProjectDetails() {
                 />
             )}
 
-            {status === 'CONFIRM_TESTCASE_CREATION' && (
+            {status === 'COMPLETE_TESTCASE_CREATION' && (
                 <Notice
                     title='Verify the test cases'
                     content='Please remove any unwanted test cases from the proposed ones and click confirm to go ahead with their creation on Jira project.'
