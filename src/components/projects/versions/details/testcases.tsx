@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { MoveUpRight, TriangleAlert } from 'lucide-react'
+import { MoveUpRight, SquareCheckBig, TriangleAlert } from 'lucide-react'
 
 import { getCurrentUser } from '@/lib/firebase/utilities'
 import { Markdown } from '@/lib/utility/ui/Markdown'
@@ -113,6 +113,11 @@ export default function TestCases({
                                     )}
                                 </div>
                             </div>
+                            {t.created === 'SUCCESS' &&
+                                <div className='flex items-center gap-1 text-xs my-1'>
+                                    <SquareCheckBig size={14} />
+                                    Created this testcase on {tool}.
+                                </div>}
                             {t.created === 'FAILED' &&
                                 <div className='flex items-center gap-1 text-xs text-red-500 my-1'>
                                     <TriangleAlert size={14} />
