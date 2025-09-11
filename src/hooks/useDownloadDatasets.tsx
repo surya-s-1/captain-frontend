@@ -5,7 +5,7 @@ import { getCurrentUser } from '@/lib/firebase/utilities'
 const NEXT_PUBLIC_TOOL_ENDPOINT = process.env.NEXT_PUBLIC_TOOL_ENDPOINT || ''
 
 export const useDownloadDatasets = (projectId: string, version: string) => {
-    const pollJobStatus = async (jobId) => {
+    const pollJobStatus = async (jobId: string, name: string | null = null) => {
         const POLLING_INTERVAL = 2000
 
         const interval = setInterval(async () => {
@@ -21,7 +21,7 @@ export const useDownloadDatasets = (projectId: string, version: string) => {
 
                     const a = document.createElement('a')
                     a.href = url
-                    a.download = `${jobId}.zip`
+                    a.download = name ? `${name}.zip` : `v_${version}_project_${projectId}.zip`
                     document.body.appendChild(a)
                     a.click()
 
@@ -74,7 +74,7 @@ export const useDownloadDatasets = (projectId: string, version: string) => {
             const jobId = data.job_id
             console.log(`Job started with ID: ${jobId}`)
 
-            pollJobStatus(jobId)
+            pollJobStatus(jobId, testcaseId)
 
         } catch (error) {
             console.error('Error:', error)
@@ -82,5 +82,40 @@ export const useDownloadDatasets = (projectId: string, version: string) => {
         }
     }
 
-    return { downloadSingleDataset }
+    const downloadAllDatasets = async () => {
+        try {
+            const user = await getCurrentUser()
+            if (!user) return
+
+            const token = await user.getIdToken()
+            if (!token) return
+
+            const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/v1/download/all/async`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    project_id: projectId,
+                    version: version
+                }),
+            })
+
+            if (!response.ok) {
+                throw new Error('Failed to start download job')
+            }
+
+            const data = await response.json()
+            const jobId = data.job_id
+            console.log(`Job started with ID: ${jobId}`)
+
+            pollJobStatus(jobId)
+        } catch (err) {
+            console.error('Error:', err)
+            alert('Failed to start download. Please try again.')
+        }
+    }
+
+    return { downloadSingleDataset, downloadAllDatasets }
 }

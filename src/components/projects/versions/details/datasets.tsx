@@ -25,7 +25,7 @@ export default function Datasets({ projectId, version, status, testcase_ids }: D
     const [downloadOneLoading, setDownloadOneLoading] = useState(false)
     const [singleTestcase, setSingleTestcase] = useState('')
 
-    const { downloadSingleDataset } = useDownloadDatasets(projectId, version)
+    const { downloadSingleDataset, downloadAllDatasets } = useDownloadDatasets(projectId, version)
 
     if (!canDownload) {
         return (
@@ -56,9 +56,11 @@ export default function Datasets({ projectId, version, status, testcase_ids }: D
         }
     }
 
-    async function downloadAllDatasets() {
+    async function downloadEveryDataset() {
         try {
             setDownloadAllLoading(true)
+
+            await downloadAllDatasets()
         } catch (err) {
             console.error(err)
         } finally {
@@ -81,7 +83,7 @@ export default function Datasets({ projectId, version, status, testcase_ids }: D
     return (
         <div className='flex flex-col gap-4 w-full p-4'>
             <button
-                className={`flex items-center gap-2 w-fit px-4 py-2 rounded-md shadow-sm hover:shadow-md shadow-black/30 dark:shadow-black/50 transition-shadow ${createLoading ? '' : 'cursor-pointer'}`}
+                className={`flex items-center gap-2 w-fit px-4 py-2 rounded-md shadow-sm shadow-black/30 dark:shadow-black/50 transition-shadow ${createLoading ? 'cursor-not-allowed' : 'cursor-pointer hover:shadow-md'}`}
                 onClick={createDatasets}
                 disabled={createLoading}
             >
@@ -93,12 +95,12 @@ export default function Datasets({ projectId, version, status, testcase_ids }: D
             {createLoading &&
                 <div className='flex items-center gap-2 text-red-500'>
                     <TriangleAlert size={24} />
-                    <span>Please don't leave this tab while we are starting the datasets creation</span>
+                    <span>Please don't leave this tab while starting the datasets creation</span>
                 </div>}
 
             <button
-                className={`flex items-center gap-2 w-fit px-4 py-2 rounded-md shadow-sm hover:shadow-md shadow-black/30 dark:shadow-black/50 transition-shadow ${downloadAllLoading ? '' : 'cursor-pointer'}`}
-                onClick={downloadAllDatasets}
+                className={`flex items-center gap-2 w-fit px-4 py-2 rounded-md shadow-sm shadow-black/30 dark:shadow-black/50 transition-shadow ${downloadAllLoading ? 'cursor-not-allowed' : 'cursor-pointer hover:shadow-md'}`}
+                onClick={() => downloadEveryDataset()}
                 disabled={downloadAllLoading}
             >
                 <Download size={24} />
@@ -106,10 +108,20 @@ export default function Datasets({ projectId, version, status, testcase_ids }: D
                 {downloadAllLoading && <Loader2 className='animate-spin' size={20} />}
             </button>
 
+            {downloadAllLoading &&
+                <div className='flex items-center gap-2 text-red-500'>
+                    <TriangleAlert size={24} />
+                    <span>Please don't leave this tab while downloading the datasets</span>
+                </div>}
+
             <div className='flex items-center gap-2 w-fit'>
                 <span>Download dataset for a testcase:</span>
 
-                <select className='text-sm p-1 border rounded' value={singleTestcase} onChange={(e) => setSingleTestcase(e.target.value)}>
+                <select 
+                    className='text-sm p-1 border rounded' 
+                    value={singleTestcase} 
+                    onChange={(e) => setSingleTestcase(e.target.value)}
+                >
                     <option value='' disabled hidden>Select a testcase</option>
                     {testcase_ids.map(id => (
                         <option key={id} value={id}>{id}</option>
@@ -117,7 +129,7 @@ export default function Datasets({ projectId, version, status, testcase_ids }: D
                 </select>
 
                 <button
-                    className={`flex items-center gap-2 w-fit text-sm px-2 py-1 rounded-md shadow-sm hover:shadow-md shadow-black/30 dark:shadow-black/50 transition-shadow ${downloadAllLoading ? '' : 'cursor-pointer'}`}
+                    className={`flex items-center gap-2 w-fit text-sm px-2 py-1 rounded-md shadow-sm shadow-black/30 dark:shadow-black/50 transition-shadow ${downloadAllLoading ? 'cursor-not-allowed' : 'cursor-pointer hover:shadow-md'}`}
                     onClick={downloadOneDataset}
                     disabled={downloadOneLoading}
                 >
@@ -125,6 +137,12 @@ export default function Datasets({ projectId, version, status, testcase_ids }: D
                     {downloadOneLoading && <Loader2 className='animate-spin' size={20} />}
                 </button>
             </div>
+
+            {downloadOneLoading &&
+                <div className='flex items-center gap-2 text-red-500'>
+                    <TriangleAlert size={24} />
+                    <span>Please don't leave this tab while downloading the dataset</span>
+                </div>}
         </div>
     )
 }
