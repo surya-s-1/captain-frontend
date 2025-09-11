@@ -62,6 +62,16 @@ export default function Requirements({
 
     const canDelete = status === 'CONFIRM_REQ_EXTRACT'
 
+    useEffect(() => {
+        if (requirements.length > 0 && window.location.hash) {
+            setCurrentPage(Math.ceil((requirements.findIndex(r => `#${r.requirement_id}` === window.location.hash) + 1) / requirementsPerPage))
+            setTimeout(() => {
+                const el = document.querySelector(window.location.hash)
+                el?.scrollIntoView({ behavior: "smooth" })
+            }, 500)
+        }
+    }, [requirements])
+
     async function deleteRequirement(reqId: string) {
         try {
             setDeleteLoading(true)
@@ -85,13 +95,6 @@ export default function Requirements({
             setDeleteLoading(false)
         }
     }
-
-    useEffect(() => {
-        if (requirements.length > 0 && window.location.hash) {
-            const el = document.querySelector(window.location.hash)
-            el?.scrollIntoView({ behavior: "smooth" })
-        }
-    }, [requirements])
 
     function groupSources(sources: Source[]) {
         const grouped: Record<string, string[]> = {}
