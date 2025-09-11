@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { PackagePlus, Download, Loader2 } from 'lucide-react'
+import { PackagePlus, TriangleAlert, Download, Loader2 } from 'lucide-react'
 
 import { getCurrentUser } from '@/lib/firebase/utilities'
 import { VERSION_STATUS_RANK } from '@/lib/utility/constants'
@@ -110,6 +110,12 @@ export default function Datasets({ projectId, version, status, testcase_ids }: D
                 <span>Create datasets</span>
                 {createLoading && <Loader2 className='animate-spin' size={20} />}
             </button>
+
+            {createLoading &&
+                <div className='flex items-center gap-2 text-red-500'>
+                    <TriangleAlert size={24} />
+                    <span>Please don't leave this tab while we are starting the datasets creation</span>
+                </div>}
 
             <button
                 className={`flex items-center gap-2 w-fit px-4 py-2 rounded-md shadow-sm hover:shadow-md shadow-black/30 dark:shadow-black/50 transition-shadow ${downloadAllLoading ? '' : 'cursor-pointer'}`}
