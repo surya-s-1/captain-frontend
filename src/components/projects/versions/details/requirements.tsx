@@ -51,6 +51,14 @@ export default function Requirements({
     const [deleteLoading, setDeleteLoading] = useState(false)
     const [expandedSources, setExpandedSources] = useState<Record<string, Record<string, boolean>>>({})
     const [expandedRegs, setExpandedRegs] = useState<Record<string, Record<string, boolean>>>({})
+    const [currentPage, setCurrentPage] = useState(1)
+
+    const requirementsPerPage = 50
+    const totalPages = Math.ceil(requirements.length / requirementsPerPage)
+
+    const indexOfLastReq = currentPage * requirementsPerPage
+    const indexOfFirstReq = indexOfLastReq - requirementsPerPage
+    const currentRequirements = requirements.slice(indexOfFirstReq, indexOfLastReq)
 
     const canDelete = status === 'CONFIRM_REQ_EXTRACT'
 
@@ -124,10 +132,10 @@ export default function Requirements({
     }
 
     return (
-        <>
-            {requirements.length > 0 ? (
+        <div className='w-full flex flex-col gap-8 items-center'>
+            {currentRequirements.length > 0 ? (
                 <div className='w-full flex flex-col gap-4'>
-                    {requirements.map((r, ind) => {
+                    {currentRequirements.map((r, ind) => {
                         const groupedSources = groupSources(r.sources || [])
                         const groupedRegs = groupRegulations(r.regulations || [])
 
@@ -224,6 +232,25 @@ export default function Requirements({
             ) : (
                 <p>No requirements found.</p>
             )}
-        </>
+            {requirements.length > requirementsPerPage && (
+                <div className='sticky bottom-1 w-fit bg-secondary rounded-md shadow-md flex justify-center items-center gap-4 mt-8'>
+                    <button
+                        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                        disabled={currentPage === 1}
+                        className='bg-primary px-4 py-2 rounded-md shadow-md cursor-pointer disabled:opacity-50'
+                    >
+                        Previous
+                    </button>
+                    <span>Page {currentPage} of {totalPages}</span>
+                    <button
+                        onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                        disabled={currentPage === totalPages}
+                        className='bg-primary px-4 py-2 rounded-md shadow-md cursor-pointer disabled:opacity-50'
+                    >
+                        Next
+                    </button>
+                </div>
+            )}
+        </div>
     )
 }

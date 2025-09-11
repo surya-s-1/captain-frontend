@@ -41,9 +41,15 @@ export default function TestCases({
     testcases
 }: TestCasesProps) {
 
-    const [currentPage, setCurrentPage] = useState(1)
     const [deleteLoading, setDeleteLoading] = useState(false)
+    const [currentPage, setCurrentPage] = useState(1)
+
     const testcasesPerPage = 50
+    const totalPages = Math.ceil(testcases.length / testcasesPerPage)
+
+    const indexOfLastTestcase = currentPage * testcasesPerPage
+    const indexOfFirstTestcase = indexOfLastTestcase - testcasesPerPage
+    const currentTestcases = testcases.slice(indexOfFirstTestcase, indexOfLastTestcase)
 
     const canDelete = status === 'COMPLETE_TESTCASE_CREATION'
 
@@ -70,12 +76,6 @@ export default function TestCases({
             setDeleteLoading(false)
         }
     }
-
-    const indexOfLastTestcase = currentPage * testcasesPerPage
-    const indexOfFirstTestcase = indexOfLastTestcase - testcasesPerPage
-    const currentTestcases = testcases.slice(indexOfFirstTestcase, indexOfLastTestcase)
-
-    const totalPages = Math.ceil(testcases.length / testcasesPerPage)
 
     return (
         <div className='w-full flex flex-col gap-8 items-center'>
