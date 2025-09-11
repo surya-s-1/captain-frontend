@@ -1,23 +1,26 @@
 'use client'
 
 import { useState } from 'react'
-import { MoveUpRight, TriangleAlert } from 'lucide-react'
+import { MoveUpRight, TriangleAlert, ArrowDownToLine } from 'lucide-react'
 
 import { getCurrentUser } from '@/lib/firebase/utilities'
 import { Markdown } from '@/lib/utility/ui/Markdown'
+import { TC_DATASET_STATUS_MESSAGES } from '@/lib/utility/constants'
 
 import JIRA_ICON from '@/../public/Jira_icon.png'
 
 export interface TestCaseInterface {
+    testcase_id: string
     title: string
     description: string
     acceptance_criteria: string
     priority: string
-    testcase_id: string
     requirement_id: string
-    toolIssueLink: string
     deleted: boolean
-    created: string | null
+    toolCreated: string | null
+    toolIssueLink: string
+    dataset_status: string | null
+    datasets: string[] | null
 }
 
 interface TestCasesProps {
@@ -38,10 +41,11 @@ export default function TestCases({
     testcases
 }: TestCasesProps) {
 
+    const [currentPage, setCurrentPage] = useState(1)
     const [deleteLoading, setDeleteLoading] = useState(false)
+    const testcasesPerPage = 50
 
     const canDelete = status === 'COMPLETE_TESTCASE_CREATION'
-
 
     async function deleteTestcase(tcId: string) {
         try {
@@ -67,13 +71,23 @@ export default function TestCases({
         }
     }
 
+    const indexOfLastTestcase = currentPage * testcasesPerPage
+    const indexOfFirstTestcase = indexOfLastTestcase - testcasesPerPage
+    const currentTestcases = testcases.slice(indexOfFirstTestcase, indexOfLastTestcase)
+
+    const totalPages = Math.ceil(testcases.length / testcasesPerPage)
 
     return (
-        <>
-            {testcases.length > 0 ? (
+        <div className='w-full flex flex-col gap-8 items-center'>
+            {currentTestcases.length > 0 ? (
                 <div className='w-full flex flex-col gap-4'>
-                    {testcases.map((t) => (
+                    {currentTestcases.map((t) => (
                         <div key={t.testcase_id} className='relative p-4 shadow-md shadow-black/30 dark:shadow-black/50 rounded-lg'>
+                            <div className='flex items-center gap-1 text-color-primary/50 text-xs'>
+                                <span>
+                                    {t.testcase_id}
+                                </span>
+                            </div>
                             <div className='w-full flex items-center justify-between'>
                                 <div className='flex items-center gap-1 text-color-primary/50 text-xs'>
                                     <span>
@@ -89,11 +103,19 @@ export default function TestCases({
                                     </a>
                                 </div>
                                 <div className='flex items-center gap-2'>
+                                    {t.datasets && t.datasets.length > 0 &&
+                                        <button
+                                            className='flex items-center gap-2 px-2 py-1 rounded-md shadow-sm hover:shadow-md shadow-black/30 dark:shadow-black/50 transition-shadow cursor-pointer'
+                                            onClick={() => { }}
+                                        >
+                                            <ArrowDownToLine />
+                                            <span>Download Dataset</span>
+                                        </button>}
                                     {t.toolIssueLink &&
                                         <a
                                             href={t.toolIssueLink}
                                             target='_blank'
-                                            className='flex items-center gap-2 p-1 rounded-md shadow-sm hover:shadow-md shadow-black/30 dark:shadow-black/50 transition-shadow'
+                                            className='flex items-center gap-2 px-2 py-1 rounded-md shadow-sm hover:shadow-md shadow-black/30 dark:shadow-black/50 transition-shadow'
                                         >
                                             <img
                                                 src={JIRA_ICON.src}
@@ -113,7 +135,12 @@ export default function TestCases({
                                     )}
                                 </div>
                             </div>
-                            {t.created === 'FAILED' &&
+                            <div className='flex items-center gap-1 text-color-primary/50 text-xs'>
+                                <span>
+                                    {TC_DATASET_STATUS_MESSAGES[t.dataset_status] || t.dataset_status}
+                                </span>
+                            </div>
+                            {t.toolCreated === 'FAILED' &&
                                 <div className='flex items-center gap-1 text-xs text-red-500 my-1'>
                                     <TriangleAlert size={14} />
                                     Sorry, I was not able to create this issue on {tool}. Can you go ahead and create it please?
@@ -145,6 +172,25 @@ export default function TestCases({
             ) : (
                 <p>No test cases found.</p>
             )}
-        </>
+            {testcases.length > testcasesPerPage && (
+                <div className='sticky bottom-1 w-fit bg-secondary rounded-md shadow-md flex justify-center items-center gap-4 mt-8'>
+                    <button
+                        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                        disabled={currentPage === 1}
+                        className='bg-primary px-4 py-2 rounded-md shadow-md cursor-pointer disabled:opacity-50'
+                    >
+                        Previous
+                    </button>
+                    <span>Page {currentPage} of {totalPages}</span>
+                    <button
+                        onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                        disabled={currentPage === totalPages}
+                        className='bg-primary px-4 py-2 rounded-md shadow-md cursor-pointer disabled:opacity-50'
+                    >
+                        Next
+                    </button>
+                </div>
+            )}
+        </div>
     )
 }

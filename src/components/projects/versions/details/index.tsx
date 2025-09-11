@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { doc, getDoc, onSnapshot, query, collection, where } from 'firebase/firestore'
+import { doc, getDoc, onSnapshot, query, collection, where, getDocs } from 'firebase/firestore'
 
 import DetailsBanner from '@/components/projects/versions/details/banner'
 import Requirements, { RequirementInterface } from '@/components/projects/versions/details/requirements'
 import TestCases, { TestCaseInterface } from '@/components/projects/versions/details/testcases'
+import Datasets from '@/components/projects/versions/details/datasets'
 
 import { Notice } from '@/lib/utility/ui/Notice'
 import { firestoreDb } from '@/lib/firebase'
@@ -15,7 +16,7 @@ import { SUPPORTED_TOOLS } from '@/lib/utility/constants'
 
 const NEXT_PUBLIC_TOOL_ENDPOINT = process.env.NEXT_PUBLIC_TOOL_ENDPOINT || ''
 
-type Tab = 'requirements' | 'testcases'
+type Tab = 'requirements' | 'testcases' | 'datasets'
 
 export default function ProjectDetails() {
     const router = useRouter()
@@ -107,7 +108,6 @@ export default function ProjectDetails() {
         return () => unsubscribe()
     }
 
-
     useEffect(() => {
         if (!projectId || !version || !tool || !Object.values(SUPPORTED_TOOLS).includes(tool)) {
             router.push('/projects')
@@ -116,15 +116,24 @@ export default function ProjectDetails() {
 
         fetchVersion()
         fetchRequirements()
-        fetchTestcases()
-        
+        fetchTestcases()        
     }, [projectId, version])
-
-
+    
     useEffect(() => {
-        if (status === 'START_TESTCASE_CREATION') setTab('testcases')
-    }, [status])
+        if (status === 'START_TESTCASE_CREATION') {
+            const testsCompletedReqQuery = getDocs(query(
+                collection(firestoreDb, 'projects', projectId, 'versions', version, 'requirements'),
+                where('deleted', '==', false),
+                where('status', '==', 'TESTCASES_CREATION_COMPLETE'))
+            )
 
+            testsCompletedReqQuery.then(result => {
+                if (result.docs.length === requirements.length) {
+                    setStatus('COMPLETE_TESTCASE_CREATION')
+                }
+            })
+        }
+    }, [requirements, status])
 
     async function confirmRequirements() {
         try {
@@ -175,23 +184,33 @@ export default function ProjectDetails() {
         )
     }
 
+    function getTabClassName(input: Tab) {
+        return `p-2 rounded ${tab === input ? 'bg-primary-contrast text-color-primary-contrast' : 'cursor-pointer'}`
+    }
+
     return (
         <div className='w-full h-full overflow-y-auto scrollbar'>
-            <DetailsBanner />
+            <DetailsBanner status={status} />
 
             {!HIDE_TABS && (
                 <div className='w-ful sticky top-[150px] backdrop-blur-xs bg-white/30 flex items-center justify-center gap-8 py-2 shadow-xl z-10'>
                     <button
-                        className={`p-2 rounded ${tab === 'requirements' ? 'bg-primary-contrast text-color-primary-contrast' : 'cursor-pointer'}`}
+                        className={getTabClassName('requirements')}
                         onClick={() => setTab('requirements')}
                     >
                         Requirements ({requirements.length})
                     </button>
                     <button
-                        className={`p-2 rounded ${tab === 'testcases' ? 'bg-primary-contrast text-color-primary-contrast' : 'cursor-pointer'}`}
+                        className={getTabClassName('testcases')}
                         onClick={() => setTab('testcases')}
                     >
                         Test Cases ({testcases.length})
+                    </button>
+                    <button
+                        className={getTabClassName('datasets')}
+                        onClick={() => setTab('datasets')}
+                    >
+                        Datasets
                     </button>
                 </div>
             )}
@@ -215,12 +234,35 @@ export default function ProjectDetails() {
                         testcases={testcases}
                     />
                 )}
+
+                {tab === 'datasets' && (
+                    <Datasets
+                        projectId={projectId}
+                        version={version}
+                        status={status}
+                        testcase_ids={testcases.map(t => {
+                            if (t.testcase_id) {
+                                return t.testcase_id
+                            }
+                        })}
+                    />
+                )}
             </div>
 
             {status === 'CONFIRM_REQ_EXTRACT' && (
                 <Notice
                     title='Verify the proposed requirements'
                     content='Please remove any unwanted requirement from the extracted requirements and click confirm to go ahead with test cases creation.'
+                    buttonLabel='Confirm'
+                    loading={submitLoading}
+                    callback={confirmRequirements}
+                />
+            )}
+
+            {status === 'CONFIRM_REQ_EXTRACT_RETRY' && (
+                <Notice
+                    title='Retry'
+                    content='Sorry, there was something wrong. Could you please retry?'
                     buttonLabel='Confirm'
                     loading={submitLoading}
                     callback={confirmRequirements}

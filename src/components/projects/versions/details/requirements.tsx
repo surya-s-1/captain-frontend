@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { getCurrentUser } from '@/lib/firebase/utilities'
 import { Markdown } from '@/lib/utility/ui/Markdown'
+import { REQ_STATUS_MESSAGES } from '@/lib/utility/constants'
 
 interface Source {
     filename: string
@@ -28,6 +29,7 @@ export interface RequirementInterface {
     sources: Source[]
     regulations: Regulation[]
     deleted: boolean
+    status: string | null
 }
 
 interface RequirementsProps {
@@ -144,7 +146,15 @@ export default function Requirements({
                                         Remove
                                     </button>
                                 )}
-                                <h2 className='text-color-primary/50 text-sm mb-1'>{r.requirement_id}</h2>
+                                <h2 className='text-color-primary/50 text-xs mb-1'>
+                                    {r.requirement_id}{r.requirement_type && ` (${r.requirement_type})`}
+                                </h2>
+
+                                {r.status &&
+                                    <p className='text-color-primary/50 text-xs mb-1'>
+                                        {REQ_STATUS_MESSAGES[r.status] || r.status}
+                                    </p>}
+
                                 <Markdown text={r.requirement} />
 
                                 <div className='flex flex-col gap-4 mt-4'>

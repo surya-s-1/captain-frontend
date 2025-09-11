@@ -118,7 +118,7 @@ export function ProjectView({ tool, loading, error, projects }: ProjectViewInput
                                     >
                                         <span>Connect</span>
                                         {connectLoading && 
-                                            <Loader2 size={16} />}
+                                            <Loader2 className='animate-spin' size={16} />}
                                     </button>
                                 }
                             </div>

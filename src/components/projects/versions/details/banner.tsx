@@ -7,7 +7,7 @@ import { doc, onSnapshot } from 'firebase/firestore'
 
 import { Modal } from '@/lib/utility/ui/Modal'
 
-import { STANDARD_APP_NAME, STATUS_MESSAGES, STATUS_SHOW_LOADER } from '@/lib/utility/constants'
+import { STANDARD_APP_NAME, VERSION_STATUS_MESSAGES, VERSION_STATUS_SHOW_LOADER } from '@/lib/utility/constants'
 import { firestoreDb } from '@/lib/firebase'
 import { getCurrentUser } from '@/lib/firebase/utilities'
 
@@ -21,7 +21,7 @@ const VALID_FILE_TYPES = [
     'text/csv'
 ]
 
-export default function DetailsBanner() {
+export default function DetailsBanner({ status }) {
     const router = useRouter()
     const searchParams = useSearchParams()
 
@@ -31,7 +31,6 @@ export default function DetailsBanner() {
     const [error, setError] = useState<string>('')
     const [projectName, setProjectName] = useState<string>('')
     const [uploadedFiles, setUploadedFiles] = useState<any[]>([])
-    const [status, setStatus] = useState('')
     const [versionFiles, setVersionFiles] = useState<any[]>([])
     const [submitLoading, setSubmitLoading] = useState(false)
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -77,7 +76,6 @@ export default function DetailsBanner() {
         const unsubscribe = onSnapshot(versionDocRef, (docSnapshot) => {
             if (docSnapshot.exists()) {
                 const data = docSnapshot.data()
-                setStatus(data.status || 'Unknown')
                 setVersionFiles(data.files || [])
             } else {
                 setError('Version not found!')
@@ -167,8 +165,8 @@ export default function DetailsBanner() {
                         <h2 className='text-2xl font-bold'>{projectName}</h2>
                         <h4 className='text-sm'>Version: {version}</h4>
                         <div className='flex items-center gap-2 mt-2'>
-                            Status: {STATUS_MESSAGES[status] || status}
-                            {STATUS_SHOW_LOADER[status] && <Loader2 className='animate-spin' size={20} />}
+                            Status: {VERSION_STATUS_MESSAGES[status] || status}
+                            {VERSION_STATUS_SHOW_LOADER[status] && <Loader2 className='animate-spin' size={20} />}
                         </div>
                     </div>
                     {(versionFiles.length === 0 || status.startsWith('ERR')) && (
@@ -203,7 +201,7 @@ export default function DetailsBanner() {
                                     </div>
                                     {uploadedFiles.length > 0 &&
                                         <button
-                                        className={`w-fit bg-primary-contrast text-color-primary-contrast rounded-full p-2 mt-2 cursor-pointer ${submitLoading && 'bg-primary-contrast/50'}`}
+                                            className={`w-fit bg-primary-contrast text-color-primary-contrast rounded-full p-2 mt-2 cursor-pointer ${submitLoading && 'bg-primary-contrast/50'}`}
                                             onClick={() => handleSubmit()}
                                             disabled={submitLoading}
                                         >
