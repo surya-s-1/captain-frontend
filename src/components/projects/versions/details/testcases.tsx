@@ -1,7 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { MoveUpRight, TriangleAlert, ArrowDownToLine } from 'lucide-react'
+import { MoveUpRight, TriangleAlert, ArrowDownToLine, Loader2 } from 'lucide-react'
+
+import { useDownloadDatasets } from '@/hooks/useDownloadDatasets'
 
 import { getCurrentUser } from '@/lib/firebase/utilities'
 import { Markdown } from '@/lib/utility/ui/Markdown'
@@ -43,6 +45,9 @@ export default function TestCases({
 
     const [deleteLoading, setDeleteLoading] = useState(false)
     const [currentPage, setCurrentPage] = useState(1)
+    const [downloadsInProgress, setDownloadsInProgress] = useState([])
+
+    const { downloadSingleDataset } = useDownloadDatasets(projectId, version)
 
     const testcasesPerPage = 50
     const totalPages = Math.ceil(testcases.length / testcasesPerPage)
@@ -77,6 +82,30 @@ export default function TestCases({
         }
     }
 
+    async function downloadDataset(testcaseId: string) {
+        try {
+            if (downloadsInProgress.includes(testcaseId)) {
+                return
+            }
+
+            setDownloadsInProgress(prev => [...prev, testcaseId])
+
+            const user = await getCurrentUser()
+            if (!user) return
+
+            const token = await user.getIdToken()
+            if (!token) return
+
+            await downloadSingleDataset(testcaseId)
+
+            setDownloadsInProgress(prev => prev.filter(id => id !== testcaseId))
+
+        } catch (err) {
+            console.error(err)
+        }
+    }
+
+
     return (
         <div className='w-full flex flex-col gap-8 items-center'>
             {currentTestcases.length > 0 ? (
@@ -106,10 +135,12 @@ export default function TestCases({
                                     {t.datasets && t.datasets.length > 0 &&
                                         <button
                                             className='flex items-center gap-2 px-2 py-1 rounded-md shadow-sm hover:shadow-md shadow-black/30 dark:shadow-black/50 transition-shadow cursor-pointer'
-                                            onClick={() => { }}
+                                            onClick={() => { downloadDataset(t.testcase_id) }}
                                         >
                                             <ArrowDownToLine />
                                             <span>Download Dataset</span>
+                                            {downloadsInProgress.includes(t.testcase_id) &&
+                                                <Loader2 className='animate-spin' size={20} />}
                                         </button>}
                                     {t.toolIssueLink &&
                                         <a

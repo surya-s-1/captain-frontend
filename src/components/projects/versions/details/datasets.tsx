@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import { PackagePlus, TriangleAlert, Download, Loader2 } from 'lucide-react'
 
+import { useDownloadDatasets } from '@/hooks/useDownloadDatasets'
+
 import { getCurrentUser } from '@/lib/firebase/utilities'
 import { VERSION_STATUS_RANK } from '@/lib/utility/constants'
 
@@ -23,27 +25,22 @@ export default function Datasets({ projectId, version, status, testcase_ids }: D
     const [downloadOneLoading, setDownloadOneLoading] = useState(false)
     const [singleTestcase, setSingleTestcase] = useState('')
 
+    const { downloadSingleDataset } = useDownloadDatasets(projectId, version)
+
     if (!canDownload) {
         return (
             <div>Please come back after all the testcases are created.</div>
         )
     }
 
-    async function getToken() {
-        const user = await getCurrentUser()
-        if (!user) return null
-
-        const token = await user.getIdToken()
-        if (!token) return null
-
-        return token
-    }
-
     async function createDatasets() {
         try {
             setCreateLoading(true)
 
-            const token = await getToken()
+            const user = await getCurrentUser()
+            if (!user) return
+
+            const token = await user.getIdToken()
             if (!token) return
 
             const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/${projectId}/v/${version}/datasets/create`, {
@@ -62,16 +59,6 @@ export default function Datasets({ projectId, version, status, testcase_ids }: D
     async function downloadAllDatasets() {
         try {
             setDownloadAllLoading(true)
-
-            const token = await getToken()
-            if (!token) return
-
-            const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/${projectId}/v/${version}/datasets/download/all`, {
-                method: 'POST',
-                headers: { Authorization: `Bearer ${token}` }
-            })
-
-            if (!response.ok) console.error('Could not download datasets')
         } catch (err) {
             console.error(err)
         } finally {
@@ -83,15 +70,7 @@ export default function Datasets({ projectId, version, status, testcase_ids }: D
         try {
             setDownloadOneLoading(true)
 
-            const token = await getToken()
-            if (!token) return
-
-            const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/${projectId}/v/${version}/datasets/download/${singleTestcase}`, {
-                method: 'POST',
-                headers: { Authorization: `Bearer ${token}` }
-            })
-
-            if (!response.ok) console.error('Could not download dataset')
+            await downloadSingleDataset(singleTestcase)
         } catch (err) {
             console.error(err)
         } finally {
@@ -128,7 +107,7 @@ export default function Datasets({ projectId, version, status, testcase_ids }: D
             </button>
 
             <div className='flex items-center gap-2 w-fit'>
-                <span>Download dataset for testcase:</span>
+                <span>Download dataset for a testcase:</span>
 
                 <select className='text-sm p-1 border rounded' value={singleTestcase} onChange={(e) => setSingleTestcase(e.target.value)}>
                     <option value='' disabled hidden>Select a testcase</option>
