@@ -53,7 +53,7 @@ export const useDownloadDatasets = (projectId: string, version: string) => {
             const token = await user.getIdToken()
             if (!token) return
 
-            const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/v1/download/async`, {
+            const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/v1/download/one`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -90,7 +90,7 @@ export const useDownloadDatasets = (projectId: string, version: string) => {
             const token = await user.getIdToken()
             if (!token) return
 
-            const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/v1/download/all/async`, {
+            const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/v1/download/all`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

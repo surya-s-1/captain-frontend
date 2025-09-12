@@ -40,7 +40,7 @@ export function ProjectView({ tool, loading, error, projects }: ProjectViewInput
 
             setConnectLoading(true)
 
-            const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/connect`, {
+            const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/v1/connect`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

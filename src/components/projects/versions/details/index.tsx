@@ -144,7 +144,7 @@ export default function ProjectDetails() {
             const token = await user.getIdToken()
             if (!token) return
 
-            const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/${projectId}/v/${version}/requirements/confirm`, {
+            const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/v1/${projectId}/v/${version}/requirements/confirm`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }
             })
@@ -166,7 +166,7 @@ export default function ProjectDetails() {
             const token = await user.getIdToken()
             if (!token) return
 
-            const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/${projectId}/v/${version}/testcases/confirm`, {
+            const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/v1/${projectId}/v/${version}/testcases/confirm`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }
             })

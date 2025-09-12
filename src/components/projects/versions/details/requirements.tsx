@@ -81,7 +81,7 @@ export default function Requirements({
             if (!token) return
 
             const response = await fetch(
-                `${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/${projectId}/v/${version}/r/${reqId}/delete`,
+                `${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/v1/${projectId}/v/${version}/r/${reqId}`,
                 {
                     method: 'DELETE',
                     headers: { Authorization: `Bearer ${token}` }

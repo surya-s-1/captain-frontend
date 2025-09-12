@@ -43,7 +43,7 @@ export default function Datasets({ projectId, version, status, testcase_ids }: D
             const token = await user.getIdToken()
             if (!token) return
 
-            const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/${projectId}/v/${version}/datasets/create`, {
+            const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/v1/${projectId}/v/${version}/datasets/create`, {
                 method: 'POST',
                 headers: { Authorization: `Bearer ${token}` }
             })

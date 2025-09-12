@@ -67,7 +67,7 @@ export default function TestCases({
             if (!token) return
 
             const response = await fetch(
-                `${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/${projectId}/v/${version}/t/${tcId}/delete`,
+                `${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/v1/${projectId}/v/${version}/t/${tcId}`,
                 {
                     method: 'DELETE',
                     headers: { Authorization: `Bearer ${token}` }

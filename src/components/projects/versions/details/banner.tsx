@@ -125,7 +125,7 @@ export default function DetailsBanner({ status }) {
             if (!token) return
 
             try {
-                const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/${projectId}/v/${version}/docs/upload`, {
+                const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/v1/${projectId}/v/${version}/docs/upload`, {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`
