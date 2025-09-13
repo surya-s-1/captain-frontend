@@ -10,7 +10,19 @@ export const useDownloadDatasets = (projectId: string, version: string) => {
 
         const interval = setInterval(async () => {
             try {
-                const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/v1/download/status/${jobId}`)
+                const user = await getCurrentUser()
+                if (!user) return
+
+                const token = await user.getIdToken()
+                if (!token) return
+
+                const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/v1/download/status/${jobId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
                 const contentType = response.headers.get('content-type')
 
                 if (response.status === 200 && contentType?.includes('application/zip')) {
