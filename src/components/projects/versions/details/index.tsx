@@ -119,21 +119,6 @@ export default function ProjectDetails() {
         fetchTestcases()        
     }, [projectId, version])
     
-    useEffect(() => {
-        if (status === 'START_TESTCASE_CREATION') {
-            const testsCompletedReqQuery = getDocs(query(
-                collection(firestoreDb, 'projects', projectId, 'versions', version, 'requirements'),
-                where('deleted', '==', false),
-                where('status', '==', 'TESTCASES_CREATION_COMPLETE'))
-            )
-
-            testsCompletedReqQuery.then(result => {
-                if (result.docs.length === requirements.length) {
-                    setStatus('CONFIRM_TESTCASES')
-                }
-            })
-        }
-    }, [requirements, status])
 
     async function confirmRequirements() {
         try {
