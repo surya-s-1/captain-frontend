@@ -56,7 +56,7 @@ export default function TestCases({
     const indexOfFirstTestcase = indexOfLastTestcase - testcasesPerPage
     const currentTestcases = testcases.slice(indexOfFirstTestcase, indexOfLastTestcase)
 
-    const canDelete = status === 'COMPLETE_TESTCASE_CREATION'
+    const canDelete = status === 'CONFIRM_TESTCASES'
 
     async function deleteTestcase(tcId: string) {
         try {

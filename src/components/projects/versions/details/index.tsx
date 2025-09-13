@@ -129,7 +129,7 @@ export default function ProjectDetails() {
 
             testsCompletedReqQuery.then(result => {
                 if (result.docs.length === requirements.length) {
-                    setStatus('COMPLETE_TESTCASE_CREATION')
+                    setStatus('CONFIRM_TESTCASES')
                 }
             })
         }
@@ -269,7 +269,7 @@ export default function ProjectDetails() {
                 />
             )}
 
-            {status === 'COMPLETE_TESTCASE_CREATION' && (
+            {status === 'CONFIRM_TESTCASES' && (
                 <Notice
                     title='Verify the test cases'
                     content='Please remove any unwanted test cases from the proposed ones and click confirm to go ahead with their creation on Jira project.'

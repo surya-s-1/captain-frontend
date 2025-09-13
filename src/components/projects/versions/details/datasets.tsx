@@ -18,7 +18,7 @@ interface DatasetsProps {
 }
 
 export default function Datasets({ projectId, version, status, testcase_ids }: DatasetsProps) {
-    const canDownload = (VERSION_STATUS_RANK[status] || -1) >= VERSION_STATUS_RANK['COMPLETE_TESTCASE_CREATION']
+    const canDownload = (VERSION_STATUS_RANK[status] || -1) >= VERSION_STATUS_RANK['CONFIRM_TESTCASES']
 
     const [createLoading, setCreateLoading] = useState(false)
     const [downloadAllLoading, setDownloadAllLoading] = useState(false)
@@ -117,9 +117,9 @@ export default function Datasets({ projectId, version, status, testcase_ids }: D
             <div className='flex items-center gap-2 w-fit'>
                 <span>Download dataset for a testcase:</span>
 
-                <select 
-                    className='text-sm p-1 border rounded' 
-                    value={singleTestcase} 
+                <select
+                    className='text-sm p-1 border rounded'
+                    value={singleTestcase}
                     onChange={(e) => setSingleTestcase(e.target.value)}
                 >
                     <option value='' disabled hidden>Select a testcase</option>
