@@ -158,7 +158,7 @@ export default function DetailsBanner({ status }) {
     }, [projectId, version])
 
     return (
-        <div className='w-full h-[150px] flex items-center justify-between sticky top-0 p-10 bg-gray-500 text-white z-10'>
+        <div className='w-full h-[150px] flex items-center justify-between sticky top-0 p-10 bg-gradient-to-br from-indigo-500 to-purple-600 text-white z-10'>
             {projectName &&
                 <>
                     <div>
@@ -172,7 +172,7 @@ export default function DetailsBanner({ status }) {
                     {(versionFiles.length === 0 || status.startsWith('ERR')) && (
                         <div>
                             <button
-                                className='w-fit bg-primary-contrast rounded-full p-2 cursor-pointer'
+                                className='w-fit bg-primary-contrast text-color-primary-contrast rounded-full p-2 cursor-pointer'
                                 onClick={() => setIsModalOpen(true)}
                             >
                                 Upload Requirements {status.startsWith('ERR') && <span>(Retry)</span>}

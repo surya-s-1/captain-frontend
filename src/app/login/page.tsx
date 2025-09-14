@@ -31,22 +31,33 @@ export default function LoginPage() {
     }
 
     return (
-        <div className='flex flex-col lg:flex-row w-full h-full items-center justify-evenly bg-primary pb-20 lg:pb-40 pt-10 lg:pt-0'>
-            <div className='flex flex-col items-center gap-4 lg:gap-8 w-full lg:w-[40%]'>
-                <div className='text-4xl lg:text-8xl font-bold'>
-                    Get.<br />
-                    Set.<br />
-                    Go.<br />
+        <div className='flex flex-col lg:flex-row w-full min-h-screen items-center bg-gray-50 dark:bg-gray-900'>
+            <div className='flex flex-col items-center justify-center w-full lg:w-1/2 min-h-[300px] lg:min-h-screen bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-lg'>
+                <div className='text-center'>
+                    <h1 className='text-5xl lg:text-7xl font-extrabold tracking-tight'>
+                        Get.<br />
+                        Set.<br />
+                        Go.
+                    </h1>
+                    <p className='mt-4 text-xl lg:text-2xl font-light text-white/90'>
+                        Captain's here to assist you.
+                    </p>
                 </div>
             </div>
-            <div className='flex flex-col w-full lg:w-[60%] mt-10 lg:mt-0 items-center lg:items-start'>
-                <div className='flex flex-col gap-4 lg:gap-8 w-fit px-5 lg:pl-20'>
-                    <h1 className='text-4xl lg:text-5xl text-color-primary/50'>Login</h1>
+
+            <div className='flex flex-col w-full lg:w-1/2 items-center justify-center p-8 lg:p-12'>
+                <div className='w-full max-w-sm p-8 bg-white dark:bg-gray-800 rounded-xl shadow-2xl transition-transform transform hover:scale-105'>
+                    <h2 className='text-3xl font-bold text-center text-gray-800 dark:text-gray-100 mb-6'>
+                        Welcome
+                    </h2>
+                    <p className='text-center text-gray-500 dark:text-gray-400 mb-8'>
+                        Sign in to continue to your projects.
+                    </p>
                     <button
                         onClick={handleGoogleLogin}
-                        className='flex items-center justify-center lg:justify-start gap-2 px-4 py-2 bg-secondary hover:bg-tertiary text-color-secondary/80 hover:text-color-tertiary transition-colors duration-300 cursor-pointer text-lg rounded-lg'
+                        className='w-full flex items-center justify-center gap-3 px-6 py-3 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium rounded-lg shadow-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors cursor-pointer'
                     >
-                        <img className='max-h-[24px]' src={Google_Logo.src} />
+                        <img className='h-6 w-6' src={Google_Logo.src} alt="Google Logo" />
                         <span>Sign in with Google</span>
                     </button>
                 </div>

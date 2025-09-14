@@ -69,7 +69,7 @@ export default function ChatMessages({ autoScroll, setAutoScroll }) {
     return (
         <div className='w-full flex flex-col flex-1 gap-2 max-h-full overflow-y-auto scrollbar'>
             {messages.length === 0 ? (
-                <div className='flex w-full h-full items-center justify-center bg-primary text-color-primary/50 text-7xl pb-52'>
+                <div className='flex w-full h-full items-center justify-center bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent text-7xl pb-52'>
                     {appUser.name ? (
                         <div>
                             Hello,<br />

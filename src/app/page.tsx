@@ -9,7 +9,7 @@ export default function Home() {
 
     return (
         <div className='flex flex-col w-full h-full items-center justify-center bg-primary'>
-            <div className='text-color-primary/50 text-7xl pb-40'>
+            <div className='bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent text-7xl pb-40'>
                 {appUser.name ?
                     <>
                         Hello,<br />
