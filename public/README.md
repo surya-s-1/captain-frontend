@@ -36,7 +36,7 @@ This notice is meant to help you understand what you can do today, why certain c
 
 ### 📄 Documentation and Requirement Processing
 6. You can upload your project's documentation in the **Project Details** page.  
-    - Supported formats (for now, will expand to XML and Markdown in the future): **PDF, Plain Text, Word, Excel, CSV**.  
+    - Supported formats (for now, will expand to XML, Plain Text and Markdown in the future): **PDF, Word, Excel, CSV**.  
     - Uploading documentation will automatically trigger **requirement and test case generation**.
 
 7. To ensure quality, we made **manual verification mandatory**:
@@ -95,8 +95,8 @@ This notice is meant to help you understand what you can do today, why certain c
 ---
 
 ### 📂 Expanded Documentation Support
-- Current supported formats: PDF, Plain Text, Word, Excel, CSV.
-- Planned future support: **Markdown** and **XML**.  
+- Current supported formats: PDF, Word, Excel, CSV.
+- Planned future support: **Plain Text**, **Markdown** and **XML**.  
 
 ---
 
