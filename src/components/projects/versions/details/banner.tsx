@@ -175,10 +175,10 @@ export default function DetailsBanner({ status }) {
                                 className='w-fit bg-primary-contrast text-color-primary-contrast rounded-full p-2 cursor-pointer'
                                 onClick={() => setIsModalOpen(true)}
                             >
-                                Upload Requirements {status.startsWith('ERR') && <span>(Retry)</span>}
+                                Upload Documents {status.startsWith('ERR') && <span>(Retry)</span>}
                             </button>
                             <Modal isOpen={isModalOpen} closeModal={() => setIsModalOpen(false)}>
-                                <h2 className='text-xl font-bold mb-4'>Upload Requirements</h2>
+                                <h2 className='text-xl font-bold mb-4'>Upload Documents</h2>
                                 <div className='flex flex-col gap-4'>
                                     <label htmlFor='files' className='w-fit bg-primary-contrast text-color-primary-contrast rounded-full p-2 cursor-pointer'>
                                         Select Files
