@@ -30,9 +30,18 @@ const componentPlugin = {
         </h2>
     ),
     h3: ({ children }) => (
-        <h2 className='font-semibold text-lg'>
+        <h3 className='font-semibold text-lg'>
             {children}
-        </h2>
+        </h3>
+    ),
+    a: ({ href, children }) => (
+        <a
+            href={href}
+            target='_blank'
+            className='text-blue-500 underline hover:text-blue-700 transition-colors'
+        >
+            {children}
+        </a>
     ),
     ul: ({ children }) => (
         <ul className='list-disc ml-5'>

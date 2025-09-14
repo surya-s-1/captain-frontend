@@ -24,6 +24,7 @@ export default function LoginPage() {
         try {
             const provider = new GoogleAuthProvider()
             await signInWithPopup(auth, provider)
+            localStorage.removeItem('agent_session_id')
             router.push('/projects')
         } catch (err) {
             console.error('Login error:', err)

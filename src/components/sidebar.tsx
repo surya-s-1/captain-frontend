@@ -35,7 +35,7 @@ const Sidebar = ({ sidebarExpanded, setSidebarExpanded }) => {
     const navItems = [
         { label: 'Integrations', icon: Cable, link: '/integrations' },
         { label: 'Projects', icon: LayoutDashboard, link: '/projects' },
-        { label: 'Ask Captain', icon: CircleQuestionMark, link: '/chat' }
+        { label: 'Ask Captain', icon: CircleQuestionMark, link: '/ask-captain' }
     ]
 
     const iconClass = 'p-2 rounded-full hover:bg-tertiary hover:text-color-tertiary transition-colors duration-200 cursor-pointer'

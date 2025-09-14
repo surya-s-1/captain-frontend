@@ -17,6 +17,7 @@ export default function Settings() {
     const appUser = useSelector((state: RootState) => state.user)
     const [message, setMessage] = useState('')
 
+    /*
     async function deleteChat() {
         const user = auth.currentUser
         if (!user) return
@@ -38,6 +39,7 @@ export default function Settings() {
             setMessage('Failed to delete chat history')
         }
     }
+    */
 
     return (
         <div className='w-full h-full flex flex-col pl-4 lg:pl-40 mt-8 gap-4 lg:gap-8'>
@@ -64,7 +66,7 @@ export default function Settings() {
                     <option value='dark'>Dark</option>
                 </select>
             </div>
-            <div className='flex flex-col gap-8 text-xl'>
+            {/* <div className='flex flex-col gap-8 text-xl'>
                 <button 
                     className='bg-red-400 text-white rounded-md p-2 w-fit cursor-pointer'
                     onClick={() => { deleteChat() }}
@@ -72,7 +74,7 @@ export default function Settings() {
                     Delete Chat
                 </button>
                 <p>{message}</p>
-            </div>
+            </div> */}
         </div>
     )
 }
