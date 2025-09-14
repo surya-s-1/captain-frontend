@@ -115,7 +115,7 @@ export default function ChatMessages({ autoScroll, setAutoScroll }) {
                         return (
                             <React.Fragment key={msg.msg_id || idx}>
                                 {isNewSession && (
-                                    <br />
+                                    <hr className='my-1' />
                                 )}
 
                                 {msg.text.startsWith('[error]:') ? (
