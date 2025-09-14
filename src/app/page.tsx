@@ -38,7 +38,7 @@ export default function Home() {
                     </a>
                 </div>
                 <div className='flex items-center gap-4'>
-                    <p>Want to ask <b>Captain</b> to do it for you?</p>
+                    <p>Want to ask <span className='bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent'>Captain</span> to do it for you?</p>
                     <a
                         href='/ask-captain'
                         className='text-blue-500 cursor-pointer'
