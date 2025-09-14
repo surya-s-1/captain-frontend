@@ -9,10 +9,12 @@ interface Message {
 }
 
 interface askCaptainState {
+    sessionId: string
     messages: Message[]
 }
 
 const initialState: askCaptainState = {
+    sessionId: '',
     messages: []
 }
 
@@ -39,6 +41,12 @@ export const askCaptainSlice = createSlice({
             if (msg) {
                 msg.text = action.payload.text.trim()
             }
+        },
+        setSessionId: (state: askCaptainState, action: PayloadAction<string>) => {
+            state.sessionId = action.payload
+        },
+        clearSessionId: (state: askCaptainState) => {
+            state.sessionId = ''
         }
     }
 })
@@ -46,7 +54,9 @@ export const askCaptainSlice = createSlice({
 export const {
     clearMessages,
     pushMessage,
-    updateMessage
+    updateMessage,
+    setSessionId,
+    clearSessionId
 } = askCaptainSlice.actions
 
 export default askCaptainSlice.reducer

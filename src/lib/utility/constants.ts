@@ -100,7 +100,3 @@ export const TC_DATASET_STATUS_MESSAGES = {
     DATASET_GENERATION_COMPLETED: 'Dataset generation completed',
     ERR_DATASET_GENERATION: 'Error occurred during dataset generation'
 }
-
-export const KEYS = {
-    AGENT_SESSION_ID: 'agent_session_id'
-}

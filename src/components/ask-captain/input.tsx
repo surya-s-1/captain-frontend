@@ -2,12 +2,12 @@
 
 import React from 'react'
 import { useState, useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Send, Loader2 } from 'lucide-react'
 
-import { pushMessage } from '@/lib/slices/askCaptain'
+import { RootState } from '@/lib/store'
+import { pushMessage, setSessionId } from '@/lib/slices/askCaptain'
 import { getCurrentUser } from '@/lib/firebase/utilities'
-import { KEYS } from '@/lib/utility/constants'
 
 const AGENT_ENDPOINT = process.env.NEXT_PUBLIC_AGENT_ENDPOINT
 
@@ -16,6 +16,7 @@ export default function ChatInput({ setAutoScroll }) {
     const [loading, setLoading] = useState<boolean>(false)
 
     const textareaRef = useRef<HTMLTextAreaElement>(null)
+    const sessionId = useSelector((state: RootState) => state.askCaptain.sessionId)
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -33,8 +34,6 @@ export default function ChatInput({ setAutoScroll }) {
             setLoading(true)
             setAutoScroll(true)
 
-            let session_id = localStorage.getItem(KEYS.AGENT_SESSION_ID)
-
             const user = await getCurrentUser()
             const token = await user.getIdToken()
 
@@ -44,7 +43,7 @@ export default function ChatInput({ setAutoScroll }) {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
-                    'x-session-id': (session_id !== 'null' && session_id) ? session_id : ''
+                    'X-Session-Id': sessionId || ''
                 }
             })
 
@@ -55,27 +54,25 @@ export default function ChatInput({ setAutoScroll }) {
             }
 
             const msg_id = await queryRes.text()
-            session_id = queryRes.headers.get('x-session-id')
-            localStorage.setItem(KEYS.AGENT_SESSION_ID, session_id)
+            let receivedSessionId = queryRes.headers.get('X-Session-Id')
+            dispatch(setSessionId(receivedSessionId))
 
             const newMsg = {
                 msg_id,
                 text: inputValue,
                 timestamp: new Date().toISOString(),
                 role: 'user',
-                session_id
+                session_id: receivedSessionId
             }
 
             dispatch(pushMessage(newMsg))
             setInputValue('')
 
-            console.log('session_id', session_id)
-
             const modelRes = await fetch(`${AGENT_ENDPOINT}/response`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
-                    'x-session-id': session_id
+                    'X-Session-Id': receivedSessionId
                 }
             })
 
@@ -86,18 +83,18 @@ export default function ChatInput({ setAutoScroll }) {
             }
 
             const { msg_id: modelMsgId, text: modelMsgText } = await modelRes.json()
-            session_id = modelRes.headers.get('x-session-id')
-            localStorage.setItem(KEYS.AGENT_SESSION_ID, session_id)
+            receivedSessionId = modelRes.headers.get('X-Session-Id')
 
             const modelMsg = {
                 msg_id: modelMsgId,
                 text: modelMsgText,
                 timestamp: new Date().toISOString(),
                 role: 'model',
-                session_id
+                session_id: receivedSessionId
             }
 
             dispatch(pushMessage(modelMsg))
+            dispatch(setSessionId(receivedSessionId))
             setLoading(false)
         }
     }

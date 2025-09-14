@@ -10,6 +10,7 @@ import { auth } from '@/lib/firebase'
 import { RootState } from '@/lib/store'
 import { clearMessages } from '@/lib/slices/chat'
 import { clearUser } from '@/lib/slices/user'
+import { clearSessionId } from '@/lib/slices/askCaptain'
 
 const Sidebar = ({ sidebarExpanded, setSidebarExpanded }) => {
     const appUser = useSelector((state: RootState) => state.user)
@@ -26,9 +27,9 @@ const Sidebar = ({ sidebarExpanded, setSidebarExpanded }) => {
     }, [appUser])
 
     const handleLogout = async () => {
+        dispatch(clearSessionId())
         dispatch(clearMessages())
         dispatch(clearUser())
-        localStorage.clear()
         await signOut(auth)
     }
 
