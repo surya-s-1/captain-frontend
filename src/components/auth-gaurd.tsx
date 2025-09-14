@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux'
 import { useRouter, usePathname } from 'next/navigation'
 
 import { RootState } from '@/lib/store'
+import { PUBLIC_PATHS } from '@/lib/utility/constants'
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
     const router = useRouter()
@@ -12,7 +13,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     const { uid, loading } = useSelector((state: RootState) => state.user)
 
     useEffect(() => {
-        if (!loading && !uid && pathname !== '/login') {
+        if (!loading && !uid && !PUBLIC_PATHS.includes(pathname)) {
             router.replace('/login')
         }
     }, [uid, loading, pathname, router])

@@ -1,6 +1,7 @@
-# 📢 Notice: Current Features and Upcoming Updates
+# 📢 Current Features and Upcoming Updates
 
 This notice is meant to help you understand what you can do today, why certain choices were made, and where we're headed.
+
 ---
 
 ## ✅ Current Features
@@ -13,21 +14,32 @@ This notice is meant to help you understand what you can do today, why certain c
 👉 **Note:** We intentionally did **not** provide the ability to create new Jira projects from within this app.
 
 - Jira project creation is considered an internal team responsibility and to be done directly on Jira.
-- This app's scope is focused strictly on **requirements, test cases, and datasets**—not on creating or managing Jira projects.  
+- This app's scope is focused strictly on **requirements, test cases, and datasets**—not on creating or managing Jira projects.
+
+---
+
+### 🤖 Captain (The In-App Assistant)
+
+4. You can also ask **Captain** itself to perform many tasks for you, such as:  
+
+    - Connecting your Jira account  
+    - Connecting a Jira project to this application  
+    - Deleting a requirement or test case  
+    - Creating datasets
 
 ---
 
 ### 👥 Project Access
-4. Multiple team members can work on the same project in this app, as long as they already have the proper access in Jira.  
+5. Multiple team members can work on the same project in this app, as long as they already have the proper access in Jira.  
 
 ---
 
 ### 📄 Documentation and Requirement Processing
-5. You can upload your project's documentation in the **Project Details** page.  
+6. You can upload your project's documentation in the **Project Details** page.  
     - Supported formats (for now, will expand to XML and Markdown in the future): **PDF, Plain Text, Word, Excel, CSV**.  
     - Uploading documentation will automatically trigger **requirement and test case generation**.
 
-6. To ensure quality, we made **manual verification mandatory**:
+7. To ensure quality, we made **manual verification mandatory**:
 
     - You must confirm generated requirements and remove any that are unnecessary before testcases are generated for these requirements.  
     - Similarly, you must review test cases and remove any that are unnecessary before they are created on Jira.  
@@ -35,9 +47,9 @@ This notice is meant to help you understand what you can do today, why certain c
 ---
 
 ### 🧪 Test Case Lifecycle
-7. Once confirmed, test cases are automatically created in Jira.
+8. Once confirmed, test cases are automatically created in Jira.
 
-8. For convenience, this app keeps them in sync:
+9. For convenience, this app syncs those testcases right after creation:
 
     - After creation, they are synced back into this app.  
     - Each synced test case provides an **“Open in Jira”** option for direct navigation.  
@@ -45,7 +57,7 @@ This notice is meant to help you understand what you can do today, why certain c
 ---
 
 ### 📊 Dataset Management
-9. Datasets are generated for all confirmed test cases.
+10. Datasets are generated for all confirmed test cases.
 
     - Trigger dataset creation with the **Create Datasets** button.  
     - You can download datasets either **individually** (per test case) or **in bulk** (for all test cases).  
@@ -53,27 +65,11 @@ This notice is meant to help you understand what you can do today, why certain c
 ---
 
 ### 🖥️ User Experience Enhancements
-10. A **realtime progress banner** is displayed at the top of the **Project Details** page so you can track the current status.
+11. A **realtime progress banner** is displayed at the top of the **Project Details** page so you can track the current status.
 
-11. Each project will have a **version**.
+12. Each project will have a **version**.
 
-    - This is preparation for future **versioning support**, so you can later create new test cases when requirements evolve, without losing historical context.  
-
-12. You can also ask **Captain (the in-app assistant)** to perform many tasks for you, such as:  
-
-    - Connecting your Jira account  
-    - Connecting a project  
-    - Deleting a requirement or test case  
-    - Creating datasets  
-
-    ⚠️ **Limitations:** Captain cannot currently handle tasks that involve file management (e.g., uploading documentation or downloading datasets).  
-
----
-
-### 🔐 Authentication
-13. At this time, only **Google authentication** is supported.
-
-    - More authentication options will be added in the future.  
+    - This is preparation for future **versioning support**, so you can later create new test cases when requirements evolve, without losing historical context.
 
 ---
 
@@ -107,6 +103,11 @@ This notice is meant to help you understand what you can do today, why certain c
 ### 🛠️ More Tool Integrations
 - Right now, only Jira is supported.  
 - Planned future integrations: **Azure DevOps** and **Polarion**.  
+
+---
+
+### 🔐 Authentication
+- At this time, only **Google authentication** is supported. More authentication options will be added in the future.  
 
 ---
 

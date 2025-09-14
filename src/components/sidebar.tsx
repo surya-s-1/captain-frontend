@@ -76,7 +76,8 @@ const Sidebar = ({ sidebarExpanded, setSidebarExpanded }) => {
 
             <div>
                 <a
-                    href={'/notice'}
+                    href='/notice'
+                    target='_blank'
                     className={navButtonClass}
                 >
                     <CircleAlert size={20} />

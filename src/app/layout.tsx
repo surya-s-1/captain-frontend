@@ -12,7 +12,7 @@ import Sidebar from '@/components/sidebar'
 import Branding from '@/components/branding'
 
 import { listenToAuthChanges } from '@/lib/firebase/utilities'
-import { STANDARD_APP_NAME } from '@/lib/utility/constants'
+import { PUBLIC_PATHS, STANDARD_APP_NAME } from '@/lib/utility/constants'
 
 import './globals.css'
 
@@ -32,7 +32,7 @@ export default function RootLayout({ children }) {
                 <StoreProvider>
                     <AuthGuard>
                         <div className='flex h-screen'>
-                            {pathname !== '/login' && (
+                            {!PUBLIC_PATHS.includes(pathname) && (
                                 <>
                                     <Sidebar
                                         sidebarExpanded={sidebarExpanded}
