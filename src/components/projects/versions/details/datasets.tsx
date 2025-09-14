@@ -18,7 +18,7 @@ interface DatasetsProps {
 }
 
 export default function Datasets({ projectId, version, status, testcase_ids }: DatasetsProps) {
-    const canDownload = (VERSION_STATUS_RANK[status] || -1) >= VERSION_STATUS_RANK['CONFIRM_TESTCASES']
+    const canDownload = (VERSION_STATUS_RANK[status] || -1) >= VERSION_STATUS_RANK['START_JIRA_CREATION']
 
     const [createLoading, setCreateLoading] = useState(false)
     const [downloadAllLoading, setDownloadAllLoading] = useState(false)
@@ -29,7 +29,7 @@ export default function Datasets({ projectId, version, status, testcase_ids }: D
 
     if (!canDownload) {
         return (
-            <div>Please come back after all the testcases are created.</div>
+            <div>Please come back after all confirming the created testcases.</div>
         )
     }
 

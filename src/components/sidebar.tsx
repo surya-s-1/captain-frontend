@@ -4,7 +4,7 @@ import React from 'react'
 import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { signOut } from 'firebase/auth'
-import { PanelLeft, Cable, LayoutDashboard, Settings, CircleQuestionMark, LogOut } from 'lucide-react'
+import { PanelLeft, Cable, LayoutDashboard, Settings, MessageSquare, CircleAlert, LogOut } from 'lucide-react'
 
 import { auth } from '@/lib/firebase'
 import { RootState } from '@/lib/store'
@@ -36,7 +36,7 @@ const Sidebar = ({ sidebarExpanded, setSidebarExpanded }) => {
     const navItems = [
         { label: 'Integrations', icon: Cable, link: '/integrations' },
         { label: 'Projects', icon: LayoutDashboard, link: '/projects' },
-        { label: 'Ask Captain', icon: CircleQuestionMark, link: '/ask-captain' }
+        { label: 'Ask Captain', icon: MessageSquare, link: '/ask-captain' }
     ]
 
     const iconClass = 'p-2 rounded-full hover:bg-tertiary hover:text-color-tertiary transition-colors duration-200 cursor-pointer'
@@ -75,6 +75,16 @@ const Sidebar = ({ sidebarExpanded, setSidebarExpanded }) => {
             </nav>
 
             <div>
+                <a
+                    href={'/notice'}
+                    className={navButtonClass}
+                >
+                    <CircleAlert size={20} />
+                    {sidebarExpanded &&
+                        <span className='whitespace-nowrap overflow-hidden transition-opacity duration-300'>
+                            Notice
+                        </span>}
+                </a>
                 <a
                     href={'/settings'}
                     className={navButtonClass}
