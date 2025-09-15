@@ -33,17 +33,10 @@ export default function RootLayout({ children }) {
                     <AuthGuard>
                         <div className='flex h-screen'>
                             {!PUBLIC_PATHS.includes(pathname) && (
-                                <>
-                                    <Sidebar
-                                        sidebarExpanded={sidebarExpanded}
-                                        setSidebarExpanded={setSidebarExpanded}
-                                    />
-                                    {sidebarExpanded && (
-                                        <div
-                                            className='fixed inset-0 bg-black opacity-50 z-20 lg:hidden'
-                                        ></div>
-                                    )}
-                                </>
+                                <Sidebar
+                                    sidebarExpanded={sidebarExpanded}
+                                    setSidebarExpanded={setSidebarExpanded}
+                                />
                             )}
                             <div className={`flex flex-col w-full`}>
                                 {pathname !== '/login' ?
