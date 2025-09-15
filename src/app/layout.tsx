@@ -24,7 +24,15 @@ export default function RootLayout({ children }) {
 
     useEffect(() => {
         document.title = STANDARD_APP_NAME
+
+        localStorage.getItem('sidebarExpanded') === 'true' ?
+            setSidebarExpanded(true) :
+            setSidebarExpanded(false)
     }, [])
+
+    useEffect(() => {
+        localStorage.setItem('sidebarExpanded', String(sidebarExpanded))
+    }, [sidebarExpanded])
 
     return (
         <html lang='en'>
@@ -40,20 +48,20 @@ export default function RootLayout({ children }) {
                             )}
                             <div className={`flex flex-col w-full`}>
                                 {pathname !== '/login' ?
-                                <>
-                                    <div className='lg:hidden flex items-center justify-between bg-primary'>
-                                        <button 
-                                            onClick={() => { setSidebarExpanded(!sidebarExpanded) }} 
-                                            className='ml-4 text-color-primary'
-                                        >
-                                            <Menu size={24} />
-                                        </button>
-                                        <Branding />
-                                    </div>
-                                    <div className='hidden lg:block'>
-                                        <Branding />
-                                    </div>
-                                </> :
+                                    <>
+                                        <div className='lg:hidden flex items-center justify-between bg-primary'>
+                                            <button
+                                                onClick={() => { setSidebarExpanded(!sidebarExpanded) }}
+                                                className='ml-4 text-indigo-500'
+                                            >
+                                                <Menu size={24} />
+                                            </button>
+                                            <Branding />
+                                        </div>
+                                        <div className='hidden lg:block'>
+                                            <Branding />
+                                        </div>
+                                    </> :
                                     <Branding />}
                                 <div className='w-full flex flex-col flex-1 items-center overflow-hidden'>
                                     {children}

@@ -112,15 +112,15 @@ export default function TestCases({
                 <div className='w-full flex flex-col gap-4'>
                     {currentTestcases.map((t) => (
                         <div key={t.testcase_id} className='relative p-4 shadow-md shadow-black/30 dark:shadow-black/50 rounded-lg'>
-                            <div className='w-full flex justify-between'>
-                                <div className='flex items-center gap-1 text-color-primary/50 text-xs'>
+                            <div className='w-full flex flex-col lg:flex-row gap-4 justify-between'>
+                                <div className='flex flex-col lg:flex-row lg:items-center gap-1 text-color-primary/50 text-xs'>
                                     <span>
                                         {t.testcase_id}: This testcase is created for requirement {t.requirement_id}.
                                     </span>
                                     <a
                                         href={`#${t.requirement_id}`}
                                         target='_blank'
-                                        className='flex items-center gap-1 border-b-2 border-dotted'
+                                        className='w-fit flex items-center gap-1 border-b-2 border-dotted'
                                     >
                                         <span>Open Requirement</span>
                                         <MoveUpRight size={14} />
@@ -161,7 +161,7 @@ export default function TestCases({
                                     )}
                                 </div>
                             </div>
-                            <div className='flex items-center gap-1 text-color-primary/50 text-xs'>
+                            <div className='mt-2 lg:mt-0 flex items-center gap-1 text-color-primary/50 text-xs'>
                                 <span>
                                     {TC_DATASET_STATUS_MESSAGES[t.dataset_status] || t.dataset_status}
                                 </span>

@@ -4,7 +4,7 @@ import React from 'react'
 import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { signOut } from 'firebase/auth'
-import { PanelLeft, Cable, LayoutDashboard, Settings, MessageSquare, CircleAlert, LogOut } from 'lucide-react'
+import { PanelLeft, X, Cable, LayoutDashboard, Settings, MessageSquare, CircleAlert, LogOut } from 'lucide-react'
 
 import { auth } from '@/lib/firebase'
 import { RootState } from '@/lib/store'
@@ -39,19 +39,24 @@ const Sidebar = ({ sidebarExpanded, setSidebarExpanded }) => {
         { label: 'Ask Captain', icon: MessageSquare, link: '/ask-captain' }
     ]
 
-    const iconClass = 'p-2 rounded-full hover:bg-white/30 backdrop-blur-sm transition-colors duration-200 cursor-pointer'
     const navButtonClass = 'flex items-center space-x-3 p-2 rounded-lg hover:bg-white/20 backdrop-blur-sm transition-colors duration-200 cursor-pointer'
 
     return (
         <div
-            className={`fixed inset-y-0 left-0 z-10 flex flex-col h-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white transition-all duration-300 ease-in-out lg:relative lg:translate-x-0 ${sidebarExpanded ? 'w-64 lg:w-80 translate-x-0' : '-translate-x-full w-0 lg:w-20'} p-4 text-sm`}
+            className={`fixed inset-y-0 left-0 z-20 flex flex-col h-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white transition-all duration-300 ease-in-out lg:relative lg:translate-x-0 ${sidebarExpanded ? 'w-64 lg:w-80 translate-x-0' : '-translate-x-full w-0 lg:w-20'} p-4 text-sm`}
         >
             <div className='flex justify-between mb-4'>
                 <button
                     onClick={() => setSidebarExpanded(!sidebarExpanded)}
-                    className={iconClass}
+                    className='p-2 rounded-full hover:bg-white/30 backdrop-blur-sm transition-colors duration-200 cursor-pointer hidden lg:block'
                 >
                     <PanelLeft size={24} className={`transition-transform duration-300 ${sidebarExpanded ? 'block' : 'hidden lg:block rotate-180'}`} />
+                </button>
+                <button
+                    onClick={() => setSidebarExpanded(!sidebarExpanded)}
+                    className='p-2 rounded-full hover:bg-white/30 backdrop-blur-sm transition-colors duration-200 cursor-pointer block lg:hidden'
+                >
+                    <X size={24} className={`transition-transform duration-300 ${sidebarExpanded ? 'block' : 'hidden rotate-180'}`} />
                 </button>
             </div>
 
