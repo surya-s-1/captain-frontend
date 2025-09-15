@@ -121,7 +121,7 @@ export default function ChatInput({ setAutoScroll }) {
             {!loading ?
                 <button
                     onClick={handleSend}
-                    className={`flex gap-2 p-2 bg-primary-contrast text-color-primary-contrast rounded-full cursor-pointer transition-all duration-300`}
+                    className={`flex gap-2 p-2 w-fit h-fit bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-full cursor-pointer transition-all duration-300`}
                     aria-label='Send message'
                     type='button'
                 >

@@ -90,13 +90,13 @@ export default function ChatMessages({ autoScroll, setAutoScroll }) {
                             className='self-center px-2 py-1 rounded-lg  cursor-pointer
                                     bg-transparent text-color-primary/50 hover:text-color-primary'
                         >
-                            Load More Messages
+                            Load earlier messages
                         </button>
                     ) : (
                         <span
                             className='self-center px-2 py-1 rounded-lg bg-transparent text-color-primary/50'
                         >
-                            No more messages
+                            No messages earlier
                         </span>
                     )}
 
