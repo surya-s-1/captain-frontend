@@ -236,7 +236,7 @@ export default function Requirements({
                 <p>No requirements found.</p>
             )}
             {requirements.length > requirementsPerPage && (
-                <div className='sticky bottom-1 w-fit bg-secondary rounded-md shadow-md flex justify-center items-center gap-4 mt-8'>
+                <div className='sticky bottom-4 w-fit bg-secondary rounded-md shadow-md flex justify-center items-center gap-4 mt-8'>
                     <button
                         onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                         disabled={currentPage === 1}

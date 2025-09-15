@@ -112,15 +112,10 @@ export default function TestCases({
                 <div className='w-full flex flex-col gap-4'>
                     {currentTestcases.map((t) => (
                         <div key={t.testcase_id} className='relative p-4 shadow-md shadow-black/30 dark:shadow-black/50 rounded-lg'>
-                            <div className='flex items-center gap-1 text-color-primary/50 text-xs'>
-                                <span>
-                                    {t.testcase_id}
-                                </span>
-                            </div>
-                            <div className='w-full flex items-center justify-between'>
+                            <div className='w-full flex justify-between'>
                                 <div className='flex items-center gap-1 text-color-primary/50 text-xs'>
                                     <span>
-                                        Created for requirement {t.requirement_id}.
+                                        {t.testcase_id}: This testcase is created for requirement {t.requirement_id}.
                                     </span>
                                     <a
                                         href={`#${t.requirement_id}`}
@@ -204,7 +199,7 @@ export default function TestCases({
                 <p>No test cases found.</p>
             )}
             {testcases.length > testcasesPerPage && (
-                <div className='sticky bottom-1 w-fit bg-secondary rounded-md shadow-md flex justify-center items-center gap-4 mt-8'>
+                <div className='sticky bottom-4 w-fit bg-secondary rounded-md shadow-md flex justify-center items-center gap-4 mt-8'>
                     <button
                         onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                         disabled={currentPage === 1}
