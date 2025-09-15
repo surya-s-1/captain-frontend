@@ -68,14 +68,18 @@ export function ProjectView({ tool, loading, error, projects }: ProjectViewInput
     return (
         <>
             <h2 className='text-color-primary/70 text-lg font-semibold mb-4'>{tool}</h2>
-            <div className='w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-                {(loading || error) ?
-                    <div>
-                        {loading ?
-                            <div className='flex items-center gap-2'>Loading <Loader2 className='animate-spin' size={20} /></div> :
-                            <p className='text-error font-semibold'>{error}</p>}
-                    </div> :
-                    projects.map((project, idx) => (
+
+            {loading &&
+                <div className='flex items-center gap-2'>
+                    Loading <Loader2 className='animate-spin' size={20} />
+                </div>}
+
+            {error &&
+                <div className='text-error font-semibold'>{error}</div>}
+
+            {!loading && !error &&
+                <div className='w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+                    {projects.map((project, idx) => (
                         <a
                             key={idx}
                             href={project.connected ? `/projects/versions/details?projectId=${project.project_id}&version=${project.latest_version}&tool=${tool}` : ''}
@@ -117,14 +121,15 @@ export function ProjectView({ tool, loading, error, projects }: ProjectViewInput
                                         disabled={connectLoading}
                                     >
                                         <span>Connect</span>
-                                        {connectLoading && 
+                                        {connectLoading &&
                                             <Loader2 className='animate-spin' size={16} />}
                                     </button>
                                 }
                             </div>
                         </a>
                     ))}
-            </div>
+                </div>
+            }
         </>
     )
 }
