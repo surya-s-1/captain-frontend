@@ -157,8 +157,12 @@ export default function DetailsBanner({ status }) {
         fetchVersion()
     }, [projectId, version])
 
+    useEffect(() => {
+        document.title = (projectName ? projectName + ' ' : '') + 'Details | ' + STANDARD_APP_NAME
+    }, [projectName])
+
     return (
-        <div className='w-full h-[150px] flex items-center justify-between sticky top-0 p-10 bg-gradient-to-br from-indigo-500 to-purple-600 text-white z-10'>
+        <div className='w-full h-[125px] flex items-center justify-between sticky top-0 p-10 bg-gradient-to-r from-indigo-500 to-purple-600 text-white z-10'>
             {projectName &&
                 <>
                     <div>

@@ -178,7 +178,7 @@ export default function ProjectDetails() {
             <DetailsBanner status={status} />
 
             {!HIDE_TABS && (
-                <div className='w-ful sticky top-[150px] backdrop-blur-xs bg-white/30 flex items-center justify-center gap-8 py-2 shadow-xl z-10'>
+                <div className='w-ful sticky top-[125px] backdrop-blur-xs bg-white/20 flex items-center justify-center gap-8 py-2 shadow-xl z-10'>
                     <button
                         className={getTabClassName('requirements')}
                         onClick={() => setTab('requirements')}
@@ -236,7 +236,7 @@ export default function ProjectDetails() {
 
             {status === 'CONFIRM_REQ_EXTRACT' && (
                 <Notice
-                    title='Verify the proposed requirements'
+                    title='Verify proposed requirements'
                     content='Please remove any unwanted requirement from the extracted requirements and click confirm to go ahead with test cases creation.'
                     buttonLabel='Confirm'
                     loading={submitLoading}
@@ -256,7 +256,7 @@ export default function ProjectDetails() {
 
             {status === 'CONFIRM_TESTCASES' && (
                 <Notice
-                    title='Verify the test cases'
+                    title='Verify proposed test cases'
                     content='Please remove any unwanted test cases from the proposed ones and click confirm to go ahead with their creation on Jira project.'
                     buttonLabel='Confirm'
                     loading={submitLoading}

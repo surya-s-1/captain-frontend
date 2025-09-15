@@ -2,7 +2,7 @@ import { Loader2 } from 'lucide-react'
 
 export function Notice({ title, content, buttonLabel = null, loading = null, callback = null }) {
     return (
-        <div className='sticky bottom-0 p-4 bg-yellow-100 border-l-4 border-yellow-500 text-black flex items-center justify-between'>
+        <div className='sticky bottom-0 p-4 bg-gradient-to-r from-indigo-500 to-violet-500 border-l-4 border-yellow-500 text-white flex items-center justify-between'>
             <div>
                 <p className='font-semibold'>{title}</p>
                 <p>{content}</p>

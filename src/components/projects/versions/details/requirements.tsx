@@ -146,7 +146,7 @@ export default function Requirements({
                             <div
                                 id={r.requirement_id}
                                 key={r.requirement_id}
-                                className='relative p-2 shadow-md shadow-black/30 dark:shadow-black/50 rounded-lg scroll-mt-[210px]'
+                                className='relative p-2 shadow-md shadow-black/30 dark:shadow-black/50 rounded-lg scroll-mt-[195px]'
                             >
                                 {canDelete && (
                                     <button

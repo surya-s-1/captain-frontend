@@ -5,7 +5,7 @@ import Captain from '@/../public/Captain_Logo.png'
 
 const Branding = () => {
     return (
-        <header className='w-full sticky top-0 py-4 px-8'>
+        <header className='w-full sticky top-0 py-2 px-8'>
             <div className='flex-col items-center space-y-sm'>
                 <div className='flex items-center gap-1'>
                     <img src={Captain.src} width={40} />

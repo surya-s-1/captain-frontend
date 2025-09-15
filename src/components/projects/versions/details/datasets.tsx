@@ -29,7 +29,7 @@ export default function Datasets({ projectId, version, status, testcase_ids }: D
 
     if (!canDownload) {
         return (
-            <div>Please come back after all confirming the created testcases.</div>
+            <div>Please come back after confirming the created testcases.</div>
         )
     }
 

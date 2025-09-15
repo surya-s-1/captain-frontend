@@ -94,7 +94,7 @@ export const REQ_STATUS_MESSAGES = {
 }
 
 export const TC_DATASET_STATUS_MESSAGES = {
-    NOT_STARTED: 'Dataset not yet generated. Please go to Datasets tab and select \'create datasets\' once you delete the ones not needed.',
+    NOT_STARTED: 'Dataset creation not yet started. Click \'Create datasets\' button in Datasets tab to start the process.',
     DATASET_GENERATION_QUEUED: 'Dataset generation queued',
     DATASET_GENERATION_STARTED: 'Dataset generation in progress',
     DATASET_GENERATION_COMPLETED: 'Dataset generation completed',

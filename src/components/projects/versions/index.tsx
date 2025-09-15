@@ -6,7 +6,7 @@ import { collection, getDoc, doc, getDocs, query, where } from 'firebase/firesto
 
 import { firestoreDb } from '@/lib/firebase'
 import { getCurrentUser } from '@/lib/firebase/utilities'
-import { SUPPORTED_TOOLS } from '@/lib/utility/constants'
+import { STANDARD_APP_NAME, SUPPORTED_TOOLS } from '@/lib/utility/constants'
 
 
 export default function ProjectVersions() {
@@ -65,6 +65,9 @@ export default function ProjectVersions() {
         }
     }
 
+    useEffect(() => {
+        document.title = 'Project Versions | ' + STANDARD_APP_NAME
+    }, [])
 
     useEffect(() => {
         setLoading(true)

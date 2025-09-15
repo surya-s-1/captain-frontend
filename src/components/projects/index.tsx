@@ -7,7 +7,7 @@ import { ProjectView } from '@/components/projects/view'
 import { useJiraProjects } from '@/hooks/useJiraProjects'
 
 import { firestoreDb } from '@/lib/firebase'
-import { SUPPORTED_TOOLS } from '@/lib/utility/constants'
+import { STANDARD_APP_NAME, SUPPORTED_TOOLS } from '@/lib/utility/constants'
 import { getCurrentUser } from '@/lib/firebase/utilities'
 
 export interface ConnectedProject {
@@ -37,6 +37,8 @@ export default function Projects() {
     }
 
     useEffect(() => {
+        document.title = 'Projects | ' + STANDARD_APP_NAME
+
         async function loadProjects() {
             const unsubscribe = await fetchConnectedProjects()
             return () => unsubscribe && unsubscribe()
