@@ -228,6 +228,19 @@ export default function DetailsBanner({ status }) {
                                 ))}
                             </ul>
                         </div>}
+                    {versionFiles.length == 0 && (
+                        <div className='flex flex-col gap-1'>
+                            <span>Updated Requirements?</span>
+                            <button
+                                className='w-fit bg-primary-contrast/50 text-color-primary-contrast rounded-full p-2 cursor-pointer'
+                                onClick={() => setIsModalOpen(true)}
+                                disabled={true}
+                                title='Feature not yet developed'
+                            >
+                                Create New Version
+                            </button>
+                        </div>
+                    )}
                 </>}
         </div>
     )

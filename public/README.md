@@ -75,8 +75,8 @@ This notice is meant to help you understand what you can do today, why certain c
 
 ## 🚀 Future Updates on Our Roadmap
 
-### 📌 Versioning
-- If your project requirements change mid-project, you will be able to create a **new version**.
+### 📌 Support for Changing Project Requirements
+- As your project requirements change and new features get added and older ones get deprecated, you will be able to create a **new version** of the project in the app.
 
 - Instead of regenerating all test cases from scratch, the app will:
 
@@ -84,13 +84,22 @@ This notice is meant to help you understand what you can do today, why certain c
     - Reuse what already exists.  
     - Generate only what's truly new or changed.
 
-- To prevent confusion, only the **latest version** will allow actions. Older versions will become **read-only**.  
+- Only the **latest version** will allow actions. Older versions will become **read-only**.  
+
+---
+
+### 🔀 Upload Existing Testcases
+- You will be able to upload existing testcases, into this app and then generate only the missed test cases.
+
+---
+
+### ✨ Enhancement of Testcases
+- You will be able to chat with AI and enhance a testcase it generated, if it is not upto the mark.
 
 ---
 
 ### 🔄 Realtime Jira Sync
 - Any changes you make to test cases in Jira (outside the app) will sync back automatically into this app.
-- This was postponed due to time constraints but remains a high-priority update.  
 
 ---
 
@@ -111,8 +120,7 @@ This notice is meant to help you understand what you can do today, why certain c
 
 ---
 
-## ⚡ Summary 
-- Today, you can already connect Jira, manage requirements, generate test cases, and create datasets with collaboration support.  
-- Tomorrow, you'll see smarter versioning, realtime sync, and expanded integrations.  
+## Summary 
+You'll see smarter versioning, support for already created test cases, realtime sync, and expanded integrations in the near future.
 
 Stay tuned 🚀.
