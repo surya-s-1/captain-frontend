@@ -20,7 +20,8 @@ export interface TestCaseInterface {
     requirement_id: string
     deleted: boolean
     toolCreated: string | null
-    toolIssueLink: string
+    toolIssueKey: string | null
+    toolIssueLink: string | null
     dataset_status: string | null
     datasets: string[] | null
 }
@@ -152,7 +153,7 @@ export default function TestCases({
                                         </a>}
                                     {canDelete && (
                                         <button
-                                            className='text-red-500 absolute top-2 right-2 cursor-pointer'
+                                            className='text-red-500 cursor-pointer'
                                             onClick={() => deleteTestcase(t.testcase_id)}
                                             disabled={deleteLoading}
                                         >

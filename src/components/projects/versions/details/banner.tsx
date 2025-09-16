@@ -7,7 +7,7 @@ import { doc, onSnapshot } from 'firebase/firestore'
 
 import { Modal } from '@/lib/utility/ui/Modal'
 
-import { STANDARD_APP_NAME, VERSION_STATUS_MESSAGES, VERSION_STATUS_SHOW_LOADER } from '@/lib/utility/constants'
+import { STANDARD_APP_NAME, VERSION_STATUS } from '@/lib/utility/constants'
 import { firestoreDb } from '@/lib/firebase'
 import { getCurrentUser } from '@/lib/firebase/utilities'
 
@@ -169,8 +169,8 @@ export default function DetailsBanner({ status }) {
                         <h2 className='text-2xl font-bold'>{projectName}</h2>
                         <h4 className='text-sm'>Version: {version}</h4>
                         <div className='flex items-center gap-2 mt-2'>
-                            Status: {VERSION_STATUS_MESSAGES[status] || status}
-                            {VERSION_STATUS_SHOW_LOADER[status] && <Loader2 className='animate-spin' size={20} />}
+                            Status: {VERSION_STATUS?.[status]?.MESSAGE || status}
+                            {VERSION_STATUS?.[status]?.LOADER && <Loader2 className='animate-spin' size={20} />}
                         </div>
                     </div>
                     {(versionFiles.length === 0 || status.startsWith('ERR')) && (

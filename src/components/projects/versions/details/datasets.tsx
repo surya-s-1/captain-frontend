@@ -6,7 +6,7 @@ import { PackagePlus, TriangleAlert, Download, Loader2 } from 'lucide-react'
 import { useDownloadDatasets } from '@/hooks/useDownloadDatasets'
 
 import { getCurrentUser } from '@/lib/firebase/utilities'
-import { VERSION_STATUS_RANK } from '@/lib/utility/constants'
+import { VERSION_STATUS } from '@/lib/utility/constants'
 
 const NEXT_PUBLIC_TOOL_ENDPOINT = process.env.NEXT_PUBLIC_TOOL_ENDPOINT || ''
 
@@ -18,7 +18,7 @@ interface DatasetsProps {
 }
 
 export default function Datasets({ projectId, version, status, testcase_ids }: DatasetsProps) {
-    const canDownload = (VERSION_STATUS_RANK[status] || -1) >= VERSION_STATUS_RANK['START_JIRA_CREATION']
+    const canDownload = (VERSION_STATUS?.[status]?.RANK || -1) >= VERSION_STATUS['START_REQ_CREATION_ON_TOOL'].RANK
 
     const [createLoading, setCreateLoading] = useState(false)
     const [downloadAllLoading, setDownloadAllLoading] = useState(false)

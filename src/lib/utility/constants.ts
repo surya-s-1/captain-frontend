@@ -1,89 +1,175 @@
 export const STANDARD_APP_NAME = 'Captain App'
+
 export const SUPPORTED_TOOLS = {
     JIRA: 'Jira'
 }
 
-export const VERSION_STATUS_MESSAGES = {
-    CREATED: 'Created',
-    START_TEXT_EXTRACT: 'Started text extraction',
-    COMPLETE_TEXT_EXTRACT: 'Text extraction complete',
-    ERR_TEXT_EXTRACT: 'Error occurred during text extraction',
-    START_REQ_EXTRACT_P1: 'Started requirement extraction (Phase 1)',
-    COMPLETE_REQ_EXTRACT_P1: 'Requirement extraction (Phase 1) complete',
-    ERR_REQ_EXTRACT_P1: 'Error occurred during requirement extraction (Phase 1)',
-    START_REQ_EXTRACT_P2: 'Started requirement extraction (Phase 2)',
-    DEDUP_EXPLICIT_WITH_GEMINI: 'Started deduplication of explicit requirements with Gemini',
-    WRITE_EXPLICIT_TO_FIRESTORE: 'Storing explicit requirements',
-    COMPLETE_EXP_REQ: 'Completed processing of explicit requirements',
-    SEARCH_IMPLICIT_DISCOVERY: 'Searching for implicit requirements from standards and regulations',
-    COMPLETE_IMP_REQ_FETCH: 'Completed fetching of implicit requirements',
-    PROCESS_IMPLICIT_WITH_GEMINI: 'Processing of implicit requirements with Gemini',
-    WRITE_IMPLICIT_TO_FIRESTORE: 'Storing implicit requirements',
-    CONFIRM_REQ_EXTRACT: 'Confirm extracted requirements',
-    CONFIRM_REQ_EXTRACT_RETRY: 'Something went wrong, please retry',
-    ERR_REQ_EXTRACT_P2: 'Error occurred during requirement extraction (Phase 2)',
-    START_TESTCASE_CREATION: 'Started proposed test cases creation',
-    CONFIRM_TESTCASES: 'Confirm proposed test cases',
-    ERR_TESTCASE_CREATION: 'Error occurred during proposed test cases creation',
-    START_JIRA_CREATION: 'Creating test cases on Jira',
-    COMPLETE_JIRA_CREATION: 'Completed creating test cases on Jira',
-    ERR_JIRA_CREATION: 'Error occurred during testcase creation on Jira',
-    START_JIRA_SYNC: 'Started syncing the testcases with Jira',
-    COMPLETE_JIRA_SYNC: 'Completed syncing the testcases',
-    ERR_JIRA_SYNC: 'Error occurred during testcases sync',
-}
-
-export const VERSION_STATUS_SHOW_LOADER = {
-    CREATED: false,
-    START_TEXT_EXTRACT: true,
-    COMPLETE_TEXT_EXTRACT: true,
-    ERR_TEXT_EXTRACT: false,
-    START_REQ_EXTRACT_P1: true,
-    COMPLETE_REQ_EXTRACT_P1: true,
-    ERR_REQ_EXTRACT_P1: false,
-    START_REQ_EXTRACT_P2: true,
-    DEDUP_EXPLICIT_WITH_GEMINI: true,
-    WRITE_EXPLICIT_TO_FIRESTORE: true,
-    COMPLETE_EXP_REQ: true,
-    SEARCH_IMPLICIT_DISCOVERY: true,
-    COMPLETE_IMP_REQ_FETCH: true,
-    PROCESS_IMPLICIT_WITH_GEMINI: true,
-    WRITE_IMPLICIT_TO_FIRESTORE: true,
-    CONFIRM_REQ_EXTRACT: false,
-    CONFIRM_REQ_EXTRACT_RETRY: false,
-    ERR_REQ_EXTRACT_P2: false,
-    START_TESTCASE_CREATION: true,
-    CONFIRM_TESTCASES: false,
-    ERR_TESTCASE_CREATION: false,
-    START_JIRA_CREATION: true,
-    COMPLETE_JIRA_CREATION: false,
-    ERR_JIRA_CREATION: false,
-    START_JIRA_SYNC: true,
-    COMPLETE_JIRA_SYNC: false,
-    ERR_JIRA_SYNC: false,
-}
-
-export const VERSION_STATUS_RANK = {
-    CREATED: 0,
-    START_TEXT_EXTRACT: 1,
-    COMPLETE_TEXT_EXTRACT: 2,
-    START_REQ_EXTRACT_P1: 3,
-    COMPLETE_REQ_EXTRACT_P1: 4,
-    START_REQ_EXTRACT_P2: 5,
-    DEDUP_EXPLICIT_WITH_GEMINI: 6,
-    WRITE_EXPLICIT_TO_FIRESTORE: 7,
-    COMPLETE_EXP_REQ: 8,
-    SEARCH_IMPLICIT_DISCOVERY: 9,
-    COMPLETE_IMP_REQ_FETCH: 10,
-    PROCESS_IMPLICIT_WITH_GEMINI: 11,
-    WRITE_IMPLICIT_TO_FIRESTORE: 12,
-    CONFIRM_REQ_EXTRACT: 13,
-    START_TESTCASE_CREATION: 14,
-    CONFIRM_TESTCASES: 15,
-    START_JIRA_CREATION: 16,
-    COMPLETE_JIRA_CREATION: 17,
-    START_JIRA_SYNC: 18,
-    COMPLETE_JIRA_SYNC: 19
+export const VERSION_STATUS = {
+    CREATED: {
+        MESSAGE: 'Created',
+        LOADER: false,
+        RANK: 0
+    },
+    START_TEXT_EXTRACT: {
+        MESSAGE: 'Started text extraction',
+        LOADER: true,
+        RANK: 1
+    },
+    COMPLETE_TEXT_EXTRACT: {
+        MESSAGE: 'Text extraction complete',
+        LOADER: true,
+        RANK: 2
+    },
+    ERR_TEXT_EXTRACT: {
+        MESSAGE: 'Error occurred during text extraction',
+        LOADER: false,
+        RANK: null // Errors typically don't have a rank
+    },
+    START_REQ_EXTRACT_P1: {
+        MESSAGE: 'Started requirement extraction (Phase 1)',
+        LOADER: true,
+        RANK: 3
+    },
+    COMPLETE_REQ_EXTRACT_P1: {
+        MESSAGE: 'Requirement extraction (Phase 1) complete',
+        LOADER: true,
+        RANK: 4
+    },
+    ERR_REQ_EXTRACT_P1: {
+        MESSAGE: 'Error occurred during requirement extraction (Phase 1)',
+        LOADER: false,
+        RANK: null
+    },
+    START_REQ_EXTRACT_P2: {
+        MESSAGE: 'Started requirement extraction (Phase 2)',
+        LOADER: true,
+        RANK: 5
+    },
+    DEDUP_EXPLICIT_WITH_GEMINI: {
+        MESSAGE: 'Started deduplication of explicit requirements with Gemini',
+        LOADER: true,
+        RANK: 6
+    },
+    WRITE_EXPLICIT_TO_FIRESTORE: {
+        MESSAGE: 'Storing explicit requirements',
+        LOADER: true,
+        RANK: 7
+    },
+    COMPLETE_EXP_REQ: {
+        MESSAGE: 'Completed processing of explicit requirements',
+        LOADER: true,
+        RANK: 8
+    },
+    SEARCH_IMPLICIT_DISCOVERY: {
+        MESSAGE: 'Searching for implicit requirements from standards and regulations',
+        LOADER: true,
+        RANK: 9
+    },
+    COMPLETE_IMP_REQ_FETCH: {
+        MESSAGE: 'Completed fetching of implicit requirements',
+        LOADER: true,
+        RANK: 10
+    },
+    PROCESS_IMPLICIT_WITH_GEMINI: {
+        MESSAGE: 'Processing of implicit requirements with Gemini',
+        LOADER: true,
+        RANK: 11
+    },
+    WRITE_IMPLICIT_TO_FIRESTORE: {
+        MESSAGE: 'Storing implicit requirements',
+        LOADER: true,
+        RANK: 12
+    },
+    CONFIRM_REQ_EXTRACT: {
+        MESSAGE: 'Confirm extracted requirements',
+        LOADER: false,
+        RANK: 13
+    },
+    CONFIRM_REQ_EXTRACT_RETRY: {
+        MESSAGE: 'Something went wrong, please retry',
+        LOADER: false,
+        RANK: null
+    },
+    ERR_REQ_EXTRACT_P2: {
+        MESSAGE: 'Error occurred during requirement extraction (Phase 2)',
+        LOADER: false,
+        RANK: null
+    },
+    START_TESTCASE_CREATION: {
+        MESSAGE: 'Started proposed test cases creation',
+        LOADER: true,
+        RANK: 14
+    },
+    CONFIRM_TESTCASES: {
+        MESSAGE: 'Confirm proposed test cases',
+        LOADER: false,
+        RANK: 15
+    },
+    ERR_TESTCASE_CREATION: {
+        MESSAGE: 'Error occurred during proposed test cases creation',
+        LOADER: false,
+        RANK: null
+    },
+    START_REQ_CREATION_ON_TOOL: {
+        MESSAGE: 'Creating requirements on tool',
+        LOADER: true,
+        RANK: 16
+    },
+    COMPLETE_REQ_CREATION_ON_TOOL: {
+        MESSAGE: 'Completed creating requirements on tool',
+        LOADER: false,
+        RANK: 17
+    },
+    ERR_REQ_CREATION_ON_TOOL: {
+        MESSAGE: 'Error occurred during requirements creation on tool',
+        LOADER: false,
+        RANK: null
+    },
+    START_REQ_SYNC_WITH_TOOL: {
+        MESSAGE: 'Started syncing the requirements with tool',
+        LOADER: true,
+        RANK: 18
+    },
+    COMPLETE_REQ_SYNC_WITH_TOOL: {
+        MESSAGE: 'Completed syncing the requirements',
+        LOADER: false,
+        RANK: 19
+    },
+    ERR_REQ_SYNC_WITH_TOOL: {
+        MESSAGE: 'Error occurred during requirements sync',
+        LOADER: false,
+        RANK: null
+    },
+    START_TC_CREATION_ON_TOOL: {
+        MESSAGE: 'Creating test cases on tool',
+        LOADER: true,
+        RANK: 20
+    },
+    COMPLETE_TC_CREATION_ON_TOOL: {
+        MESSAGE: 'Completed creating test cases on tool',
+        LOADER: false,
+        RANK: 21
+    },
+    ERR_TC_CREATION_ON_TOOL: {
+        MESSAGE: 'Error occurred during test cases creation on tool',
+        LOADER: false,
+        RANK: null
+    },
+    START_TC_SYNC_WITH_TOOL: {
+        MESSAGE: 'Started syncing the test cases with tool',
+        LOADER: true,
+        RANK: 22
+    },
+    COMPLETE_TC_SYNC_WITH_TOOL: {
+        MESSAGE: 'Completed syncing the test cases',
+        LOADER: false,
+        RANK: 23
+    },
+    ERR_TC_SYNC_WITH_TOOL: {
+        MESSAGE: 'Error occurred during test cases sync',
+        LOADER: false,
+        RANK: null
+    },
 }
 
 export const REQ_STATUS_MESSAGES = {

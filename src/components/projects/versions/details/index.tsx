@@ -205,6 +205,7 @@ export default function ProjectDetails() {
                     <Requirements
                         projectId={projectId!}
                         version={version!}
+                        tool={tool}
                         status={status}
                         requirements={requirements}
                     />

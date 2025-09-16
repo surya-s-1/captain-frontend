@@ -1,9 +1,13 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { TriangleAlert } from 'lucide-react'
+
 import { getCurrentUser } from '@/lib/firebase/utilities'
 import { Markdown } from '@/lib/utility/ui/Markdown'
 import { REQ_STATUS_MESSAGES } from '@/lib/utility/constants'
+
+import JIRA_ICON from '@/../public/Jira_icon.png'
 
 interface Source {
     filename: string
@@ -30,6 +34,9 @@ export interface RequirementInterface {
     regulations: Regulation[]
     deleted: boolean
     status: string | null
+    toolIssueKey: string | null
+    toolIssueLink: string | null
+    toolCreated: string | null
 }
 
 interface RequirementsProps {
@@ -37,6 +44,7 @@ interface RequirementsProps {
     version: string
     status: string
     requirements: RequirementInterface[]
+    tool: string
 }
 
 const NEXT_PUBLIC_TOOL_ENDPOINT = process.env.NEXT_PUBLIC_TOOL_ENDPOINT || ''
@@ -45,7 +53,8 @@ export default function Requirements({
     projectId,
     version,
     status,
-    requirements
+    requirements,
+    tool
 }: RequirementsProps) {
 
     const [deleteLoading, setDeleteLoading] = useState(false)
@@ -148,23 +157,47 @@ export default function Requirements({
                                 key={r.requirement_id}
                                 className='relative p-2 shadow-md shadow-black/30 dark:shadow-black/50 rounded-lg scroll-mt-[195px]'
                             >
-                                {canDelete && (
-                                    <button
-                                        className='text-red-500 absolute top-2 right-2 cursor-pointer'
-                                        onClick={() => deleteRequirement(r.requirement_id)}
-                                        disabled={deleteLoading}
-                                    >
-                                        Remove
-                                    </button>
-                                )}
-                                <h2 className='text-color-primary/50 text-xs mb-1'>
-                                    {r.requirement_id}{r.requirement_type && ` (${r.requirement_type})`}
-                                </h2>
+                                <div className='w-full flex flex-col lg:flex-row gap-4 justify-between'>
+                                    <h2 className='text-color-primary/50 text-sm mb-1'>
+                                        {r.requirement_id}{r.requirement_type && ` (${r.requirement_type})`}
+                                    </h2>
+                                    <div className='flex items-center gap-2'>
+                                        {r.toolIssueLink &&
+                                            <a
+                                                href={r.toolIssueLink}
+                                                target='_blank'
+                                                className='flex items-center gap-2 px-2 py-1 rounded-md shadow-sm hover:shadow-md shadow-black/30 dark:shadow-black/50 transition-shadow'
+                                            >
+                                                <img
+                                                    src={JIRA_ICON.src}
+                                                    alt='Jira Logo'
+                                                    className='h-6'
+                                                />
+                                                <span>Open in {tool}</span>
+                                            </a>}
+
+                                        {canDelete && (
+                                            <button
+                                                className='text-red-500 cursor-pointer'
+                                                onClick={() => deleteRequirement(r.requirement_id)}
+                                                disabled={deleteLoading}
+                                            >
+                                                Remove
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
 
                                 {r.status &&
                                     <p className='text-color-primary/50 text-xs mb-1'>
                                         {REQ_STATUS_MESSAGES[r.status] || r.status}
                                     </p>}
+
+                                {r.toolCreated === 'FAILED' &&
+                                    <div className='flex items-center gap-1 text-xs text-red-500 my-1'>
+                                        <TriangleAlert size={14} />
+                                        Sorry, I was not able to create this issue on {tool}. Can you go ahead and create it please?
+                                    </div>}
 
                                 <Markdown text={r.requirement} />
 
