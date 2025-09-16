@@ -228,7 +228,7 @@ export default function DetailsBanner({ status }) {
                                 ))}
                             </ul>
                         </div>}
-                    {versionFiles.length > 0 && (
+                    {versionFiles.length > 0 && status != 'CREATED' && (
                         <div className='flex flex-col gap-1'>
                             <span>Updated Requirements?</span>
                             <button
