@@ -47,13 +47,12 @@ This notice is meant to help you understand what you can do today, why certain c
 ---
 
 ### 🧪 Test Case Lifecycle
-8. Once confirmed, test cases are automatically created in Jira.
+8. You will be able to chat with AI and enhance a testcase it generated, if it is not upto the mark, while you are in the confirm testcases state. Once confirmed, test cases are automatically created in Jira.
 
 9. For convenience, this app syncs those testcases right after creation:
 
-    - After creation, they are synced back into this app.  
-    - Each synced test case provides an **“Open in Jira”** option for direct navigation.  
-
+    - After creation, they are synced back into this app.
+    - Each synced test case provides an **“Open in Jira”** option for direct navigation.
 ---
 
 ### 📊 Dataset Management
@@ -90,11 +89,6 @@ This notice is meant to help you understand what you can do today, why certain c
 
 ### 🔀 Upload Existing Testcases
 - You will be able to upload existing testcases, into this app and then generate only the missed test cases.
-
----
-
-### ✨ Enhancement of Testcases
-- You will be able to chat with AI and enhance a testcase it generated, if it is not upto the mark.
 
 ---
 

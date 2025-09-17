@@ -102,6 +102,7 @@ function Testcase({ testcase, status, projectId, version, tool }) {
 
     const { downloadSingleDataset } = useDownloadDatasets(projectId, version)
     const canDelete = status === 'CONFIRM_TESTCASES'
+    const canEnhance = status === 'CONFIRM_TESTCASES'
 
     async function deleteTestcase(tcId: string) {
         try {
@@ -151,7 +152,7 @@ function Testcase({ testcase, status, projectId, version, tool }) {
 
     async function enhanceTestcase(testcaseId: string) {
         try {
-            if (enhancementInProgress) return
+            if (enhancementInProgress || !canEnhance) return
 
             setEnhancementInProgress(true)
 
