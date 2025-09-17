@@ -162,7 +162,7 @@ export default function DetailsBanner({ status }) {
     }, [projectName])
 
     return (
-        <div className='w-full h-[125px] flex items-center justify-between sticky top-0 p-10 bg-gradient-to-br from-indigo-500 to-purple-600 text-white z-10'>
+        <div className='w-full h-[150px] flex items-center justify-between sticky top-0 p-10 bg-gradient-to-br from-indigo-500 to-purple-600 text-white z-10'>
             {projectName &&
                 <>
                     <div>
@@ -229,8 +229,8 @@ export default function DetailsBanner({ status }) {
                             </ul>
                         </div>}
                     {versionFiles.length > 0 && status != 'CREATED' && (
-                        <div className='flex flex-col gap-1'>
-                            <span>Updated Requirements?</span>
+                        <div className='flex flex-col items-center gap-1'>
+                            <span>Change in requirements?</span>
                             <button
                                 className='w-fit bg-primary-contrast/50 text-color-primary-contrast rounded-full p-2 cursor-pointer'
                                 onClick={() => setIsModalOpen(true)}
@@ -239,6 +239,7 @@ export default function DetailsBanner({ status }) {
                             >
                                 Create New Version
                             </button>
+                            <span className='text-xs'>(Feature not yet developed)</span>
                         </div>
                     )}
                 </>}
