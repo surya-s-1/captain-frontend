@@ -265,6 +265,7 @@ function Testcase({ testcase, status, projectId, version, tool }) {
             <div className='my-1'>
                 <Markdown text={testcase.priority} />
             </div>
+            {canEnhance &&
             <div className='flex flex-col lg:flex-row lg:items-center gap-2'>
                 <input
                     type='text'
@@ -282,7 +283,7 @@ function Testcase({ testcase, status, projectId, version, tool }) {
                     Enhance
                     {enhancementInProgress && <Loader2 className='animate-spin' size={20} />}
                 </button>
-            </div>
+            </div>}
         </div>
     )
 }
