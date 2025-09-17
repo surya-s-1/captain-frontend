@@ -270,6 +270,7 @@ function Testcase({ testcase, status, projectId, version, tool }) {
                     type='text'
                     className='p-2 border focus:outline-none rounded w-[90%]'
                     value={enhancementInput}
+                    placeholder='Enhance the testcase...'
                     onChange={e => {!enhancementInProgress && setEnhancementInput(e.target.value)}}
                 />
                 <button
