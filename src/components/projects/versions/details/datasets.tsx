@@ -18,7 +18,7 @@ interface DatasetsProps {
 }
 
 export default function Datasets({ projectId, version, status, testcase_ids }: DatasetsProps) {
-    const canDownload = (VERSION_STATUS?.[status]?.RANK || -1) >= VERSION_STATUS['START_REQ_CREATION_ON_TOOL'].RANK
+    const canDownload = (VERSION_STATUS?.[status]?.RANK || -1) >= VERSION_STATUS['START_TC_CREATION_ON_TOOL'].RANK
 
     const [createLoading, setCreateLoading] = useState(false)
     const [downloadAllLoading, setDownloadAllLoading] = useState(false)
