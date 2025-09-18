@@ -110,36 +110,6 @@ export const VERSION_STATUS = {
         LOADER: false,
         RANK: null
     },
-    START_REQ_CREATION_ON_TOOL: {
-        MESSAGE: 'Creating requirements on tool',
-        LOADER: true,
-        RANK: 16
-    },
-    COMPLETE_REQ_CREATION_ON_TOOL: {
-        MESSAGE: 'Completed creating requirements on tool',
-        LOADER: false,
-        RANK: 17
-    },
-    ERR_REQ_CREATION_ON_TOOL: {
-        MESSAGE: 'Error occurred during requirements creation on tool',
-        LOADER: false,
-        RANK: null
-    },
-    START_REQ_SYNC_WITH_TOOL: {
-        MESSAGE: 'Started syncing the requirements with tool',
-        LOADER: true,
-        RANK: 18
-    },
-    COMPLETE_REQ_SYNC_WITH_TOOL: {
-        MESSAGE: 'Completed syncing the requirements',
-        LOADER: false,
-        RANK: 19
-    },
-    ERR_REQ_SYNC_WITH_TOOL: {
-        MESSAGE: 'Error occurred during requirements sync',
-        LOADER: false,
-        RANK: null
-    },
     START_TC_CREATION_ON_TOOL: {
         MESSAGE: 'Creating test cases on tool',
         LOADER: true,

@@ -34,9 +34,6 @@ export interface RequirementInterface {
     regulations: Regulation[]
     deleted: boolean
     status: string | null
-    toolIssueKey: string | null
-    toolIssueLink: string | null
-    toolCreated: string | null
 }
 
 interface RequirementsProps {
@@ -162,20 +159,6 @@ export default function Requirements({
                                         {r.requirement_id}{r.requirement_type && ` (${r.requirement_type})`}
                                     </h2>
                                     <div className='flex items-center gap-2'>
-                                        {r.toolIssueLink &&
-                                            <a
-                                                href={r.toolIssueLink}
-                                                target='_blank'
-                                                className='flex items-center gap-2 px-2 py-1 rounded-md shadow-sm hover:shadow-md shadow-black/30 dark:shadow-black/50 transition-shadow'
-                                            >
-                                                <img
-                                                    src={JIRA_ICON.src}
-                                                    alt='Jira Logo'
-                                                    className='h-6'
-                                                />
-                                                <span>Open in {tool}</span>
-                                            </a>}
-
                                         {canDelete && (
                                             <button
                                                 className='text-red-500 cursor-pointer'
@@ -192,12 +175,6 @@ export default function Requirements({
                                     <p className='text-color-primary/50 text-xs mb-1'>
                                         {REQ_STATUS_MESSAGES[r.status] || r.status}
                                     </p>}
-
-                                {r.toolCreated === 'FAILED' &&
-                                    <div className='flex items-center gap-1 text-xs text-red-500 my-1'>
-                                        <TriangleAlert size={14} />
-                                        Sorry, I was not able to create this issue on {tool}. Can you go ahead and create it please?
-                                    </div>}
 
                                 <Markdown text={r.requirement} />
 
