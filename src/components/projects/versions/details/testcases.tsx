@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { MoveUpRight, TriangleAlert, ArrowDownToLine, Loader2, WandSparkles } from 'lucide-react'
+import { MoveUpRight, TriangleAlert, ArrowDownToLine, RefreshCcw, RefreshCcwDot, Loader2, WandSparkles } from 'lucide-react'
 
 import { useDownloadDatasets } from '@/hooks/useDownloadDatasets'
 
@@ -94,10 +94,20 @@ export default function TestCases({
     )
 }
 
-function Testcase({ testcase, status, projectId, version, tool }) {
+interface TestCaseProps {
+    projectId: string
+    version: string
+    tool: string
+    status: string
+    testcase: TestCaseInterface
+}
+
+function Testcase({ testcase, status, projectId, version, tool }: TestCaseProps) {
     const [deleteLoading, setDeleteLoading] = useState(false)
     const [downloadInProgress, setDownloadInProgress] = useState(false)
     const [enhancementInProgress, setEnhancementInProgress] = useState(false)
+    const [resyncInProgress, setResyncInProgress] = useState(false)
+    const [recreateInProgress, setRecreateInProgress] = useState(false)
     const [enhancementInput, setEnhancementInput] = useState('')
 
     const { downloadSingleDataset } = useDownloadDatasets(projectId, version)
@@ -183,6 +193,58 @@ function Testcase({ testcase, status, projectId, version, tool }) {
         setEnhancementInput('')
     }
 
+    async function resyncTestcases() {
+        try {
+            if (resyncInProgress) return
+
+            setResyncInProgress(true)
+
+            const user = await getCurrentUser()
+            if (!user) throw new Error('No user found')
+
+            const token = await user.getIdToken()
+            if (!token) throw new Error('No token found')
+
+            const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/v1/${projectId}/v/${version}/testcases/sync`, {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${token}` }
+            })
+
+            if (!response.ok) alert(`Could not resync testcases`)
+        } catch (err) {
+            console.error(err)
+            alert('Could not resync testcases')
+        } finally {
+            setResyncInProgress(false)
+        }
+    }
+
+    async function recreateTestcase(testcase_id: string) {
+        try {
+            if (recreateInProgress) return
+
+            setRecreateInProgress(true)
+
+            const user = await getCurrentUser()
+            if (!user) throw new Error('No user found')
+
+            const token = await user.getIdToken()
+            if (!token) throw new Error('No token found')
+
+            const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/v1/${projectId}/v/${version}/t/${testcase_id}/create/one`, {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${token}` }
+            })
+
+            if (!response.ok) alert(`Could not recreate testcases`)
+        } catch (err) {
+            console.error(err)
+            alert('Could not recreate testcases')
+        } finally {
+            setRecreateInProgress(false)
+        }
+    }
+
     return(
         <div key={testcase.testcase_id} className='relative p-4 shadow-md shadow-black/30 dark:shadow-black/50 rounded-lg'>
             <div className='w-full flex flex-col lg:flex-row gap-4 justify-between'>
@@ -200,6 +262,30 @@ function Testcase({ testcase, status, projectId, version, tool }) {
                     </a>
                 </div>
                 <div className='flex items-center gap-2'>
+
+                    {testcase.toolCreated === 'FAILED' && status === 'COMPLETE_SYNC_TC_WITH_TOOL' &&
+                        <>
+                        <button
+                            className='flex items-center gap-2 px-2 py-1 rounded-md shadow-sm hover:shadow-md shadow-black/30 dark:shadow-black/50 transition-shadow cursor-pointer'
+                            onClick={() => { resyncTestcases() }}
+                        >
+                            <RefreshCcw />
+                            <span>Retry Sync</span>
+                            {resyncInProgress &&
+                                <Loader2 className='animate-spin' size={20} />}
+                        </button>
+                        <button
+                            className='flex items-center gap-2 px-2 py-1 rounded-md shadow-sm hover:shadow-md shadow-black/30 dark:shadow-black/50 transition-shadow cursor-pointer'
+                            onClick={() => { recreateTestcase(testcase.testcase_id) }}
+                        >
+                            <RefreshCcwDot />
+                            <span>Retry Create</span>
+                            {recreateInProgress &&
+                                <Loader2 className='animate-spin' size={20} />}
+                        </button>
+                        </>}
+                        
+
                     {testcase.datasets && testcase.datasets.length > 0 &&
                         <button
                             className='flex items-center gap-2 px-2 py-1 rounded-md shadow-sm hover:shadow-md shadow-black/30 dark:shadow-black/50 transition-shadow cursor-pointer'
@@ -210,6 +296,7 @@ function Testcase({ testcase, status, projectId, version, tool }) {
                             {downloadInProgress &&
                                 <Loader2 className='animate-spin' size={20} />}
                         </button>}
+
                     {testcase.toolIssueLink &&
                         <a
                             href={testcase.toolIssueLink}
@@ -223,6 +310,7 @@ function Testcase({ testcase, status, projectId, version, tool }) {
                             />
                             <span>Open in {tool}</span>
                         </a>}
+
                     {canDelete && (
                         <button
                             className='text-red-500 cursor-pointer'

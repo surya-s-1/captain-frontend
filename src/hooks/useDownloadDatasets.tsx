@@ -25,6 +25,11 @@ export const useDownloadDatasets = (projectId: string, version: string) => {
                 })
                 const contentType = response.headers.get('content-type')
 
+                if (response.status === 500) {
+                    clearInterval(interval)
+                    alert('Unable to download')
+                }
+
                 if (response.status === 200 && contentType?.includes('application/zip')) {
                     clearInterval(interval)
 

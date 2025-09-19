@@ -19,6 +19,7 @@ export interface Project {
 
 interface ProjectViewInput {
     tool: string
+    description: string
     loading: boolean
     error: string | null
     projects: Project[]
@@ -26,7 +27,7 @@ interface ProjectViewInput {
 
 const NEXT_PUBLIC_TOOL_ENDPOINT = process.env.NEXT_PUBLIC_TOOL_ENDPOINT || ''
 
-export function ProjectView({ tool, loading, error, projects }: ProjectViewInput) {
+export function ProjectView({ tool, description, loading, error, projects }: ProjectViewInput) {
     const router = useRouter()
     const [connectLoading, setConnectLoading] = useState(false)
 
@@ -67,7 +68,8 @@ export function ProjectView({ tool, loading, error, projects }: ProjectViewInput
 
     return (
         <>
-            <h2 className='text-color-primary/70 text-lg font-semibold mb-4'>{tool}</h2>
+            <h2 className='text-color-primary/70 text-lg font-semibold'>{tool}</h2>
+            <p className='text-color-primary/50 italic mb-4'>{description}</p>
 
             {loading &&
                 <div className='flex items-center gap-2'>
