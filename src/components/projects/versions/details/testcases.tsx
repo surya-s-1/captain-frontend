@@ -45,7 +45,7 @@ export default function TestCases({
 }: TestCasesProps) {
     const [currentPage, setCurrentPage] = useState(1)
 
-    const testcasesPerPage = 50
+    const testcasesPerPage = 20
     const totalPages = Math.ceil(testcases.length / testcasesPerPage)
 
     const indexOfLastTestcase = currentPage * testcasesPerPage

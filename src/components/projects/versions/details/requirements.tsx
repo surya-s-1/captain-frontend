@@ -10,7 +10,7 @@ import { REQ_STATUS_MESSAGES } from '@/lib/utility/constants'
 import JIRA_ICON from '@/../public/Jira_icon.png'
 
 interface Source {
-    filename: string
+    file_name: string
     location: string
     snippet: string
 }
@@ -21,19 +21,26 @@ interface Regulation {
         filename: string
         page_start: string
         page_end: string
+        raw_snippet: string
         snippet: string
         from_req_id: string
     }
 }
 
 export interface RequirementInterface {
-    requirement_id: string
+    status: string | null
+    created_at: Date
+    deleted: boolean
+    embedding: number[]
+    exp_req_ids: string[]
+    is_duplicate: boolean
+    priority: string
     requirement: string
+    requirement_id: string
     requirement_type: string
+    source_type: string
     sources: Source[]
     regulations: Regulation[]
-    deleted: boolean
-    status: string | null
 }
 
 interface RequirementsProps {
@@ -59,7 +66,7 @@ export default function Requirements({
     const [expandedRegs, setExpandedRegs] = useState<Record<string, Record<string, boolean>>>({})
     const [currentPage, setCurrentPage] = useState(1)
 
-    const requirementsPerPage = 50
+    const requirementsPerPage = 30
     const totalPages = Math.ceil(requirements.length / requirementsPerPage)
 
     const indexOfLastReq = currentPage * requirementsPerPage
@@ -105,8 +112,8 @@ export default function Requirements({
     function groupSources(sources: Source[]) {
         const grouped: Record<string, string[]> = {}
         sources.forEach(src => {
-            if (!grouped[src.filename]) grouped[src.filename] = []
-            grouped[src.filename].push(src.location)
+            if (!grouped[src.file_name]) grouped[src.file_name] = []
+            grouped[src.file_name].push(src.location)
         })
         return grouped
     }
@@ -115,7 +122,7 @@ export default function Requirements({
         const grouped: Record<string, string[]> = {}
         regulations.forEach(reg => {
             if (!grouped[reg.regulation]) grouped[reg.regulation] = []
-            grouped[reg.regulation].push(reg.source.snippet)
+            grouped[reg.regulation].push(reg.source.raw_snippet)
         })
         return grouped
     }
