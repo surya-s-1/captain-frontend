@@ -77,7 +77,14 @@ export default function Requirements({
 
     useEffect(() => {
         if (requirements.length > 0 && window.location.hash) {
-            setCurrentPage(Math.ceil((requirements.findIndex(r => `#${r.requirement_id}` === window.location.hash) + 1) / requirementsPerPage))
+            const reqIndex = requirements.findIndex(r => `#${r.requirement_id}` === window.location.hash)
+
+            if (reqIndex === -1) {
+                alert(`Requirement ${window.location.hash} not found`)
+                return
+            }
+
+            setCurrentPage(Math.ceil((reqIndex + 1) / requirementsPerPage))
             setTimeout(() => {
                 const el = document.querySelector(window.location.hash)
                 el?.scrollIntoView({ behavior: "smooth" })
