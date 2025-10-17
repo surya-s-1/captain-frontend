@@ -28,7 +28,7 @@ interface Regulation {
 }
 
 export interface RequirementInterface {
-    status: string | null
+    testcase_status: string | null
     created_at: Date
     deleted: boolean
     embedding: number[]
@@ -185,9 +185,9 @@ export default function Requirements({
                                     </div>
                                 </div>
 
-                                {r.status &&
+                                {r.testcase_status &&
                                     <p className='text-color-primary/50 text-xs mb-1'>
-                                        {REQ_STATUS_MESSAGES[r.status] || r.status}
+                                        {REQ_STATUS_MESSAGES[r.testcase_status] || r.testcase_status}
                                     </p>}
 
                                 <Markdown text={r.requirement} />
