@@ -12,7 +12,7 @@ import Datasets from '@/components/projects/versions/details/datasets'
 import { Notice } from '@/lib/utility/ui/Notice'
 import { firestoreDb } from '@/lib/firebase'
 import { getCurrentUser } from '@/lib/firebase/utilities'
-import { SUPPORTED_TOOLS } from '@/lib/utility/constants'
+import { CHANGE_ANALYSIS_STATUS, SUPPORTED_TOOLS } from '@/lib/utility/constants'
 
 const NEXT_PUBLIC_TOOL_ENDPOINT = process.env.NEXT_PUBLIC_TOOL_ENDPOINT || ''
 
@@ -82,11 +82,18 @@ export default function ProjectDetails() {
     async function fetchRequirements() {
         const reqQuery = query(
             collection(firestoreDb, 'projects', projectId, 'versions', version, 'requirements'),
-            where('deleted', '==', false)
+            where('deleted', '==', false),
+            where('duplicate', '==', false),
+            where('change_analysis_status', '!=', CHANGE_ANALYSIS_STATUS.IGNORED)
         )
 
         const unsubscribe = onSnapshot(reqQuery, (snapshot) => {
-            const reqsList = snapshot.docs.map(d => ({ ...d.data() })) as RequirementInterface[]
+            const reqsList = snapshot.docs.map(d => {
+                const data = d.data()
+                const { embedding, ...restOfData} = data
+                return restOfData
+            }) as RequirementInterface[]
+            
             setRequirements(reqsList)
         })
 

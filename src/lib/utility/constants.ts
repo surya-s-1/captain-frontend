@@ -152,4 +152,12 @@ export const TC_DATASET_STATUS_MESSAGES = {
     ERR_DATASET_GENERATION: 'Error occurred during dataset generation'
 }
 
+export const CHANGE_ANALYSIS_STATUS = {
+    IGNORED: 'IGNORED',
+    NEW: 'NEW',
+    UNCHANGED: 'UNCHANGED',
+    MODIFIED: 'MODIFIED',
+    DEPRECATED: 'DEPRECATED'
+}
+
 export const PUBLIC_PATHS = ['/login', '/notice']
