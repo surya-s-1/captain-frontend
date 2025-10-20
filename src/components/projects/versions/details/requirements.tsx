@@ -1,13 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { TriangleAlert } from 'lucide-react'
 
 import { getCurrentUser } from '@/lib/firebase/utilities'
 import { Markdown } from '@/lib/utility/ui/Markdown'
 import { REQ_STATUS_MESSAGES } from '@/lib/utility/constants'
-
-import JIRA_ICON from '@/../public/Jira_icon.png'
 
 interface Source {
     file_name: string
@@ -27,20 +24,33 @@ interface Regulation {
     }
 }
 
-export interface RequirementInterface {
-    testcase_status: string | null
-    created_at: Date
-    deleted: boolean
-    embedding: number[]
-    exp_req_ids: string[]
-    is_duplicate: boolean
-    priority: string
-    requirement: string
+interface RequirementInterfaceBase {
     requirement_id: string
+    requirement: string
     requirement_type: string
-    source_type: string
+    source_type: 'explicit' | 'implicit'
+    deleted: boolean
+    duplicate: boolean
+    near_duplicate_id: string | null
+    change_analysis_status: string | null
+    change_analysis_status_reason: string | null
+    change_analysis_near_duplicate_id: string | null
     sources: Source[]
     regulations: Regulation[]
+    exp_req_ids: string[]
+    testcase_status: string | null
+    updated_at: Date | null
+    created_at: Date
+}
+
+interface RequirementHistoryEntry {
+    version: string
+    fields: RequirementInterfaceBase
+    copied_at: Date
+}
+
+export interface RequirementInterface extends RequirementInterfaceBase {
+    history: RequirementHistoryEntry[] | null
 }
 
 interface RequirementsProps {
