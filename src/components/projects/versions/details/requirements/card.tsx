@@ -139,6 +139,7 @@ export default function RequirementCard({
                         onChange={toggleChangeAnalysisStatus}
                         isLoading={toggleStatusLoading}
                         disabled={!canToggleStatus || ['IGNORED', 'NEW'].includes(requirement.change_analysis_status)}
+                        size='xs'
                     />
                 </div>
                 <div className='flex items-center gap-2'>

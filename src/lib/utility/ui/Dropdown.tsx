@@ -54,7 +54,7 @@ export default function Dropdown({
             <div
                 className={`
                     flex items-center gap-2 border cursor-pointer shadow-sm 
-                    transition-colors select-none ${sizeClasses}
+                    transition-colors select-none ${sizeClasses} rounded-t-3xl rounded-b-3xl
                     ${isOpen ? 'border-gray-400' : 'border-gray-300'}
                     ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
                 `}
