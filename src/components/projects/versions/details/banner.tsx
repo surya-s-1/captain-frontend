@@ -27,12 +27,14 @@ export default function DetailsBanner({ status }) {
 
     const projectId = searchParams.get('projectId')
     const version = searchParams.get('version')
+    const tool = searchParams.get('tool')
 
     const [error, setError] = useState<string>('')
     const [projectName, setProjectName] = useState<string>('')
     const [uploadedFiles, setUploadedFiles] = useState<any[]>([])
     const [versionFiles, setVersionFiles] = useState<any[]>([])
     const [submitLoading, setSubmitLoading] = useState(false)
+    const [createVersionLoading, setCreateVersionLoading] = useState(false)
     const [isModalOpen, setIsModalOpen] = useState(false)
 
     useEffect(() => {
@@ -152,6 +154,40 @@ export default function DetailsBanner({ status }) {
         }
     }
 
+    async function createNewVersion() {
+        try {
+            if (createVersionLoading) return
+
+            setCreateVersionLoading(true)
+
+            const user = await getCurrentUser()
+            if (!user) return
+
+            const token = await user.getIdToken()
+            if (!token) return
+
+            const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/v1/${projectId}/createNewVersion`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+
+            if (!response.ok) {
+                throw new Error('Could not create new version')
+            } else {
+                const newVersion = await response.text()
+
+                router.push(`/projects/versions/details?projectId=${projectId}&version=${newVersion}&tool=${tool}`)
+            }
+
+            setCreateVersionLoading(false)
+        } catch (err) {
+            console.error(err)
+            setCreateVersionLoading(false)
+        }
+    }
+
     useEffect(() => {
         fetchProjectName()
         fetchVersion()
@@ -232,14 +268,12 @@ export default function DetailsBanner({ status }) {
                         <div className='flex flex-col items-center gap-1'>
                             <span>Change in requirements?</span>
                             <button
-                                className='w-fit bg-primary-contrast/50 text-color-primary-contrast rounded-full p-2 cursor-pointer'
-                                onClick={() => setIsModalOpen(true)}
-                                disabled={true}
-                                title='Feature not yet developed'
+                                className='w-fit bg-primary-contrast text-color-primary-contrast rounded-full p-2 cursor-pointer flex items-center gap-2'
+                                onClick={() => createNewVersion()}
                             >
                                 Create New Version
+                                {createVersionLoading && <Loader2 className='animate-spin' />}
                             </button>
-                            <span className='text-xs'>(Feature not yet developed)</span>
                         </div>
                     )}
                 </>}
