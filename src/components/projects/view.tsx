@@ -27,7 +27,7 @@ interface ProjectViewInput {
 
 const NEXT_PUBLIC_TOOL_ENDPOINT = process.env.NEXT_PUBLIC_TOOL_ENDPOINT || ''
 
-export function ProjectView({ tool, description, loading, error, projects }: ProjectViewInput) {
+function ProjectCard({ project, tool }: { project: Project, tool: string }) {
     const router = useRouter()
     const [connectLoading, setConnectLoading] = useState(false)
 
@@ -67,6 +67,56 @@ export function ProjectView({ tool, description, loading, error, projects }: Pro
     }
 
     return (
+        <a
+            href={project.connected ? `/projects/versions/details?projectId=${project.project_id}&version=${project.latest_version}&tool=${tool}` : ''}
+            className='flex flex-col justify-between gap-8 cursor-pointer p-4 rounded-md shadow-md hover:shadow-lg transition-shadow dark:shadow-black/50'
+        >
+            <div className='w-full flex items-center gap-4'>
+                <img src={project.imageUrl} className='h-8 rounded-full' />
+                <h2 className='text-xl'>{project.name}</h2>
+            </div>
+            <div className={`w-full flex items-center justify-between ${!project.connected && 'flex-row-reverse'}`}>
+                {project.connected ?
+                    <>
+                        <button
+                            className='text-color-primary/80 cursor-pointer font-sans font-semibold'
+                            onClick={(e) => {
+                                e.preventDefault()
+                                router.push(`/projects/versions?projectId=${project.project_id}&tool=${tool}`)
+                            }}
+                        >
+                            See versions {'>>'}
+                        </button>
+                        <span
+                            className='w-fit text-success p-2'
+                        >
+                            Connected
+                        </span>
+                    </> :
+                    <button
+                        className='flex items-center gap-2 w-fit text-link font-sans font-semibold p-2 cursor-pointer'
+                        onClick={(e) => {
+                            e.preventDefault()
+                            connectProject(
+                                project.siteId,
+                                project.siteDomain,
+                                project.name,
+                                project.key
+                            )
+                        }}
+                        disabled={connectLoading}
+                    >
+                        <span>Connect</span>
+                        {connectLoading &&
+                            <Loader2 className='animate-spin' size={16} />}
+                    </button>
+                }
+            </div>
+        </a>)
+}
+
+export function ProjectView({ tool, description, loading, error, projects }: ProjectViewInput) {
+    return (
         <>
             <h2 className='text-color-primary/70 text-lg font-semibold'>{tool}</h2>
             <p className='text-color-primary/50 italic mb-4'>{description}</p>
@@ -82,53 +132,7 @@ export function ProjectView({ tool, description, loading, error, projects }: Pro
             {!loading && !error &&
                 <div className='w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
                     {projects.map((project, idx) => (
-                        <a
-                            key={idx}
-                            href={project.connected ? `/projects/versions/details?projectId=${project.project_id}&version=${project.latest_version}&tool=${tool}` : ''}
-                            className='flex flex-col justify-between gap-8 cursor-pointer p-4 rounded-md shadow-md hover:shadow-lg transition-shadow dark:shadow-black/50'
-                        >
-                            <div className='w-full flex items-center gap-4'>
-                                <img src={project.imageUrl} className='h-8 rounded-full' />
-                                <h2 className='text-xl'>{project.name}</h2>
-                            </div>
-                            <div className={`w-full flex items-center justify-between ${!project.connected && 'flex-row-reverse'}`}>
-                                {project.connected ?
-                                    <>
-                                        <button
-                                            className='text-color-primary/80 cursor-pointer font-sans font-semibold'
-                                            onClick={(e) => {
-                                                e.preventDefault()
-                                                router.push(`/projects/versions?projectId=${project.project_id}&tool=${tool}`)
-                                            }}
-                                        >
-                                            See versions {'>>'}
-                                        </button>
-                                        <span
-                                            className='w-fit text-success p-2'
-                                        >
-                                            Connected
-                                        </span>
-                                    </> :
-                                    <button
-                                        className='flex items-center gap-2 w-fit text-link font-sans font-semibold p-2 cursor-pointer'
-                                        onClick={(e) => {
-                                            e.preventDefault()
-                                            connectProject(
-                                                project.siteId,
-                                                project.siteDomain,
-                                                project.name,
-                                                project.key
-                                            )
-                                        }}
-                                        disabled={connectLoading}
-                                    >
-                                        <span>Connect</span>
-                                        {connectLoading &&
-                                            <Loader2 className='animate-spin' size={16} />}
-                                    </button>
-                                }
-                            </div>
-                        </a>
+                        <ProjectCard key={idx} project={project} tool={tool} />
                     ))}
                 </div>
             }
