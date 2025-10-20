@@ -70,13 +70,12 @@ export default function Dropdown({
                     {selected ? selected.label : placeholder}
                 </span>
 
-                {isLoading ? (
+                {!disabled && (
+                isLoading ? (
                     <Loader2 className='w-4 h-4 animate-spin text-white' />
                 ) : (
-                    <ChevronDown
-                        className={`w-4 h-4 ${selected ? 'text-white' : 'text-gray-400'}`}
-                    />
-                )}
+                    <ChevronDown className={`w-4 h-4 ${selected ? 'text-white' : 'text-gray-400'}`} />
+                ))}
             </div>
 
             {isOpen && !isLoading && (

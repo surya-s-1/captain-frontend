@@ -133,6 +133,7 @@ export default function RequirementCard({
                         {requirement.requirement_id}
                         {requirement.requirement_type && ` (${requirement.requirement_type})`}
                     </h2>
+                    {requirement.change_analysis_status &&
                     <Dropdown
                         options={CHANGE_ANALYSIS_DROPDOWN_OPTIONS}
                         value={requirement.change_analysis_status}
@@ -140,7 +141,7 @@ export default function RequirementCard({
                         isLoading={toggleStatusLoading}
                         disabled={!canToggleStatus || ['IGNORED', 'NEW'].includes(requirement.change_analysis_status)}
                         size='xs'
-                    />
+                    />}
                 </div>
                 <div className='flex items-center gap-2'>
                     {canDelete && (

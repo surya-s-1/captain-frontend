@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { doc, getDoc, onSnapshot, query, collection, where } from 'firebase/firestore'
+import { doc, getDoc, onSnapshot, query, collection, where, orderBy } from 'firebase/firestore'
 
 import DetailsBanner from '@/components/projects/versions/details/banner'
 import Requirements, { RequirementInterface } from '@/components/projects/versions/details/requirements'
@@ -84,7 +84,8 @@ export default function ProjectDetails() {
             collection(firestoreDb, 'projects', projectId, 'versions', version, 'requirements'),
             where('deleted', '==', false),
             where('duplicate', '==', false),
-            where('change_analysis_status', '!=', CHANGE_ANALYSIS_STATUS.IGNORED)
+            where('change_analysis_status', '!=', CHANGE_ANALYSIS_STATUS.IGNORED),
+            orderBy('requirement_id', 'asc')
         )
 
         const unsubscribe = onSnapshot(reqQuery, (snapshot) => {
@@ -140,7 +141,10 @@ export default function ProjectDetails() {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }
             })
-            if (!response.ok) console.error('Could not confirm requirements')
+            if (!response.ok) {
+                console.error('Could not confirm requirements')
+                alert('Could not confirm requirements')
+            }
         } catch (err) {
             console.error(err)
         } finally {
@@ -162,13 +166,42 @@ export default function ProjectDetails() {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }
             })
-            if (!response.ok) console.error('Could not confirm testcases')
+            if (!response.ok) {
+                console.error('Could not confirm testcases')
+                alert('Could not confirm testcases')
+            }
         } catch (err) {
             console.error(err)
         } finally {
             setSubmitLoading(false)
         }
     }
+
+
+    async function confirmChangeAnalysis() {
+        try {
+            setSubmitLoading(true)
+            const user = await getCurrentUser()
+            if (!user) return
+
+            const token = await user.getIdToken()
+            if (!token) return
+
+            const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/v1/${projectId}/v/${version}/changeAnalysis/confirm`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}` }
+            })
+            if (!response.ok) {
+                console.error('Could not confirm change analysis')
+                alert('Could not confirm change analysis')
+            }
+        } catch (err) {
+            console.error(err)
+        } finally {
+            setSubmitLoading(false)
+        }
+    }
+
 
     if (error) {
         return (
@@ -269,6 +302,16 @@ export default function ProjectDetails() {
                     buttonLabel='Confirm'
                     loading={submitLoading}
                     callback={confirmTestcases}
+                />
+            )}
+
+            {status === 'CONFIRM_CHANGE_ANALYSIS_EXPLICIT' && (
+                <Notice
+                    title='Verify the results of change analysis'
+                    content='Please update the change status of the explicit requirements if they are not captured correctly and click on confirm.'
+                    buttonLabel='Confirm'
+                    loading={submitLoading}
+                    callback={confirmChangeAnalysis}
                 />
             )}
         </div>
