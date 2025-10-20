@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { collection, getDoc, doc, getDocs, query, where } from 'firebase/firestore'
+import { collection, getDoc, doc, getDocs, query, where, orderBy } from 'firebase/firestore'
 
 import { firestoreDb } from '@/lib/firebase'
 import { getCurrentUser } from '@/lib/firebase/utilities'
@@ -48,7 +48,10 @@ export default function ProjectVersions() {
 
             setLatestVersion(projectData.latest_version || null)
 
-            const versionsRef = collection(firestoreDb, 'projects', projectId, 'versions')
+            const versionsRef = query(
+                collection(firestoreDb, 'projects', projectId, 'versions'),
+                orderBy('created_at', 'desc')
+            )
             const querySnapshot = await getDocs(versionsRef)
 
             const versions = querySnapshot.docs.map(doc => ({

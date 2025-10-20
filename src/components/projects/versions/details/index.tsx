@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { doc, getDoc, onSnapshot, query, collection, where, getDocs } from 'firebase/firestore'
+import { doc, getDoc, onSnapshot, query, collection, where } from 'firebase/firestore'
 
 import DetailsBanner from '@/components/projects/versions/details/banner'
 import Requirements, { RequirementInterface } from '@/components/projects/versions/details/requirements'
