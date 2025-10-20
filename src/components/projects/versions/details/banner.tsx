@@ -215,10 +215,12 @@ export default function DetailsBanner({ status }) {
                                 className='w-fit bg-primary-contrast text-color-primary-contrast rounded-full p-2 cursor-pointer'
                                 onClick={() => setIsModalOpen(true)}
                             >
-                                Upload Documents {status.startsWith('ERR') && <span>(Retry)</span>}
+                                {version === 'v1' ? 'Upload Documents' : 'Upload Updated Requirements'} {status.startsWith('ERR') && <span>(Retry)</span>}
                             </button>
                             <Modal isOpen={isModalOpen} closeModal={() => setIsModalOpen(false)}>
-                                <h2 className='text-xl font-bold mb-4'>Upload Documents</h2>
+                                <h2 className='text-xl font-bold mb-4'>
+                                    Upload Documents
+                                </h2>
                                 <div className='flex flex-col gap-4'>
                                     <label htmlFor='files' className='w-fit bg-primary-contrast text-color-primary-contrast rounded-full p-2 cursor-pointer'>
                                         Select Files
@@ -252,7 +254,9 @@ export default function DetailsBanner({ status }) {
                         </div>)}
                     {versionFiles.length > 0 && !status.startsWith('ERR') &&
                         <div>
-                            <h4 className='font-semibold'>Uploaded Files:</h4>
+                            <h4 className='font-semibold'>
+                                Uploaded Files:
+                            </h4>
                             <ul>
                                 {versionFiles.map(file => (
                                     <li
