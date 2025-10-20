@@ -160,4 +160,20 @@ export const CHANGE_ANALYSIS_STATUS = {
     DEPRECATED: 'DEPRECATED'
 }
 
+const CHANGE_ANALYSIS_STATUS_COLORS = {
+    IGNORED: 'gray',
+    NEW: 'green',
+    UNCHANGED: 'blue',
+    MODIFIED: 'orange',
+    DEPRECATED: 'red'
+}
+
+export const CHANGE_ANALYSIS_DROPDOWN_OPTIONS = Object.keys(CHANGE_ANALYSIS_STATUS)
+.filter(k => k !== CHANGE_ANALYSIS_STATUS.IGNORED).map(k => ({
+    label: k,
+    value: CHANGE_ANALYSIS_STATUS[k],
+    color: CHANGE_ANALYSIS_STATUS_COLORS[k],
+    disabled: k === CHANGE_ANALYSIS_STATUS.NEW
+}))
+
 export const PUBLIC_PATHS = ['/login', '/notice']
