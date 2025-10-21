@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Info } from 'lucide-react'
 
+import { useFilter } from '@/hooks/useFilter'
 import { usePagination } from '@/hooks/usePagination'
 
 import RequirementCard from '@/components/projects/versions/details/requirements/card'
@@ -83,7 +84,15 @@ export default function Requirements({
         }
     }, [requirements, status])
 
-    const { currentItems: currentRequirements, Pagination, goToPage } = usePagination(showReqs, reqsPerPage)
+    const { filteredItems: filteredRequirements, FilterComponent } = useFilter({
+        items: showReqs,
+        config: {
+            requirement_id: { type: 'singleSearch', label: 'Requirement ID' },
+            source_type: { type: 'single', label: 'Source' }
+        }
+    })
+
+    const { currentItems: currentRequirements, Pagination, goToPage } = usePagination(filteredRequirements, reqsPerPage)
 
     useEffect(() => {
         if (showReqs.length > 0 && window.location.hash) {
@@ -126,9 +135,10 @@ export default function Requirements({
                 <p>No requirements found.</p>
             )}
 
-            <Pagination
-                className={status.startsWith('CONFIRM') ? 'bottom-24' : ''}
-            />
+            <div className='w-full flex items-end justify-between z-10 sticky bottom-24'>
+                <Pagination />
+                <FilterComponent className='items-end' />
+            </div>
         </div>
     )
 }

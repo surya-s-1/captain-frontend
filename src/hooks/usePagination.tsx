@@ -17,7 +17,7 @@ export function usePagination(items = [], itemsPerPage = 10) {
 
     const Pagination = ({ className = '' }: { className?: string }) => (
         <div
-            className={`sticky bottom-4 w-fit bg-secondary rounded-md shadow-md flex justify-center items-center gap-4 mt-8 z-10 ${className}`}
+            className={`w-fit bg-secondary rounded-md shadow-md flex justify-center items-center gap-4 mt-8 ${className}`}
         >
             <button
                 onClick={prevPage}
