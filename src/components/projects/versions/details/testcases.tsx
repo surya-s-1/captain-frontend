@@ -6,9 +6,10 @@ import { MoveUpRight, TriangleAlert, ArrowDownToLine, RefreshCcw, RefreshCcwDot,
 import { usePagination } from '@/hooks/usePagination'
 import { useDownloadDatasets } from '@/hooks/useDownloadDatasets'
 
-import { getCurrentUser } from '@/lib/firebase/utilities'
+import Dropdown from '@/lib/utility/ui/Dropdown'
 import { Markdown } from '@/lib/utility/ui/Markdown'
-import { TC_DATASET_STATUS_MESSAGES } from '@/lib/utility/constants'
+import { CHANGE_ANALYSIS_DROPDOWN_OPTIONS, TC_DATASET_STATUS_MESSAGES } from '@/lib/utility/constants'
+import { getCurrentUser } from '@/lib/firebase/utilities'
 
 import JIRA_ICON from '@/../public/Jira_icon.png'
 
@@ -20,6 +21,7 @@ export interface TestCaseInterface {
     priority: string
     requirement_id: string
     deleted: boolean
+    change_analysis_status: string | null
     toolCreated: string | null
     toolIssueKey: string | null
     toolIssueLink: string | null
@@ -153,9 +155,9 @@ function Testcase({ testcase, status, projectId, version, tool }: TestCaseProps)
 
             const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/v1/${projectId}/v/${version}/t/${testcaseId}/update`, {
                 method: 'POST',
-                headers: { 
+                headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}` 
+                    Authorization: `Bearer ${token}`
                 },
                 body: JSON.stringify({
                     prompt: enhancementInput
@@ -224,10 +226,10 @@ function Testcase({ testcase, status, projectId, version, tool }: TestCaseProps)
         }
     }
 
-    return(
+    return (
         <div key={testcase.testcase_id} className='relative p-4 shadow-md shadow-black/30 dark:shadow-black/50 rounded-lg'>
             <div className='w-full flex flex-col lg:flex-row gap-4 justify-between'>
-                <div className='flex flex-col lg:flex-row lg:items-center gap-1 text-color-primary/50 text-xs'>
+                <div className='flex flex-col gap-2 lg:flex-row lg:items-center text-color-primary/50 text-xs'>
                     <span>
                         {testcase.testcase_id}: This testcase is created for requirement {testcase.requirement_id}.
                     </span>
@@ -239,31 +241,40 @@ function Testcase({ testcase, status, projectId, version, tool }: TestCaseProps)
                         <span>Open Requirement</span>
                         <MoveUpRight size={14} />
                     </a>
+                    {testcase.change_analysis_status &&
+                        <Dropdown
+                            options={CHANGE_ANALYSIS_DROPDOWN_OPTIONS}
+                            value={testcase.change_analysis_status}
+                            onChange={() => {}}
+                            isLoading={false}
+                            disabled={true}
+                            size='xs'
+                        />}
                 </div>
                 <div className='flex items-center gap-2'>
 
                     {testcase.toolCreated === 'FAILED' && status === 'COMPLETE_SYNC_TC_WITH_TOOL' &&
                         <>
-                        <button
-                            className='flex items-center gap-2 px-2 py-1 rounded-md shadow-sm hover:shadow-md shadow-black/30 dark:shadow-black/50 transition-shadow cursor-pointer'
-                            onClick={() => { resyncTestcases() }}
-                        >
-                            <RefreshCcw />
-                            <span>Retry Sync</span>
-                            {resyncInProgress &&
-                                <Loader2 className='animate-spin' size={20} />}
-                        </button>
-                        <button
-                            className='flex items-center gap-2 px-2 py-1 rounded-md shadow-sm hover:shadow-md shadow-black/30 dark:shadow-black/50 transition-shadow cursor-pointer'
-                            onClick={() => { recreateTestcase(testcase.testcase_id) }}
-                        >
-                            <RefreshCcwDot />
-                            <span>Retry Create</span>
-                            {recreateInProgress &&
-                                <Loader2 className='animate-spin' size={20} />}
-                        </button>
+                            <button
+                                className='flex items-center gap-2 px-2 py-1 rounded-md shadow-sm hover:shadow-md shadow-black/30 dark:shadow-black/50 transition-shadow cursor-pointer'
+                                onClick={() => { resyncTestcases() }}
+                            >
+                                <RefreshCcw />
+                                <span>Retry Sync</span>
+                                {resyncInProgress &&
+                                    <Loader2 className='animate-spin' size={20} />}
+                            </button>
+                            <button
+                                className='flex items-center gap-2 px-2 py-1 rounded-md shadow-sm hover:shadow-md shadow-black/30 dark:shadow-black/50 transition-shadow cursor-pointer'
+                                onClick={() => { recreateTestcase(testcase.testcase_id) }}
+                            >
+                                <RefreshCcwDot />
+                                <span>Retry Create</span>
+                                {recreateInProgress &&
+                                    <Loader2 className='animate-spin' size={20} />}
+                            </button>
                         </>}
-                        
+
 
                     {testcase.datasets && testcase.datasets.length > 0 &&
                         <button
@@ -333,24 +344,24 @@ function Testcase({ testcase, status, projectId, version, tool }: TestCaseProps)
                 <Markdown text={testcase.priority} />
             </div>
             {canEnhance &&
-            <div className='flex flex-col lg:flex-row lg:items-center gap-2'>
-                <input
-                    type='text'
-                    className='p-2 border focus:outline-none rounded w-[90%]'
-                    value={enhancementInput}
-                    placeholder='Enhance the testcase...'
-                    onChange={e => {!enhancementInProgress && setEnhancementInput(e.target.value)}}
-                />
-                <button
-                    className='w-fit flex items-center gap-2 rounded-md shadow-sm hover:shadow-md shadow-black/30 dark:shadow-black/50 transition-shadow p-2 cursor-pointer'
-                    onClick={() => enhanceTestcase(testcase.testcase_id)}
-                    disabled={enhancementInProgress}
-                >
-                    <WandSparkles size={24} />
-                    Enhance
-                    {enhancementInProgress && <Loader2 className='animate-spin' size={20} />}
-                </button>
-            </div>}
+                <div className='flex flex-col lg:flex-row lg:items-center gap-2'>
+                    <input
+                        type='text'
+                        className='p-2 bg-gray-200 focus:outline-none rounded w-[90%]'
+                        value={enhancementInput}
+                        placeholder='Enhance the testcase...'
+                        onChange={e => { !enhancementInProgress && setEnhancementInput(e.target.value) }}
+                    />
+                    <button
+                        className='w-fit flex items-center gap-2 rounded-md shadow-sm hover:shadow-md shadow-black/30 dark:shadow-black/50 transition-shadow p-2 cursor-pointer'
+                        onClick={() => enhanceTestcase(testcase.testcase_id)}
+                        disabled={enhancementInProgress}
+                    >
+                        <WandSparkles size={24} />
+                        Enhance
+                        {enhancementInProgress && <Loader2 className='animate-spin' size={20} />}
+                    </button>
+                </div>}
         </div>
     )
 }
