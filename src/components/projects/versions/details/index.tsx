@@ -275,6 +275,16 @@ export default function ProjectDetails() {
                 )}
             </div>
 
+            {status === 'CONFIRM_CHANGE_ANALYSIS_EXPLICIT' && (
+                <Notice
+                    title='Verify the results of change analysis'
+                    content='Please update the change status of the explicit requirements if they are not captured correctly and click on confirm.'
+                    buttonLabel='Confirm'
+                    loading={submitLoading}
+                    callback={confirmChangeAnalysis}
+                />
+            )}
+
             {status === 'CONFIRM_REQ_EXTRACT' && (
                 <Notice
                     title='Verify proposed requirements'
@@ -302,16 +312,6 @@ export default function ProjectDetails() {
                     buttonLabel='Confirm'
                     loading={submitLoading}
                     callback={confirmTestcases}
-                />
-            )}
-
-            {status === 'CONFIRM_CHANGE_ANALYSIS_EXPLICIT' && (
-                <Notice
-                    title='Verify the results of change analysis'
-                    content='Please update the change status of the explicit requirements if they are not captured correctly and click on confirm.'
-                    buttonLabel='Confirm'
-                    loading={submitLoading}
-                    callback={confirmChangeAnalysis}
                 />
             )}
         </div>
