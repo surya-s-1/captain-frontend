@@ -56,6 +56,7 @@ export default function TestCases({
         items: testcases,
         config: {
             testcase_id: { type: 'singleSearch', label: 'Testcase ID' },
+            requirement_id: { type: 'singleSearch', label: 'Parent Requirement' },
             change_analysis_status: { type: 'multi', label: 'Delta Analysis' },
             dataset_status: { type: 'multi', label: 'Dataset Creation' },
             toolCreated: { type: 'multi', label: 'Created on ALM' }
