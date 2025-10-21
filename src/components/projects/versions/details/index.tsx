@@ -28,6 +28,7 @@ export default function ProjectDetails() {
 
     const [status, setStatus] = useState<string>('')
     const [error, setError] = useState<string>('')
+    const [latestVersion, setLatestVersion] = useState<string>('')
     const [requirements, setRequirements] = useState<RequirementInterface[]>([])
     const [showRequirements, setShowRequirements] = useState<RequirementInterface[]>([])
     const [testcases, setTestcases] = useState<TestCaseInterface[]>([])
@@ -51,6 +52,7 @@ export default function ProjectDetails() {
             }
 
             const projectData = projectSnap.data()
+            setLatestVersion(projectData.latest_version || '')
 
             if (!projectData.uids || !projectData.uids.includes(user.uid)) {
                 setError('You do not have access to this project.')
@@ -139,7 +141,13 @@ export default function ProjectDetails() {
 
     async function confirmRequirements() {
         try {
+            if (version !== latestVersion) {
+                alert('Not allowed in this version')
+                return
+            }
+
             setSubmitLoading(true)
+
             const user = await getCurrentUser()
             if (!user) return
 
@@ -164,7 +172,13 @@ export default function ProjectDetails() {
 
     async function confirmTestcases() {
         try {
+            if (version !== latestVersion) {
+                alert('Not allowed in this version')
+                return
+            }
+
             setSubmitLoading(true)
+
             const user = await getCurrentUser()
             if (!user) return
 
@@ -189,7 +203,13 @@ export default function ProjectDetails() {
 
     async function confirmChangeAnalysis() {
         try {
+            if (version !== latestVersion) {
+                alert('Not allowed in this version')
+                return
+            }
+
             setSubmitLoading(true)
+
             const user = await getCurrentUser()
             if (!user) return
 
@@ -254,6 +274,7 @@ export default function ProjectDetails() {
                     <Requirements
                         projectId={projectId!}
                         version={version!}
+                        latestVersion={version === latestVersion}
                         tool={tool}
                         status={status}
                         requirements={showRequirements}
@@ -264,6 +285,7 @@ export default function ProjectDetails() {
                     <TestCases
                         projectId={projectId!}
                         version={version!}
+                        latestVersion={version === latestVersion}
                         tool={tool}
                         status={status}
                         testcases={testcases}
@@ -274,6 +296,7 @@ export default function ProjectDetails() {
                     <Datasets
                         projectId={projectId}
                         version={version}
+                        latestVersion={version === latestVersion}
                         status={status}
                         testcase_ids={testcases.map(t => {
                             if (t.testcase_id) {

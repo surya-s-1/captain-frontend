@@ -13,12 +13,13 @@ const NEXT_PUBLIC_TOOL_ENDPOINT = process.env.NEXT_PUBLIC_TOOL_ENDPOINT || ''
 interface DatasetsProps {
     projectId: string
     version: string
+    latestVersion: boolean
     status: string
     testcase_ids: string[]
 }
 
-export default function Datasets({ projectId, version, status, testcase_ids }: DatasetsProps) {
-    const canDownload = (VERSION_STATUS?.[status]?.RANK || -1) >= VERSION_STATUS['START_TC_CREATION_ON_TOOL'].RANK
+export default function Datasets({ projectId, version, latestVersion, status, testcase_ids }: DatasetsProps) {
+    const canDownload = ((VERSION_STATUS?.[status]?.RANK || -1) >= VERSION_STATUS['START_TC_CREATION_ON_TOOL'].RANK) && latestVersion
 
     const [createLoading, setCreateLoading] = useState(false)
     const [downloadAllLoading, setDownloadAllLoading] = useState(false)
@@ -35,6 +36,11 @@ export default function Datasets({ projectId, version, status, testcase_ids }: D
 
     async function createDatasets() {
         try {
+            if (!latestVersion) {
+                alert('Not allowed in this version')
+                return
+            }
+
             setCreateLoading(true)
 
             const user = await getCurrentUser()

@@ -31,6 +31,7 @@ export default function DetailsBanner({ status }) {
 
     const [error, setError] = useState<string>('')
     const [projectName, setProjectName] = useState<string>('')
+    const [latestVersion, setLatestVersion] = useState<string>('')
     const [uploadedFiles, setUploadedFiles] = useState<any[]>([])
     const [versionFiles, setVersionFiles] = useState<any[]>([])
     const [submitLoading, setSubmitLoading] = useState(false)
@@ -55,6 +56,7 @@ export default function DetailsBanner({ status }) {
             if (docSnapshot.exists()) {
                 const data = docSnapshot.data()
                 setProjectName(data.toolProjectName || '')
+                setLatestVersion(data.latest_version || '')
             } else {
                 setError('Project not found!')
                 setTimeout(() => {
@@ -268,7 +270,7 @@ export default function DetailsBanner({ status }) {
                                 ))}
                             </ul>
                         </div>}
-                    {versionFiles.length > 0 && status != 'CREATED' && (
+                    {versionFiles.length > 0 && status !== 'CREATED' && version === latestVersion && (
                         <div className='flex flex-col items-center gap-1'>
                             <span>Change in requirements?</span>
                             <button

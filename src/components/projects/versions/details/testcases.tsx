@@ -34,6 +34,7 @@ export interface TestCaseInterface {
 interface TestCasesProps {
     projectId: string
     version: string
+    latestVersion: boolean
     tool: string
     status: string
     testcases: TestCaseInterface[]
@@ -44,6 +45,7 @@ const NEXT_PUBLIC_TOOL_ENDPOINT = process.env.NEXT_PUBLIC_TOOL_ENDPOINT || ''
 export default function TestCases({
     projectId,
     version,
+    latestVersion,
     tool,
     status,
     testcases
@@ -73,6 +75,7 @@ export default function TestCases({
                             status={status}
                             projectId={projectId}
                             version={version}
+                            latestVersion={latestVersion}
                             tool={tool}
                         />
                     ))}
@@ -81,7 +84,7 @@ export default function TestCases({
                 <p>No test cases found.</p>
             )}
 
-            <div className={`w-full flex items-center justify-center z-10 sticky ${status.startsWith('CONFIRM_') ? 'bottom-24' : 'bottom-0'}`}>
+            <div className={`w-full flex items-center justify-center z-10 sticky ${status.startsWith('CONFIRM_') ? 'bottom-24' : 'bottom-4'}`}>
                 <Pagination />
 
                 <div className='absolute right-24'>
@@ -96,12 +99,13 @@ export default function TestCases({
 interface TestCaseProps {
     projectId: string
     version: string
+    latestVersion: boolean
     tool: string
     status: string
     testcase: TestCaseInterface
 }
 
-function Testcase({ testcase, status, projectId, version, tool }: TestCaseProps) {
+function Testcase({ testcase, status, projectId, version, latestVersion, tool }: TestCaseProps) {
     const [deleteLoading, setDeleteLoading] = useState(false)
     const [downloadInProgress, setDownloadInProgress] = useState(false)
     const [enhancementInProgress, setEnhancementInProgress] = useState(false)
@@ -110,8 +114,8 @@ function Testcase({ testcase, status, projectId, version, tool }: TestCaseProps)
     const [enhancementInput, setEnhancementInput] = useState('')
 
     const { downloadSingleDataset } = useDownloadDatasets(projectId, version)
-    const canDelete = status === 'CONFIRM_TESTCASES'
-    const canEnhance = status === 'CONFIRM_TESTCASES'
+    const canDelete = status === 'CONFIRM_TESTCASES' && latestVersion
+    const canEnhance = status === 'CONFIRM_TESTCASES' && latestVersion
 
     async function deleteTestcase(tcId: string) {
         try {

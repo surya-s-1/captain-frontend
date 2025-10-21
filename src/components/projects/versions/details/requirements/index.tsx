@@ -58,6 +58,7 @@ export interface RequirementInterface extends RequirementInterfaceBase {
 interface RequirementsProps {
     projectId: string
     version: string
+    latestVersion: boolean
     status: string
     requirements: RequirementInterface[]
     tool: string
@@ -66,13 +67,14 @@ interface RequirementsProps {
 export default function Requirements({
     projectId,
     version,
+    latestVersion,
     status,
     requirements,
     tool
 }: RequirementsProps) {
     const reqsPerPage = 30
-    const canToggleStatus = status === 'CONFIRM_CHANGE_ANALYSIS_EXPLICIT'
-    const canDelete = status === 'CONFIRM_REQ_EXTRACT'
+    const canToggleStatus = status === 'CONFIRM_CHANGE_ANALYSIS_EXPLICIT' && latestVersion
+    const canDelete = status === 'CONFIRM_REQ_EXTRACT' && latestVersion
 
     const { filteredItems: filteredRequirements, FilterComponent } = useFilter({
         items: requirements,
@@ -126,9 +128,8 @@ export default function Requirements({
                 <p>No requirements found.</p>
             )}
 
-            <div className={`w-full flex items-center justify-center z-10 sticky ${status.startsWith('CONFIRM_') ? 'bottom-24' : 'bottom-0'}`}>
+            <div className={`w-full flex items-center justify-center z-10 sticky ${status.startsWith('CONFIRM_') ? 'bottom-24' : 'bottom-4'}`}>
                 <Pagination />
-
                 <div className='absolute right-24'>
                     <FilterComponent />
                 </div>
