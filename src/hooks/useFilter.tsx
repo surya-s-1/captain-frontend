@@ -149,7 +149,6 @@ export function useFilter<T>({ items, config }: UseFilterOptions<T>) {
         )
     }
 
-    // ---- Filter UI ----
     function FilterComponent({
         size = 'md',
         className = '',
@@ -171,9 +170,9 @@ export function useFilter<T>({ items, config }: UseFilterOptions<T>) {
         }, [filters])
 
         return (
-            <div className={`flex flex-col items-center w-fit ${className}`} ref={popupRef}>
+            <div className={`relative w-fit ${className}`} ref={popupRef}>
                 {open && (
-                    <div className='relative mb-2 z-20 flex flex-col gap-4 max-h-[350px] p-2 bg-primary/50 backdrop-blur-sm rounded-md shadow-md border border-gray-300 overflow-auto scrollbar'>
+                    <div className='absolute bottom-[calc(100%+0.5rem)] left-1/2 -translate-x-1/2 z-20 flex flex-col gap-4 max-h-[350px] p-2 bg-primary/50 backdrop-blur-sm rounded-md shadow-md border border-gray-300 overflow-auto scrollbar min-w-[18rem]'>
                         {Object.entries(derivedConfig).map(([field, cfg]) => (
                             <div key={field} className='pb-4 border-b border-gray-400 text-sm'>
                                 <div className='flex justify-between items-center mb-1'>
@@ -308,20 +307,21 @@ export function useFilter<T>({ items, config }: UseFilterOptions<T>) {
                         </div>
                     </div>
                 )}
+
                 <button
                     onClick={() => setOpen((open) => !open)}
-                    className={`flex items-center gap-2 w-fit rounded-md shadow-md bg-primary cursor-pointer transition-all select-none ${sizeClasses}`}
+                    className={`relative flex px-4 items-center gap-2 w-fit rounded-md shadow-md bg-primary cursor-pointer transition-all select-none ${sizeClasses}`}
                 >
                     <ListFilter className='w-4 h-4' />
                     <span>Filter</span>
 
                     {hasActiveFilters && (
-                        <span className='block w-2 h-2 rounded-full bg-red-500' />
+                        <span className='absolute top-1.5 right-1 block w-2 h-2 rounded-full bg-red-500' />
                     )}
                 </button>
             </div>
         )
     }
-
+    
     return { filteredItems, filters, setFilters, resetFilters, FilterComponent }
 }
