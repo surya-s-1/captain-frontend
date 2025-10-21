@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { MoveUpRight, TriangleAlert, ArrowDownToLine, RefreshCcw, RefreshCcwDot, Loader2, WandSparkles } from 'lucide-react'
 
+import { usePagination } from '@/hooks/usePagination'
 import { useDownloadDatasets } from '@/hooks/useDownloadDatasets'
 
 import { getCurrentUser } from '@/lib/firebase/utilities'
@@ -43,14 +44,8 @@ export default function TestCases({
     status,
     testcases
 }: TestCasesProps) {
-    const [currentPage, setCurrentPage] = useState(1)
-
     const testcasesPerPage = 20
-    const totalPages = Math.ceil(testcases.length / testcasesPerPage)
-
-    const indexOfLastTestcase = currentPage * testcasesPerPage
-    const indexOfFirstTestcase = indexOfLastTestcase - testcasesPerPage
-    const currentTestcases = testcases.slice(indexOfFirstTestcase, indexOfLastTestcase)
+    const { currentItems: currentTestcases, Pagination } = usePagination(testcases, testcasesPerPage)
 
 
     return (
@@ -71,25 +66,9 @@ export default function TestCases({
             ) : (
                 <p>No test cases found.</p>
             )}
-            {testcases.length > testcasesPerPage && (
-                <div className='sticky bottom-4 w-fit bg-secondary rounded-md shadow-md flex justify-center items-center gap-4 mt-8'>
-                    <button
-                        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                        disabled={currentPage === 1}
-                        className='bg-primary px-4 py-2 rounded-md shadow-md cursor-pointer disabled:opacity-50'
-                    >
-                        Previous
-                    </button>
-                    <span>Page {currentPage} of {totalPages}</span>
-                    <button
-                        onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                        disabled={currentPage === totalPages}
-                        className='bg-primary px-4 py-2 rounded-md shadow-md cursor-pointer disabled:opacity-50'
-                    >
-                        Next
-                    </button>
-                </div>
-            )}
+            <Pagination
+                className={status.startsWith('CONFIRM') ? 'bottom-24' : ''}
+            />
         </div>
     )
 }

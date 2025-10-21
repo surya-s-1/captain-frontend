@@ -2,7 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import { Info } from 'lucide-react'
-import RequirementCard from './card'
+
+import { usePagination } from '@/hooks/usePagination'
+
+import RequirementCard from '@/components/projects/versions/details/requirements/card'
 
 export interface Source {
     file_name: string
@@ -66,16 +69,9 @@ export default function Requirements({
     requirements,
     tool
 }: RequirementsProps) {
-    const [currentPage, setCurrentPage] = useState(1)
     const [showReqs, setShowReqs] = useState<RequirementInterface[]>([])
 
-    const requirementsPerPage = 30
-    const totalPages = Math.ceil(showReqs.length / requirementsPerPage)
-
-    const indexOfLastReq = currentPage * requirementsPerPage
-    const indexOfFirstReq = indexOfLastReq - requirementsPerPage
-    const currentRequirements = showReqs.slice(indexOfFirstReq, indexOfLastReq)
-
+    const reqsPerPage = 30
     const canToggleStatus = status === 'CONFIRM_CHANGE_ANALYSIS_EXPLICIT'
     const canDelete = status === 'CONFIRM_REQ_EXTRACT'
 
@@ -87,6 +83,8 @@ export default function Requirements({
         }
     }, [requirements, status])
 
+    const { currentItems: currentRequirements, Pagination, goToPage } = usePagination(showReqs, reqsPerPage)
+
     useEffect(() => {
         if (showReqs.length > 0 && window.location.hash) {
             const reqIndex = showReqs.findIndex(r => `#${r.requirement_id}` === window.location.hash)
@@ -96,7 +94,7 @@ export default function Requirements({
                 return
             }
 
-            setCurrentPage(Math.ceil((reqIndex + 1) / requirementsPerPage))
+            goToPage(Math.ceil((reqIndex + 1) / reqsPerPage))
             setTimeout(() => {
                 const el = document.querySelector(window.location.hash)
                 el?.scrollIntoView({ behavior: 'smooth' })
@@ -107,9 +105,9 @@ export default function Requirements({
     return (
         <div className='w-full flex flex-col gap-8 items-center'>
             {canToggleStatus &&
-                <div className='sticky top-[210px] flex items-center gap-2 w-full bg-yellow-300 shadow-sm p-2 rounded-lg z-50'>
+                <div className='sticky top-[210px] flex items-center gap-2 w-full bg-yellow-300 border shadow-sm p-2 rounded-lg z-50'>
                     <Info className='w-6 h-6' />
-                    <span>Showing only explicit requirements.</span>
+                    <span>Showing only explicitly provided requirements.</span>
                 </div>}
             {currentRequirements.length > 0 ? (
                 <div className='w-full flex flex-col gap-4'>
@@ -128,25 +126,9 @@ export default function Requirements({
                 <p>No requirements found.</p>
             )}
 
-            {showReqs.length > requirementsPerPage && (
-                <div className='sticky bottom-4 w-fit bg-secondary rounded-md shadow-md flex justify-center items-center gap-4 mt-8'>
-                    <button
-                        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                        disabled={currentPage === 1}
-                        className='bg-primary px-4 py-2 rounded-md shadow-md cursor-pointer disabled:opacity-50'
-                    >
-                        Previous
-                    </button>
-                    <span>Page {currentPage} of {totalPages}</span>
-                    <button
-                        onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                        disabled={currentPage === totalPages}
-                        className='bg-primary px-4 py-2 rounded-md shadow-md cursor-pointer disabled:opacity-50'
-                    >
-                        Next
-                    </button>
-                </div>
-            )}
+            <Pagination
+                className={status.startsWith('CONFIRM') ? 'bottom-24' : ''}
+            />
         </div>
     )
 }
