@@ -81,10 +81,14 @@ export default function TestCases({
                 <p>No test cases found.</p>
             )}
 
-            <div className={`w-full flex items-center justify-evenly z-10 sticky ${status.startsWith('CONFIRM_') ? 'bottom-24' : 'bottom-0'}`}>
+            <div className={`w-full flex items-center justify-center z-10 sticky ${status.startsWith('CONFIRM_') ? 'bottom-24' : 'bottom-0'}`}>
                 <Pagination />
-                <FilterComponent />
+
+                <div className='absolute right-24'>
+                    <FilterComponent />
+                </div>
             </div>
+
         </div>
     )
 }
@@ -259,7 +263,7 @@ function Testcase({ testcase, status, projectId, version, tool }: TestCaseProps)
                         <Dropdown
                             options={CHANGE_ANALYSIS_DROPDOWN_OPTIONS}
                             value={testcase.change_analysis_status}
-                            onChange={() => {}}
+                            onChange={() => { }}
                             isLoading={false}
                             disabled={true}
                             size='xs'

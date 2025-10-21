@@ -249,7 +249,7 @@ export default function ProjectDetails() {
                 </div>
             )}
 
-            <div className='p-8 mb-16'>
+            <div className='p-8 mb-8'>
                 {tab === 'requirements' && (
                     <Requirements
                         projectId={projectId!}
