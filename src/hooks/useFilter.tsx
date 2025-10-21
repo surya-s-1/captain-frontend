@@ -163,6 +163,13 @@ export function useFilter<T>({ items, config }: UseFilterOptions<T>) {
 
         const sizeClasses = sizeMap[size]
 
+        const hasActiveFilters = useMemo(() => {
+            return Object.values(filters).some((val) => {
+                if (Array.isArray(val)) return val.some((v) => v !== '' && v != null)
+                return val !== '' && val != null
+            })
+        }, [filters])
+
         return (
             <div className={`flex flex-col items-center w-fit ${className}`} ref={popupRef}>
                 {open && (
@@ -308,6 +315,10 @@ export function useFilter<T>({ items, config }: UseFilterOptions<T>) {
                 >
                     <ListFilter className='w-4 h-4' />
                     <span>Filter</span>
+
+                    {hasActiveFilters && (
+                        <span className='block w-2 h-2 rounded-full bg-red-500' />
+                    )}
                 </button>
             </div>
         )
