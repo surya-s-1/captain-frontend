@@ -172,7 +172,7 @@ export const CHANGE_ANALYSIS_DROPDOWN_OPTIONS = Object.keys(CHANGE_ANALYSIS_STAT
     label: k,
     value: CHANGE_ANALYSIS_STATUS[k],
     color: CHANGE_ANALYSIS_STATUS_COLORS[k],
-    disabled: k === CHANGE_ANALYSIS_STATUS.NEW
+    disabled: [CHANGE_ANALYSIS_STATUS.NEW, CHANGE_ANALYSIS_STATUS.IGNORED].includes(k)
 }))
 
 export const PUBLIC_PATHS = ['/login', '/notice']
