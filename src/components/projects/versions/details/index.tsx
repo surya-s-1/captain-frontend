@@ -91,10 +91,10 @@ export default function ProjectDetails() {
         const unsubscribe = onSnapshot(reqQuery, (snapshot) => {
             const reqsList = snapshot.docs.map(d => {
                 const data = d.data()
-                const { embedding, ...restOfData} = data
+                const { embedding, ...restOfData } = data
                 return restOfData
             }) as RequirementInterface[]
-            
+
             setRequirements(reqsList)
         })
 
@@ -125,9 +125,9 @@ export default function ProjectDetails() {
 
         fetchVersion()
         fetchRequirements()
-        fetchTestcases()        
+        fetchTestcases()
     }, [projectId, version])
-    
+
 
     async function confirmRequirements() {
         try {
@@ -309,7 +309,11 @@ export default function ProjectDetails() {
             {status === 'CONFIRM_TESTCASES' && (
                 <Notice
                     title='Verify proposed test cases'
-                    content='Please remove any unwanted test cases from the proposed ones and click confirm to go ahead with their creation on Jira project.'
+                    content={
+                        version === 'v1' ?
+                        'Please remove any unwanted test cases from the proposed ones and click confirm to go ahead with their creation on Jira project.' :
+                        'Please remove any unwanted test cases and click confirm to go ahead with creation of new ones and updation of depreacted ones on Jira project.'
+                    }
                     buttonLabel='Confirm'
                     loading={submitLoading}
                     callback={confirmTestcases}
