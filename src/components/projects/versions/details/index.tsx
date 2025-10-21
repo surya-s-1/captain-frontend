@@ -29,12 +29,12 @@ export default function ProjectDetails() {
     const [status, setStatus] = useState<string>('')
     const [error, setError] = useState<string>('')
     const [requirements, setRequirements] = useState<RequirementInterface[]>([])
+    const [showRequirements, setShowRequirements] = useState<RequirementInterface[]>([])
     const [testcases, setTestcases] = useState<TestCaseInterface[]>([])
     const [tab, setTab] = useState<Tab>('requirements')
     const [submitLoading, setSubmitLoading] = useState(false)
 
     const HIDE_TABS = status === 'CREATED' || status.startsWith('ERR')
-
 
     async function fetchVersion() {
         try {
@@ -127,6 +127,14 @@ export default function ProjectDetails() {
         fetchRequirements()
         fetchTestcases()
     }, [projectId, version])
+
+    useEffect(() => {
+        if (status === 'CONFIRM_CHANGE_ANALYSIS_EXPLICIT') {
+            setShowRequirements(requirements.filter(r => r.source_type !== 'implicit'))
+        } else {
+            setShowRequirements(requirements)
+        }
+    }, [requirements, status])
 
 
     async function confirmRequirements() {
@@ -248,7 +256,7 @@ export default function ProjectDetails() {
                         version={version!}
                         tool={tool}
                         status={status}
-                        requirements={requirements}
+                        requirements={showRequirements}
                     />
                 )}
 

@@ -70,22 +70,12 @@ export default function Requirements({
     requirements,
     tool
 }: RequirementsProps) {
-    const [showReqs, setShowReqs] = useState<RequirementInterface[]>([])
-
     const reqsPerPage = 30
     const canToggleStatus = status === 'CONFIRM_CHANGE_ANALYSIS_EXPLICIT'
     const canDelete = status === 'CONFIRM_REQ_EXTRACT'
 
-    useEffect(() => {
-        if (status === 'CONFIRM_CHANGE_ANALYSIS_EXPLICIT') {
-            setShowReqs(requirements.filter(r => r.source_type !== 'implicit'))
-        } else {
-            setShowReqs(requirements)
-        }
-    }, [requirements, status])
-
     const { filteredItems: filteredRequirements, FilterComponent } = useFilter({
-        items: showReqs,
+        items: requirements,
         config: {
             requirement_id: { type: 'singleSearch', label: 'Requirement ID' },
             source_type: { type: 'single', label: 'Source' }
@@ -95,8 +85,8 @@ export default function Requirements({
     const { currentItems: currentRequirements, Pagination, goToPage } = usePagination(filteredRequirements, reqsPerPage)
 
     useEffect(() => {
-        if (showReqs.length > 0 && window.location.hash) {
-            const reqIndex = showReqs.findIndex(r => `#${r.requirement_id}` === window.location.hash)
+        if (requirements.length > 0 && window.location.hash) {
+            const reqIndex = requirements.findIndex(r => `#${r.requirement_id}` === window.location.hash)
 
             if (reqIndex === -1) {
                 alert(`Requirement ${window.location.hash} not found`)
@@ -109,7 +99,7 @@ export default function Requirements({
                 el?.scrollIntoView({ behavior: 'smooth' })
             }, 500)
         }
-    }, [showReqs])
+    }, [requirements])
 
     return (
         <div className='w-full flex flex-col gap-8 items-center'>
