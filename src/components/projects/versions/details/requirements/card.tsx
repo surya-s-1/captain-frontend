@@ -1,16 +1,19 @@
 'use client'
 
 import { useState } from 'react'
-import { Markdown } from '@/lib/utility/ui/Markdown'
-import { CHANGE_ANALYSIS_DROPDOWN_OPTIONS, REQ_STATUS_MESSAGES } from '@/lib/utility/constants'
-import { getCurrentUser } from '@/lib/firebase/utilities'
-import { RequirementInterfaceBase, Source, Regulation } from './index'
+import { FileDiff } from 'lucide-react'
+
 import Dropdown from '@/lib/utility/ui/Dropdown'
+import { Markdown } from '@/lib/utility/ui/Markdown'
+import { CHANGE_ANALYSIS_DROPDOWN_OPTIONS, CHANGE_ANALYSIS_STATUS, REQ_STATUS_MESSAGES } from '@/lib/utility/constants'
+import { getCurrentUser } from '@/lib/firebase/utilities'
+
+import { RequirementInterface, Source, Regulation } from './index'
 
 export interface RequirementCardProps {
     projectId: string
     version: string
-    requirement: RequirementInterfaceBase
+    requirement: RequirementInterface
     canToggleStatus: boolean
     canDelete: boolean
 }
@@ -26,6 +29,7 @@ export default function RequirementCard({
 }: RequirementCardProps) {
     const [deleteLoading, setDeleteLoading] = useState(false)
     const [toggleStatusLoading, setToggleStatusLoading] = useState(false)
+    const [showPreviousVersion, setShowPreviousVersion] = useState(false)
 
     const [expandedSources, setExpandedSources] = useState<Record<string, boolean>>({})
     const [expandedRegs, setExpandedRegs] = useState<Record<string, boolean>>({})
@@ -134,14 +138,14 @@ export default function RequirementCard({
                         {requirement.requirement_type && ` (${requirement.requirement_type})`}
                     </h2>
                     {requirement.change_analysis_status &&
-                    <Dropdown
-                        options={CHANGE_ANALYSIS_DROPDOWN_OPTIONS}
-                        value={requirement.change_analysis_status}
-                        onChange={toggleChangeAnalysisStatus}
-                        isLoading={toggleStatusLoading}
-                        disabled={!canToggleStatus || ['IGNORED', 'NEW'].includes(requirement.change_analysis_status)}
-                        size='xs'
-                    />}
+                        <Dropdown
+                            options={CHANGE_ANALYSIS_DROPDOWN_OPTIONS}
+                            value={requirement.change_analysis_status}
+                            onChange={toggleChangeAnalysisStatus}
+                            isLoading={toggleStatusLoading}
+                            disabled={!canToggleStatus || ['IGNORED', 'NEW'].includes(requirement.change_analysis_status)}
+                            size='xs'
+                        />}
                 </div>
                 <div className='flex items-center gap-2'>
                     {canDelete && (
@@ -163,6 +167,25 @@ export default function RequirementCard({
             )}
 
             <Markdown text={requirement.requirement} />
+
+            {canToggleStatus &&
+                [
+                    CHANGE_ANALYSIS_STATUS.DEPRECATED,
+                    CHANGE_ANALYSIS_STATUS.MODIFIED,
+                    CHANGE_ANALYSIS_STATUS.UNCHANGED
+                ].includes(requirement.change_analysis_status) &&
+                <div
+                    className='flex flex-col gap-1 bg-gray-300 rounded-lg w-fit px-2 py-1 cursor-pointer'
+                    onClick={() => setShowPreviousVersion(!showPreviousVersion)}
+                >
+                    <div className='flex items-center gap-2 text-xs text-gray-500'>
+                        <FileDiff className='w-3.5 h-3.5' />
+                        <span>{showPreviousVersion ? 'Hide previous version' : 'See previous version'}</span>
+                    </div>
+                    {showPreviousVersion && requirement.history && requirement.history.length &&
+                        <p>{requirement?.history?.[0]?.fields?.requirement || 'Sorry, data not available.'}</p>
+                    }
+                </div>}
 
             <div className='flex flex-col gap-4 mt-4'>
                 {/* Sources */}
