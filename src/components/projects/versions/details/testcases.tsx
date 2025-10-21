@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { MoveUpRight, TriangleAlert, ArrowDownToLine, RefreshCcw, RefreshCcwDot, Loader2, WandSparkles } from 'lucide-react'
+import { MoveUpRight, TriangleAlert, ArrowDownToLine, RefreshCcw, RefreshCcwDot, Loader2, WandSparkles, CircleQuestionMark } from 'lucide-react'
 
 import { usePagination } from '@/hooks/usePagination'
 import { useDownloadDatasets } from '@/hooks/useDownloadDatasets'
@@ -22,6 +22,7 @@ export interface TestCaseInterface {
     requirement_id: string
     deleted: boolean
     change_analysis_status: string | null
+    change_analysis_status_reason: string | null
     toolCreated: string | null
     toolIssueKey: string | null
     toolIssueLink: string | null
@@ -250,6 +251,10 @@ function Testcase({ testcase, status, projectId, version, tool }: TestCaseProps)
                             disabled={true}
                             size='xs'
                         />}
+                    {testcase.change_analysis_status_reason &&
+                        <div className='py-1 cursor-pointer' title={testcase.change_analysis_status_reason}>
+                            <CircleQuestionMark className='w-4 h-4 text-gray-400' />
+                        </div>}
                 </div>
                 <div className='flex items-center gap-2'>
 

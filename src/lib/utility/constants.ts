@@ -168,8 +168,7 @@ const CHANGE_ANALYSIS_STATUS_COLORS = {
     DEPRECATED: 'red'
 }
 
-export const CHANGE_ANALYSIS_DROPDOWN_OPTIONS = Object.keys(CHANGE_ANALYSIS_STATUS)
-.filter(k => k !== CHANGE_ANALYSIS_STATUS.IGNORED).map(k => ({
+export const CHANGE_ANALYSIS_DROPDOWN_OPTIONS = Object.keys(CHANGE_ANALYSIS_STATUS).map(k => ({
     label: k,
     value: CHANGE_ANALYSIS_STATUS[k],
     color: CHANGE_ANALYSIS_STATUS_COLORS[k],

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { FileDiff } from 'lucide-react'
+import { FileDiff, CircleQuestionMark } from 'lucide-react'
 
 import Dropdown from '@/lib/utility/ui/Dropdown'
 import { Markdown } from '@/lib/utility/ui/Markdown'
@@ -146,6 +146,10 @@ export default function RequirementCard({
                             disabled={!canToggleStatus || ['IGNORED', 'NEW'].includes(requirement.change_analysis_status)}
                             size='xs'
                         />}
+                    {requirement.change_analysis_status_reason &&
+                        <div className='py-1 cursor-pointer' title={requirement.change_analysis_status_reason}>
+                            <CircleQuestionMark className='w-4 h-4 text-gray-400' />
+                        </div>}
                 </div>
                 <div className='flex items-center gap-2'>
                     {canDelete && (
@@ -159,6 +163,11 @@ export default function RequirementCard({
                     )}
                 </div>
             </div>
+
+            {requirement.source_type === 'implicit' &&
+                <div className='text-color-primary/50 text-xs mb-1'>
+                    Derived from {requirement.exp_req_ids.join(', ')}
+                </div>}
 
             {requirement.testcase_status && (
                 <p className='text-color-primary/50 text-xs mb-1'>

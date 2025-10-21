@@ -84,7 +84,7 @@ export default function ProjectDetails() {
             collection(firestoreDb, 'projects', projectId, 'versions', version, 'requirements'),
             where('deleted', '==', false),
             where('duplicate', '==', false),
-            where('change_analysis_status', '!=', CHANGE_ANALYSIS_STATUS.IGNORED),
+            // where('change_analysis_status', '!=', CHANGE_ANALYSIS_STATUS.IGNORED),
             orderBy('requirement_id', 'asc')
         )
 
