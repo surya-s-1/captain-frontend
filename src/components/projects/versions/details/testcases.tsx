@@ -306,7 +306,7 @@ function Testcase({ testcase, status, projectId, version, tool }: TestCaseProps)
                             <span>Open in {tool}</span>
                         </a>}
 
-                    {canDelete && (
+                    {canDelete && testcase.change_analysis_status !== 'DEPRECATED' && (
                         <button
                             className='text-red-500 cursor-pointer'
                             onClick={() => deleteTestcase(testcase.testcase_id)}
@@ -348,7 +348,7 @@ function Testcase({ testcase, status, projectId, version, tool }: TestCaseProps)
             <div className='my-1'>
                 <Markdown text={testcase.priority} />
             </div>
-            {canEnhance &&
+            {canEnhance && testcase.change_analysis_status !== 'DEPRECATED' &&
                 <div className='flex flex-col lg:flex-row lg:items-center gap-2'>
                     <input
                         type='text'
