@@ -151,7 +151,7 @@ export function useFilter<T>({ items, config }: UseFilterOptions<T>) {
 
     // ---- Filter UI ----
     function FilterComponent({
-        size = 'sm',
+        size = 'md',
         className = '',
     }: { size?: Size, className?: string }) {
         const sizeMap: Record<Size, string> = {
