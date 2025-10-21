@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { MoveUpRight, TriangleAlert, ArrowDownToLine, RefreshCcw, RefreshCcwDot, Loader2, WandSparkles, CircleQuestionMark } from 'lucide-react'
 
+import { useFilter } from '@/hooks/useFilter'
 import { usePagination } from '@/hooks/usePagination'
 import { useDownloadDatasets } from '@/hooks/useDownloadDatasets'
 
@@ -48,8 +49,17 @@ export default function TestCases({
     testcases
 }: TestCasesProps) {
     const testcasesPerPage = 20
-    const { currentItems: currentTestcases, Pagination } = usePagination(testcases, testcasesPerPage)
 
+    const { filteredItems: filteredTestcases, FilterComponent } = useFilter({
+        items: testcases,
+        config: {
+            testcase_id: { type: 'singleSearch', label: 'Testcase ID' },
+            change_analysis_status: { type: 'multi', label: 'Change Analysis Status' },
+            dataset_status: { type: 'multi', label: 'Dataset Status' }
+        }
+    })
+
+    const { currentItems: currentTestcases, Pagination } = usePagination(filteredTestcases, testcasesPerPage)
 
     return (
         <div className='w-full flex flex-col gap-8 items-center'>
@@ -69,9 +79,11 @@ export default function TestCases({
             ) : (
                 <p>No test cases found.</p>
             )}
-            <Pagination
-                className={status.startsWith('CONFIRM') ? 'bottom-24' : ''}
-            />
+
+            <div className={`w-full flex items-end justify-between z-10 sticky ${status.startsWith('CONFIRM_') ? 'bottom-24' : 'bottom-0'}`}>
+                <Pagination />
+                <FilterComponent className='items-end' />
+            </div>
         </div>
     )
 }

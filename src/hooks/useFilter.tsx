@@ -175,7 +175,7 @@ export function useFilter<T>({ items, config }: UseFilterOptions<T>) {
                 {open && (
                     <div className='relative mb-2 z-20 flex flex-col gap-4 bg-primary/50 backdrop-blur-sm rounded-md p-3 shadow-md max-h-[20rem] overflow-auto scrollbar'>
                         {Object.entries(derivedConfig).map(([field, cfg]) => (
-                            <div key={field} className='pb-4 border-b'>
+                            <div key={field} className='pb-4 border-b text-sm'>
                                 <div className='flex justify-between items-center mb-1'>
                                     <div className='font-semibold'>{cfg.label || field}</div>
                                     <button

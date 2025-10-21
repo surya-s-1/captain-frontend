@@ -135,7 +135,7 @@ export default function Requirements({
                 <p>No requirements found.</p>
             )}
 
-            <div className='w-full flex items-end justify-between z-10 sticky bottom-24'>
+            <div className={`w-full flex items-end justify-between z-10 sticky ${status.startsWith('CONFIRM_') ? 'bottom-24' : 'bottom-0'}`}>
                 <Pagination />
                 <FilterComponent className='items-end' />
             </div>
