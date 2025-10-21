@@ -78,7 +78,8 @@ export default function Requirements({
         items: requirements,
         config: {
             requirement_id: { type: 'singleSearch', label: 'Requirement ID' },
-            source_type: { type: 'single', label: 'Source' }
+            source_type: { type: 'single', label: 'Source' },
+            change_analysis_status: { type: 'multi', label: 'Delta Analysis' }
         }
     })
 
