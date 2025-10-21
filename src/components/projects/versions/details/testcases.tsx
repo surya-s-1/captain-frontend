@@ -352,7 +352,7 @@ function Testcase({ testcase, status, projectId, version, tool }: TestCaseProps)
                 <div className='flex flex-col lg:flex-row lg:items-center gap-2'>
                     <input
                         type='text'
-                        className='p-2 bg-gray-200 focus:outline-none rounded w-[90%]'
+                        className='p-2 border border-gray-300 focus:outline-none rounded w-[90%]'
                         value={enhancementInput}
                         placeholder='Enhance the testcase...'
                         onChange={e => { !enhancementInProgress && setEnhancementInput(e.target.value) }}
