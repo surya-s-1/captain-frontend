@@ -105,7 +105,8 @@ export default function ProjectDetails() {
     async function fetchTestcases() {
         const testcaseQuery = query(
             collection(firestoreDb, 'projects', projectId, 'versions', version, 'testcases'),
-            where('deleted', '==', false)
+            where('deleted', '==', false),
+            orderBy('testcase_id', 'asc')
         )
 
         const unsubscribe = onSnapshot(testcaseQuery, (snapshot) => {
