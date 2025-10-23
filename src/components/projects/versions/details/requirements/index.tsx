@@ -79,9 +79,50 @@ export default function Requirements({
     const { filteredItems: filteredRequirements, FilterComponent } = useFilter({
         items: requirements,
         config: {
-            requirement_id: { type: 'singleSearch', label: 'Requirement ID' },
-            source_type: { type: 'single', label: 'Source' },
-            change_analysis_status: { type: 'multi', label: 'Delta Analysis' }
+            requirement_id: {
+                type: 'singleSearch',
+                label: 'Requirement ID'
+            },
+            source_type: {
+                type: 'single',
+                label: 'Source',
+                options: [
+                    {
+                        label: 'Explicit',
+                        value: 'explicit'
+                    },
+                    {
+                        label: 'Implicit',
+                        value: 'implicit'
+                    }
+                ]
+            },
+            change_analysis_status: {
+                type: 'multi',
+                label: 'Delta Analysis',
+                options: [
+                    {
+                        label: 'Deprecated',
+                        value: 'DEPRECATED'
+                    },
+                    {
+                        label: 'Unchanged',
+                        value: 'UNCHANGED'
+                    },
+                    {
+                        label: 'New',
+                        value: 'NEW'
+                    },
+                    {
+                        label: 'Ignored',
+                        value: 'IGNORED'
+                    },
+                    {
+                        label: 'Modified',
+                        value: 'MODIFIED'
+                    }
+                ]
+            }
         }
     })
 
@@ -112,7 +153,7 @@ export default function Requirements({
                     <span>Showing only explicitly provided requirements for delta analysis review.</span>
                 </div>}
             {currentRequirements.length > 0 ? (
-                <div className='w-full flex flex-col gap-4'>
+                <div className='w-full flex flex-col gap-4 mb-12'>
                     {currentRequirements.map(r => (
                         <RequirementCard
                             key={r.requirement_id}
@@ -128,9 +169,9 @@ export default function Requirements({
                 <p>No requirements found.</p>
             )}
 
-            <div className={`w-full flex items-center justify-center z-10 sticky ${status.startsWith('CONFIRM_') ? 'bottom-24' : 'bottom-4'}`}>
+            <div className={`w-full flex items-center justify-center z-10 fixed ${status.startsWith('CONFIRM_') ? 'bottom-24' : 'bottom-4'}`}>
                 <Pagination />
-                <div className='absolute right-24'>
+                <div className='relative -right-48'>
                     <FilterComponent />
                 </div>
             </div>

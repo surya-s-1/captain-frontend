@@ -55,11 +55,72 @@ export default function TestCases({
     const { filteredItems: filteredTestcases, FilterComponent } = useFilter({
         items: testcases,
         config: {
-            testcase_id: { type: 'singleSearch', label: 'Testcase ID' },
-            requirement_id: { type: 'singleSearch', label: 'Parent Requirement' },
-            change_analysis_status: { type: 'multi', label: 'Delta Analysis' },
-            dataset_status: { type: 'multi', label: 'Dataset Creation' },
-            toolCreated: { type: 'multi', label: `Created on ${tool}` }
+            testcase_id: {
+                type: 'singleSearch',
+                label: 'Testcase ID'
+            },
+            requirement_id: {
+                type: 'singleSearch',
+                label: 'Parent Requirement'
+            },
+            change_analysis_status: {
+                type: 'multi',
+                label: 'Delta Analysis',
+                options: [
+                    {
+                        label: 'Deprecated',
+                        value: 'DEPRECATED'
+                    },
+                    {
+                        label: 'Unchanged',
+                        value: 'UNCHANGED'
+                    },
+                    {
+                        label: 'New',
+                        value: 'NEW'
+                    }
+                ]
+            },
+            dataset_status: {
+                type: 'multi',
+                label: 'Dataset Creation',
+                options: [
+                    {
+                        label: 'Completed',
+                        value: 'DATASET_GENERATION_COMPLETED'
+                    },
+                    {
+                        label: 'Queued',
+                        value: 'DATASET_GENERATION_QUEUED'
+                    },
+                    {
+                        label: 'In Progress',
+                        value: 'DATASET_GENERATION_STARTED'
+                    },
+                    {
+                        label: 'Not Started',
+                        value: 'NOT_STARTED'
+                    },
+                    {
+                        label: 'Failed',
+                        value: 'ERR_DATASET_GENERATION'
+                    }
+                ]
+            },
+            toolCreated: {
+                type: 'multi',
+                label: `Created on ${tool}`,
+                options: [
+                    {
+                        label: 'Failed',
+                        value: 'FAILED'
+                    },
+                    {
+                        label: 'Success',
+                        value: 'SUCCESS'
+                    }
+                ]
+            }
         }
     })
 
