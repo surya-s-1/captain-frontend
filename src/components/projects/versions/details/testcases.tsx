@@ -43,141 +43,6 @@ interface TestCasesProps {
 
 const NEXT_PUBLIC_TOOL_ENDPOINT = process.env.NEXT_PUBLIC_TOOL_ENDPOINT || ''
 
-export default function TestCases({
-    projectId,
-    version,
-    latestVersion,
-    tool,
-    status,
-    testcases
-}: TestCasesProps) {
-    const testcasesPerPage = 20
-
-    const { filteredItems: filteredTestcases, FilterComponent } = useFilter({
-        items: testcases,
-        config: {
-            testcase_id: {
-                type: 'singleSearch',
-                label: 'Testcase ID'
-            },
-            requirement_id: {
-                type: 'singleSearch',
-                label: 'Parent Requirement'
-            },
-            dataset_status: {
-                type: 'multi',
-                label: 'Dataset Creation',
-                options: [
-                    {
-                        label: 'Completed',
-                        value: 'DATASET_GENERATION_COMPLETED'
-                    },
-                    {
-                        label: 'Queued',
-                        value: 'DATASET_GENERATION_QUEUED'
-                    },
-                    {
-                        label: 'In Progress',
-                        value: 'DATASET_GENERATION_STARTED'
-                    },
-                    {
-                        label: 'Not Started',
-                        value: 'NOT_STARTED'
-                    },
-                    {
-                        label: 'Failed',
-                        value: 'ERR_DATASET_GENERATION'
-                    }
-                ]
-            },
-            toolCreated: {
-                type: 'multi',
-                label: `Creation on ${tool}`,
-                options: [
-                    {
-                        label: 'Failed',
-                        value: 'FAILED'
-                    },
-                    {
-                        label: 'Success',
-                        value: 'SUCCESS'
-                    }
-                ]
-            }
-        }
-    })
-
-    const {
-        filteredItems: refilteredTestcases,
-        uniqueValues,
-        config,
-        selectedValue,
-        setSelectedValue,
-        BarFilterComponent
-    } = useBarFilter(filteredTestcases,
-        {
-            field: 'change_analysis_status',
-            valueLabels: {
-                [CHANGE_ANALYSIS_STATUS.NEW]: 'New',
-                [CHANGE_ANALYSIS_STATUS.UNCHANGED]: 'Unchanged',
-                [CHANGE_ANALYSIS_STATUS.DEPRECATED]: 'Deprecated'
-            },
-            valueColors: {
-                [CHANGE_ANALYSIS_STATUS.NEW]: 'bg-[#008000]/50 text-white',
-                [CHANGE_ANALYSIS_STATUS.UNCHANGED]: 'bg-[#0000FF]/50 text-white',
-                [CHANGE_ANALYSIS_STATUS.DEPRECATED]: 'bg-[#FF0000]/50 text-white'
-            }
-        })
-
-    const { currentItems: currentTestcases, Pagination } = usePagination(refilteredTestcases, testcasesPerPage)
-
-    return (
-        <div className='w-full flex flex-col gap-8 items-center'>
-            <div className='sticky top-[210px] z-30'>
-                <BarFilterComponent
-                    uniqueValues={uniqueValues}
-                    config={config}
-                    selectedValue={selectedValue}
-                    setSelectedValue={setSelectedValue}
-                />
-            </div>
-            {currentTestcases.length > 0 ? (
-                <div className='w-full flex flex-col gap-4 mb-12'>
-                    {currentTestcases.map((t) => (
-                        <Testcase
-                            key={t.testcase_id}
-                            testcase={t}
-                            status={status}
-                            projectId={projectId}
-                            version={version}
-                            latestVersion={latestVersion}
-                            tool={tool}
-                        />
-                    ))}
-                </div>
-            ) : (
-                <p>No test cases found.</p>
-            )}
-
-            <div className={`w-full flex items-center justify-center z-10 fixed ${status.startsWith('CONFIRM_') ? 'bottom-24' : 'bottom-4'}`}>
-                <Pagination />
-                <div className='relative -right-48'>
-                    <FilterComponent />
-                </div>
-            </div>
-
-        </div>
-    )
-}
-
-interface TestCaseProps {
-    projectId: string
-    version: string
-    latestVersion: boolean
-    tool: string
-    status: string
-    testcase: TestCaseInterface
-}
 
 function Testcase({ testcase, status, projectId, version, latestVersion, tool }: TestCaseProps) {
     const [deleteLoading, setDeleteLoading] = useState(false)
@@ -459,4 +324,140 @@ function Testcase({ testcase, status, projectId, version, latestVersion, tool }:
                 </div>}
         </div>
     )
+}
+
+export default function TestCases({
+    projectId,
+    version,
+    latestVersion,
+    tool,
+    status,
+    testcases
+}: TestCasesProps) {
+    const testcasesPerPage = 20
+
+    const { filteredItems: filteredTestcases, FilterComponent } = useFilter({
+        items: testcases,
+        config: {
+            testcase_id: {
+                type: 'singleSearch',
+                label: 'Testcase ID'
+            },
+            requirement_id: {
+                type: 'singleSearch',
+                label: 'Parent Requirement'
+            },
+            dataset_status: {
+                type: 'multi',
+                label: 'Dataset Creation',
+                options: [
+                    {
+                        label: 'Completed',
+                        value: 'DATASET_GENERATION_COMPLETED'
+                    },
+                    {
+                        label: 'Queued',
+                        value: 'DATASET_GENERATION_QUEUED'
+                    },
+                    {
+                        label: 'In Progress',
+                        value: 'DATASET_GENERATION_STARTED'
+                    },
+                    {
+                        label: 'Not Started',
+                        value: 'NOT_STARTED'
+                    },
+                    {
+                        label: 'Failed',
+                        value: 'ERR_DATASET_GENERATION'
+                    }
+                ]
+            },
+            toolCreated: {
+                type: 'multi',
+                label: `Creation on ${tool}`,
+                options: [
+                    {
+                        label: 'Failed',
+                        value: 'FAILED'
+                    },
+                    {
+                        label: 'Success',
+                        value: 'SUCCESS'
+                    }
+                ]
+            }
+        }
+    })
+
+    const {
+        filteredItems: refilteredTestcases,
+        uniqueValues,
+        config,
+        selectedValue,
+        setSelectedValue,
+        BarFilterComponent
+    } = useBarFilter(filteredTestcases,
+        {
+            field: 'change_analysis_status',
+            valueLabels: {
+                [CHANGE_ANALYSIS_STATUS.NEW]: 'New',
+                [CHANGE_ANALYSIS_STATUS.UNCHANGED]: 'Unchanged',
+                [CHANGE_ANALYSIS_STATUS.DEPRECATED]: 'Deprecated'
+            },
+            valueColors: {
+                [CHANGE_ANALYSIS_STATUS.NEW]: 'bg-[#008000]/50 text-white',
+                [CHANGE_ANALYSIS_STATUS.UNCHANGED]: 'bg-[#0000FF]/50 text-white',
+                [CHANGE_ANALYSIS_STATUS.DEPRECATED]: 'bg-[#FF0000]/50 text-white'
+            }
+        })
+
+    const { currentItems: currentTestcases, Pagination } = usePagination(refilteredTestcases, testcasesPerPage)
+
+    return (
+        <div className='w-full flex flex-col gap-8 items-center'>
+            <div className='sticky top-[210px] z-30'>
+                <BarFilterComponent
+                    uniqueValues={uniqueValues}
+                    config={config}
+                    selectedValue={selectedValue}
+                    setSelectedValue={setSelectedValue}
+                />
+            </div>
+            {currentTestcases.length > 0 ? (
+                <div className='w-full flex flex-col gap-4 mb-12'>
+                    {currentTestcases.map((t) => (
+                        <Testcase
+                            key={t.testcase_id}
+                            testcase={t}
+                            status={status}
+                            projectId={projectId}
+                            version={version}
+                            latestVersion={latestVersion}
+                            tool={tool}
+                        />
+                    ))}
+                </div>
+            ) : (
+                <p>No test cases found.</p>
+            )}
+
+            <div className={`w-full flex items-center justify-center z-10 fixed ${status.startsWith('CONFIRM_') ? 'bottom-24' : 'bottom-4'}`}>
+                <Pagination />
+                <div className='relative -right-48'>
+                    <FilterComponent />
+                </div>
+            </div>
+
+        </div>
+    )
+}
+
+interface TestCaseProps {
+    projectId: string
+    version: string
+    latestVersion: boolean
+    tool: string
+    status: string
+    testcase: TestCaseInterface
 }
