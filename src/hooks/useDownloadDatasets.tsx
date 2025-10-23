@@ -1,11 +1,15 @@
 'use client'
 
+import { useState } from 'react'
 import { getCurrentUser } from '@/lib/firebase/utilities'
 
 const NEXT_PUBLIC_TOOL_ENDPOINT = process.env.NEXT_PUBLIC_TOOL_ENDPOINT || ''
 
 export const useDownloadDatasets = (projectId: string, version: string) => {
-    const pollJobStatus = async (jobId: string, name: string | null = null) => {
+    const [downloadSingleLoading, setDownloadSingleLoading] = useState(false)
+    const [downloadAllLoading, setDownloadAllLoading] = useState(false)
+
+    const pollJobStatus = async (jobId: string, downloadName: string | null = null, jobEndCallback: Function | null = null) => {
         const POLLING_INTERVAL = 2000
 
         const interval = setInterval(async () => {
@@ -27,43 +31,60 @@ export const useDownloadDatasets = (projectId: string, version: string) => {
 
                 if (response.status === 500) {
                     clearInterval(interval)
+                    jobEndCallback && jobEndCallback()
                     alert('Unable to download')
+                    return
                 }
 
                 if (response.status === 200 && contentType?.includes('application/zip')) {
-                    clearInterval(interval)
-
                     const blob = await response.blob()
                     const url = window.URL.createObjectURL(blob)
 
                     const a = document.createElement('a')
                     a.href = url
-                    a.download = name ? `${name}.zip` : `v_${version}_project_${projectId}.zip`
+                    a.download = downloadName ? `${downloadName}.zip` : `v_${version}_project_${projectId}.zip`
                     document.body.appendChild(a)
                     a.click()
 
                     window.URL.revokeObjectURL(url)
                     a.remove()
+
+                    clearInterval(interval)
+                    jobEndCallback && jobEndCallback()
+                    alert('Downloaded!')
+                    return
                 } else {
                     const data = await response.json()
+
                     if (data.status === 'in_progress') {
                         console.log('Download is in progress...')
+
                     } else if (data.status === 'failed') {
                         clearInterval(interval)
-                        console.error('Download failed.')
-                        alert('Download failed. Please check the logs.')
+                        jobEndCallback && jobEndCallback()
+                        alert('Download failed.')
+                        return
                     }
                 }
             } catch (error) {
+                console.error('Error during polling:', error)
+
                 clearInterval(interval)
-                console.error('Network error during polling:', error)
-                alert('A network error occurred.')
+                jobEndCallback && jobEndCallback()
+                alert('An error occurred.')
+                return
             }
         }, POLLING_INTERVAL)
     }
 
     const downloadSingleDataset = async (testcaseId: string) => {
         try {
+            if (downloadSingleLoading) {
+                return
+            }
+
+            setDownloadSingleLoading(true)
+
             const user = await getCurrentUser()
             if (!user) return
 
@@ -91,16 +112,25 @@ export const useDownloadDatasets = (projectId: string, version: string) => {
             const jobId = data.job_id
             console.log(`Job started with ID: ${jobId}`)
 
-            pollJobStatus(jobId, testcaseId)
+            pollJobStatus(jobId, testcaseId, () => {
+                setDownloadSingleLoading(false)
+            })
 
         } catch (error) {
             console.error('Error:', error)
             alert('Failed to start download. Please try again.')
+            setDownloadSingleLoading(false)
         }
     }
 
     const downloadAllDatasets = async () => {
         try {
+            if (downloadAllLoading) {
+                return
+            }
+
+            setDownloadAllLoading(true)
+
             const user = await getCurrentUser()
             if (!user) return
 
@@ -127,12 +157,19 @@ export const useDownloadDatasets = (projectId: string, version: string) => {
             const jobId = data.job_id
             console.log(`Job started with ID: ${jobId}`)
 
-            pollJobStatus(jobId)
+            pollJobStatus(jobId, null, () => {
+                setDownloadAllLoading(false)
+            })
         } catch (err) {
             console.error('Error:', err)
             alert('Failed to start download. Please try again.')
         }
     }
 
-    return { downloadSingleDataset, downloadAllDatasets }
+    return {
+        downloadSingleDataset,
+        downloadAllDatasets,
+        downloadSingleLoading,
+        downloadAllLoading
+    }
 }

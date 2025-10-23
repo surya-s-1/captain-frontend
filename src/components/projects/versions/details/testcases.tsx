@@ -108,15 +108,14 @@ interface TestCaseProps {
 
 function Testcase({ testcase, status, projectId, version, latestVersion, tool }: TestCaseProps) {
     const [deleteLoading, setDeleteLoading] = useState(false)
-    const [downloadInProgress, setDownloadInProgress] = useState(false)
     const [enhancementInProgress, setEnhancementInProgress] = useState(false)
     const [resyncInProgress, setResyncInProgress] = useState(false)
     const [recreateInProgress, setRecreateInProgress] = useState(false)
     const [enhancementInput, setEnhancementInput] = useState('')
 
-    const { downloadSingleDataset } = useDownloadDatasets(projectId, version)
-    const canDelete = status === 'CONFIRM_TESTCASES' && latestVersion
-    const canEnhance = status === 'CONFIRM_TESTCASES' && latestVersion
+    const { downloadSingleDataset, downloadSingleLoading } = useDownloadDatasets(projectId, version)
+    const canDelete = status === 'CONFIRM_TESTCASES' && latestVersion && !['DEPRECATED', 'UNCHANGED'].includes(testcase.change_analysis_status)
+    const canEnhance = status === 'CONFIRM_TESTCASES' && latestVersion && !['DEPRECATED', 'UNCHANGED'].includes(testcase.change_analysis_status)
 
     async function deleteTestcase(tcId: string) {
         try {
@@ -144,11 +143,9 @@ function Testcase({ testcase, status, projectId, version, latestVersion, tool }:
 
     async function downloadDataset(testcaseId: string) {
         try {
-            if (downloadInProgress) {
+            if (downloadSingleLoading) {
                 return
             }
-
-            setDownloadInProgress(true)
 
             const user = await getCurrentUser()
             if (!user) return
@@ -160,8 +157,6 @@ function Testcase({ testcase, status, projectId, version, latestVersion, tool }:
         } catch (err) {
             console.error(err)
         }
-
-        setDownloadInProgress(false)
     }
 
     async function enhanceTestcase(testcaseId: string) {
@@ -261,7 +256,7 @@ function Testcase({ testcase, status, projectId, version, latestVersion, tool }:
                         target='_blank'
                         className='w-fit flex items-center gap-1 border-b-2 border-dotted'
                     >
-                        <span>Open Requirement</span>
+                        <span>View Requirement</span>
                         <MoveUpRight size={14} />
                     </a>
                     {testcase.change_analysis_status &&
@@ -310,7 +305,7 @@ function Testcase({ testcase, status, projectId, version, latestVersion, tool }:
                         >
                             <ArrowDownToLine />
                             <span>Download Dataset</span>
-                            {downloadInProgress &&
+                            {downloadSingleLoading &&
                                 <Loader2 className='animate-spin' size={20} />}
                         </button>}
 
@@ -328,7 +323,7 @@ function Testcase({ testcase, status, projectId, version, latestVersion, tool }:
                             <span>Open in {tool}</span>
                         </a>}
 
-                    {canDelete && testcase.change_analysis_status !== 'DEPRECATED' && (
+                    {canDelete && (
                         <button
                             className='text-red-500 cursor-pointer'
                             onClick={() => deleteTestcase(testcase.testcase_id)}
@@ -344,10 +339,10 @@ function Testcase({ testcase, status, projectId, version, latestVersion, tool }:
                     {TC_DATASET_STATUS_MESSAGES[testcase.dataset_status] || testcase.dataset_status}
                 </span>
             </div>
-            {testcase.toolCreated === 'FAILED' &&
+            {testcase.toolCreated === 'FAILED' && testcase.change_analysis_status !== 'DEPRECATED' &&
                 <div className='flex items-center gap-1 text-xs text-red-500 my-1'>
                     <TriangleAlert size={14} />
-                    Sorry, I was not able to create this issue on {tool}. Can you go ahead and create it please?
+                    Captain failed to create this issue on {tool}.
                 </div>}
             <h2 className='text-lg font-semibold my-2'>
                 <Markdown text={testcase.title} />
@@ -370,7 +365,7 @@ function Testcase({ testcase, status, projectId, version, latestVersion, tool }:
             <div className='my-1'>
                 <Markdown text={testcase.priority} />
             </div>
-            {canEnhance && testcase.change_analysis_status !== 'DEPRECATED' &&
+            {canEnhance &&
                 <div className='flex flex-col lg:flex-row lg:items-center gap-2'>
                     <input
                         type='text'

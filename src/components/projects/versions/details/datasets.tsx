@@ -22,11 +22,14 @@ export default function Datasets({ projectId, version, latestVersion, status, te
     const canDownload = ((VERSION_STATUS?.[status]?.RANK || -1) >= VERSION_STATUS['START_TC_CREATION_ON_TOOL'].RANK) && latestVersion
 
     const [createLoading, setCreateLoading] = useState(false)
-    const [downloadAllLoading, setDownloadAllLoading] = useState(false)
-    const [downloadOneLoading, setDownloadOneLoading] = useState(false)
     const [singleTestcase, setSingleTestcase] = useState('')
 
-    const { downloadSingleDataset, downloadAllDatasets } = useDownloadDatasets(projectId, version)
+    const {
+        downloadSingleDataset,
+        downloadAllDatasets,
+        downloadSingleLoading,
+        downloadAllLoading
+    } = useDownloadDatasets(projectId, version)
 
     if (!canDownload) {
         return (
@@ -64,25 +67,25 @@ export default function Datasets({ projectId, version, latestVersion, status, te
 
     async function downloadEveryDataset() {
         try {
-            setDownloadAllLoading(true)
+            if (downloadAllLoading) {
+                return
+            }
 
             await downloadAllDatasets()
         } catch (err) {
             console.error(err)
-        } finally {
-            setDownloadAllLoading(false)
         }
     }
 
     async function downloadOneDataset() {
         try {
-            setDownloadOneLoading(true)
+            if (downloadSingleLoading) {
+                return
+            }
 
             await downloadSingleDataset(singleTestcase)
         } catch (err) {
             console.error(err)
-        } finally {
-            setDownloadOneLoading(false)
         }
     }
 
@@ -137,14 +140,14 @@ export default function Datasets({ projectId, version, latestVersion, status, te
                 <button
                     className={`flex items-center gap-2 w-fit text-sm px-2 py-1 rounded-md shadow-sm shadow-black/30 dark:shadow-black/50 transition-shadow ${downloadAllLoading ? 'cursor-not-allowed' : 'cursor-pointer hover:shadow-md'}`}
                     onClick={downloadOneDataset}
-                    disabled={downloadOneLoading}
+                    disabled={downloadSingleLoading}
                 >
                     <Download size={20} />
-                    {downloadOneLoading && <Loader2 className='animate-spin' size={20} />}
+                    {downloadSingleLoading && <Loader2 className='animate-spin' size={20} />}
                 </button>
             </div>
 
-            {downloadOneLoading &&
+            {downloadSingleLoading &&
                 <div className='flex items-center gap-2 text-red-500'>
                     <TriangleAlert size={24} />
                     <span>Please don't leave this tab while downloading the dataset</span>

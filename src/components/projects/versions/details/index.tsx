@@ -35,7 +35,7 @@ export default function ProjectDetails() {
     const [tab, setTab] = useState<Tab>('requirements')
     const [submitLoading, setSubmitLoading] = useState(false)
 
-    const HIDE_TABS = status === 'CREATED' || status.startsWith('ERR')
+    const HIDE_TABS = (version === 'v1' && status === 'CREATED') || status.startsWith('ERR')
 
     async function fetchVersion() {
         try {
