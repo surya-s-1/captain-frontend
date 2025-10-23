@@ -224,8 +224,12 @@ export function useFilter<T>({ items, config }: UseFilterOptions<T>) {
             return Object.values(filters).some((val) => {
                 if (Array.isArray(val)) {
                     // Check if array has non-empty/null values
-                    if (val.length === 2 && (val[0] !== '' || val[1] !== '')) return true;
-                    if (val.length > 0 && val.some((v) => v !== '' && v != null)) return true;
+                    if (val.length === 2) {
+                        return val[0] !== '' || val[1] !== ''
+                    } else if (val.length === 0) {
+                        return false
+                    }
+                    return val.some((v) => v !== '' && v != null)
                 }
                 return val !== '' && val != null
             })
