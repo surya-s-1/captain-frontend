@@ -1,12 +1,15 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { Info } from 'lucide-react'
 
 import { useFilter } from '@/hooks/useFilter'
+import { useBarFilter } from '@/hooks/useBarFilter'
 import { usePagination } from '@/hooks/usePagination'
 
 import RequirementCard from '@/components/projects/versions/details/requirements/card'
+
+import { CHANGE_ANALYSIS_STATUS } from '@/lib/utility/constants'
 
 export interface Source {
     file_name: string
@@ -96,37 +99,37 @@ export default function Requirements({
                         value: 'implicit'
                     }
                 ]
-            },
-            change_analysis_status: {
-                type: 'multi',
-                label: 'Delta Analysis',
-                options: [
-                    {
-                        label: 'Deprecated',
-                        value: 'DEPRECATED'
-                    },
-                    {
-                        label: 'Unchanged',
-                        value: 'UNCHANGED'
-                    },
-                    {
-                        label: 'New',
-                        value: 'NEW'
-                    },
-                    {
-                        label: 'Ignored',
-                        value: 'IGNORED'
-                    },
-                    {
-                        label: 'Modified',
-                        value: 'MODIFIED'
-                    }
-                ]
             }
         }
     })
 
-    const { currentItems: currentRequirements, Pagination, goToPage } = usePagination(filteredRequirements, reqsPerPage)
+    const {
+        filteredItems: refilteredRequirements,
+        uniqueValues,
+        config,
+        selectedValue,
+        setSelectedValue,
+        BarFilterComponent
+    } = useBarFilter(filteredRequirements,
+        {
+            field: 'change_analysis_status',
+            valueLabels: {
+                [CHANGE_ANALYSIS_STATUS.NEW]: 'New',
+                [CHANGE_ANALYSIS_STATUS.UNCHANGED]: 'Unchanged',
+                [CHANGE_ANALYSIS_STATUS.DEPRECATED]: 'Deprecated',
+                [CHANGE_ANALYSIS_STATUS.IGNORED]: 'Ignored',
+                [CHANGE_ANALYSIS_STATUS.MODIFIED]: 'Modified'
+            },
+            valueColors: {
+                [CHANGE_ANALYSIS_STATUS.NEW]: 'bg-[#008000]/50 text-white',
+                [CHANGE_ANALYSIS_STATUS.UNCHANGED]: 'bg-[#0000FF]/50 text-white',
+                [CHANGE_ANALYSIS_STATUS.DEPRECATED]: 'bg-[#FF0000]/50 text-white',
+                [CHANGE_ANALYSIS_STATUS.IGNORED]: 'bg-[#000000]/50 text-white',
+                [CHANGE_ANALYSIS_STATUS.MODIFIED]: 'bg-[#FFA500] text-white'
+            }
+        })
+
+    const { currentItems: currentRequirements, Pagination, goToPage } = usePagination(refilteredRequirements, reqsPerPage)
 
     useEffect(() => {
         if (requirements.length > 0 && window.location.hash) {
@@ -147,8 +150,16 @@ export default function Requirements({
 
     return (
         <div className='w-full flex flex-col gap-8 items-center'>
+            <div className='sticky top-[210px] z-30'>
+                <BarFilterComponent
+                    uniqueValues={uniqueValues}
+                    config={config}
+                    selectedValue={selectedValue}
+                    setSelectedValue={setSelectedValue}
+                />
+            </div>
             {canToggleStatus &&
-                <div className='sticky top-[210px] flex items-center gap-2 w-full bg-yellow-300 border shadow-sm p-2 rounded-lg z-50'>
+                <div className='sticky top-[260px] flex items-center gap-2 w-full bg-yellow-300 border shadow-sm p-2 rounded-lg z-50'>
                     <Info className='w-6 h-6' />
                     <span>Showing only explicitly provided requirements for delta analysis review.</span>
                 </div>}

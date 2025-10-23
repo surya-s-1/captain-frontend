@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { MoveUpRight, TriangleAlert, ArrowDownToLine, RefreshCcw, RefreshCcwDot, Loader2, WandSparkles, CircleQuestionMark } from 'lucide-react'
 
 import { useFilter } from '@/hooks/useFilter'
+import { useBarFilter } from '@/hooks/useBarFilter'
 import { usePagination } from '@/hooks/usePagination'
 import { useDownloadDatasets } from '@/hooks/useDownloadDatasets'
 
@@ -13,7 +14,6 @@ import { CHANGE_ANALYSIS_DROPDOWN_OPTIONS, CHANGE_ANALYSIS_STATUS, TC_DATASET_ST
 import { getCurrentUser } from '@/lib/firebase/utilities'
 
 import JIRA_ICON from '@/../public/Jira_icon.png'
-import { useBarFilter } from '@/hooks/useBarFilter'
 
 export interface TestCaseInterface {
     testcase_id: string
