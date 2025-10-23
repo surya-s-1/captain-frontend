@@ -14,7 +14,7 @@ import { CHANGE_ANALYSIS_DROPDOWN_OPTIONS, CHANGE_ANALYSIS_STATUS, TC_DATASET_ST
 import { getCurrentUser } from '@/lib/firebase/utilities'
 
 import JIRA_ICON from '@/../public/Jira_icon.png'
-import { ExpandingButton } from '@/lib/utility/ui/ExpandingButton'
+import { ExpandingButton, ExpandingLink } from '@/lib/utility/ui/ExpandingButton'
 
 export interface TestCaseInterface {
     testcase_id: string
@@ -231,26 +231,19 @@ function Testcase({ testcase, status, projectId, version, latestVersion, tool }:
                         </>}
 
                     {testcase.datasets && testcase.datasets.length > 0 &&
-                    <ExpandingButton
-                        Icon={ArrowDownToLine}
-                        label='Download Dataset'
-                        onClick={() => { downloadDataset(testcase.testcase_id) }}
-                        isLoading={downloadSingleLoading}
-                    />}
+                        <ExpandingButton
+                            Icon={ArrowDownToLine}
+                            label='Download Dataset'
+                            onClick={() => { downloadDataset(testcase.testcase_id) }}
+                            isLoading={downloadSingleLoading}
+                        />}
 
                     {testcase.toolIssueLink &&
-                        <a
+                        <ExpandingLink
+                            imageUrl={JIRA_ICON.src}
+                            label={`Open in ${tool}`}
                             href={testcase.toolIssueLink}
-                            target='_blank'
-                            className='flex items-center gap-2 px-2 py-1 rounded-md shadow-sm hover:shadow-md shadow-black/30 dark:shadow-black/50 transition-shadow'
-                        >
-                            <img
-                                src={JIRA_ICON.src}
-                                alt='Jira Logo'
-                                className='h-6'
-                            />
-                            <span>Open in {tool}</span>
-                        </a>}
+                        />}
 
                     {canDelete && (
                         <button
