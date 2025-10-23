@@ -23,7 +23,7 @@ export function useBarFilter(
     }, [items, config, selectedValue])
 
     const BarFilterComponent = ({ uniqueValues, selectedValue, setSelectedValue, config }) => {
-        const filterOptions = ['All', ...uniqueValues]
+        const filterOptions = uniqueValues?.length ? ['All', ...uniqueValues] : []
         const valueColors = config?.valueColors || {}
         const valueLabels = config?.valueLabels || {}
 
