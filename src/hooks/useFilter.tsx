@@ -379,7 +379,7 @@ export function useFilter<T>({ items, config }: UseFilterOptions<T>) {
 
                 <button
                     onClick={() => setOpen((open) => !open)}
-                    className={`relative flex px-4 items-center gap-2 w-fit rounded-lg shadow-md bg-blue-500 text-white hover:bg-blue-600 cursor-pointer transition-all select-none ${sizeClasses}`}
+                    className={`relative flex px-4 items-center gap-2 w-fit rounded-lg shadow-lg bg-primary hover:bg-secondary border border-gray-300 cursor-pointer transition-all select-none ${sizeClasses}`}
                 >
                     <ListFilter className='w-4 h-4' />
                     <span>Filter</span>
