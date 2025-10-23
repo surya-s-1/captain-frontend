@@ -146,10 +146,9 @@ export default function TestCases({
                 <p>No test cases found.</p>
             )}
 
-            <div className={`w-full flex items-center justify-center z-10 sticky ${status.startsWith('CONFIRM_') ? 'bottom-24' : 'bottom-4'}`}>
+            <div className={`w-full flex items-center justify-center z-10 fixed ${status.startsWith('CONFIRM_') ? 'bottom-24' : 'bottom-4'}`}>
                 <Pagination />
-
-                <div className='absolute right-24'>
+                <div className='relative -right-48'>
                     <FilterComponent />
                 </div>
             </div>
