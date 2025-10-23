@@ -129,7 +129,7 @@ export default function TestCases({
     return (
         <div className='w-full flex flex-col gap-8 items-center'>
             {currentTestcases.length > 0 ? (
-                <div className='w-full flex flex-col gap-4'>
+                <div className='w-full flex flex-col gap-4 mb-12'>
                     {currentTestcases.map((t) => (
                         <Testcase
                             key={t.testcase_id}
