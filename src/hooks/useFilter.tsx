@@ -234,7 +234,7 @@ export function useFilter<T>({ items, config }: UseFilterOptions<T>) {
         return (
             <div className={`relative w-fit ${className}`} ref={popupRef}>
                 {open && (
-                    <div className='absolute bottom-[calc(100%+0.5rem)] left-1/2 -translate-x-1/2 z-20 flex flex-col gap-4 max-h-[350px] p-4 bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-200 overflow-auto scrollbar min-w-[18rem] text-gray-800'>
+                    <div className='absolute bottom-[calc(100%+0.5rem)] left-1/2 -translate-x-1/2 z-20 flex flex-col gap-4 max-h-[350px] p-4 bg-white/95 backdrop-blur-sm rounded-md shadow-lg border border-gray-200 overflow-auto scrollbar min-w-[18rem] text-gray-800'>
                         {Object.entries(derivedConfig).map(([field, cfg]) => (
                             <div key={field} className='pb-4 border-b border-gray-100 text-sm last:border-b-0'>
                                 <div className='flex justify-between items-center mb-2'>

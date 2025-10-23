@@ -9,10 +9,11 @@ import { useDownloadDatasets } from '@/hooks/useDownloadDatasets'
 
 import Dropdown from '@/lib/utility/ui/Dropdown'
 import { Markdown } from '@/lib/utility/ui/Markdown'
-import { CHANGE_ANALYSIS_DROPDOWN_OPTIONS, TC_DATASET_STATUS_MESSAGES } from '@/lib/utility/constants'
+import { CHANGE_ANALYSIS_DROPDOWN_OPTIONS, CHANGE_ANALYSIS_STATUS, TC_DATASET_STATUS_MESSAGES } from '@/lib/utility/constants'
 import { getCurrentUser } from '@/lib/firebase/utilities'
 
 import JIRA_ICON from '@/../public/Jira_icon.png'
+import { useBarFilter } from '@/hooks/useBarFilter'
 
 export interface TestCaseInterface {
     testcase_id: string
@@ -63,24 +64,6 @@ export default function TestCases({
                 type: 'singleSearch',
                 label: 'Parent Requirement'
             },
-            change_analysis_status: {
-                type: 'multi',
-                label: 'Delta Analysis',
-                options: [
-                    {
-                        label: 'Deprecated',
-                        value: 'DEPRECATED'
-                    },
-                    {
-                        label: 'Unchanged',
-                        value: 'UNCHANGED'
-                    },
-                    {
-                        label: 'New',
-                        value: 'NEW'
-                    }
-                ]
-            },
             dataset_status: {
                 type: 'multi',
                 label: 'Dataset Creation',
@@ -124,10 +107,40 @@ export default function TestCases({
         }
     })
 
-    const { currentItems: currentTestcases, Pagination } = usePagination(filteredTestcases, testcasesPerPage)
+    const {
+        filteredItems: refilteredTestcases,
+        uniqueValues,
+        config,
+        selectedValue,
+        setSelectedValue,
+        BarFilterComponent
+    } = useBarFilter(filteredTestcases,
+        {
+            field: 'change_analysis_status',
+            valueLabels: {
+                [CHANGE_ANALYSIS_STATUS.NEW]: 'New',
+                [CHANGE_ANALYSIS_STATUS.UNCHANGED]: 'Unchanged',
+                [CHANGE_ANALYSIS_STATUS.DEPRECATED]: 'Deprecated'
+            },
+            valueColors: {
+                [CHANGE_ANALYSIS_STATUS.NEW]: 'bg-[#008000]/50 text-white',
+                [CHANGE_ANALYSIS_STATUS.UNCHANGED]: 'bg-[#0000FF]/50 text-white',
+                [CHANGE_ANALYSIS_STATUS.DEPRECATED]: 'bg-[#FF0000]/50 text-white'
+            }
+        })
+
+    const { currentItems: currentTestcases, Pagination } = usePagination(refilteredTestcases, testcasesPerPage)
 
     return (
         <div className='w-full flex flex-col gap-8 items-center'>
+            <div className='sticky top-[210px] z-30'>
+                <BarFilterComponent
+                    uniqueValues={uniqueValues}
+                    config={config}
+                    selectedValue={selectedValue}
+                    setSelectedValue={setSelectedValue}
+                />
+            </div>
             {currentTestcases.length > 0 ? (
                 <div className='w-full flex flex-col gap-4 mb-12'>
                     {currentTestcases.map((t) => (
