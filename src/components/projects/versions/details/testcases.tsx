@@ -109,7 +109,7 @@ export default function TestCases({
             },
             toolCreated: {
                 type: 'multi',
-                label: `Created on ${tool}`,
+                label: `Creation on ${tool}`,
                 options: [
                     {
                         label: 'Failed',
