@@ -14,6 +14,7 @@ import { CHANGE_ANALYSIS_DROPDOWN_OPTIONS, CHANGE_ANALYSIS_STATUS, TC_DATASET_ST
 import { getCurrentUser } from '@/lib/firebase/utilities'
 
 import JIRA_ICON from '@/../public/Jira_icon.png'
+import { ExpandingButton } from '@/lib/utility/ui/ExpandingButton'
 
 export interface TestCaseInterface {
     testcase_id: string
@@ -215,37 +216,27 @@ function Testcase({ testcase, status, projectId, version, latestVersion, tool }:
 
                     {testcase.toolCreated === 'FAILED' && status === 'COMPLETE_SYNC_TC_WITH_TOOL' &&
                         <>
-                            <button
-                                className='flex items-center gap-2 px-2 py-1 rounded-md shadow-sm hover:shadow-md shadow-black/30 dark:shadow-black/50 transition-shadow cursor-pointer'
+                            <ExpandingButton
+                                Icon={RefreshCcw}
+                                label='Retry Sync'
                                 onClick={() => { resyncTestcases() }}
-                            >
-                                <RefreshCcw />
-                                <span>Retry Sync</span>
-                                {resyncInProgress &&
-                                    <Loader2 className='animate-spin' size={20} />}
-                            </button>
-                            <button
-                                className='flex items-center gap-2 px-2 py-1 rounded-md shadow-sm hover:shadow-md shadow-black/30 dark:shadow-black/50 transition-shadow cursor-pointer'
+                                isLoading={resyncInProgress}
+                            />
+                            <ExpandingButton
+                                Icon={RefreshCcwDot}
+                                label='Retry Create'
                                 onClick={() => { recreateTestcase(testcase.testcase_id) }}
-                            >
-                                <RefreshCcwDot />
-                                <span>Retry Create</span>
-                                {recreateInProgress &&
-                                    <Loader2 className='animate-spin' size={20} />}
-                            </button>
+                                isLoading={recreateInProgress}
+                            />
                         </>}
 
-
                     {testcase.datasets && testcase.datasets.length > 0 &&
-                        <button
-                            className='flex items-center gap-2 px-2 py-1 rounded-md shadow-sm hover:shadow-md shadow-black/30 dark:shadow-black/50 transition-shadow cursor-pointer'
-                            onClick={() => { downloadDataset(testcase.testcase_id) }}
-                        >
-                            <ArrowDownToLine />
-                            <span>Download Dataset</span>
-                            {downloadSingleLoading &&
-                                <Loader2 className='animate-spin' size={20} />}
-                        </button>}
+                    <ExpandingButton
+                        Icon={ArrowDownToLine}
+                        label='Download Dataset'
+                        onClick={() => { downloadDataset(testcase.testcase_id) }}
+                        isLoading={downloadSingleLoading}
+                    />}
 
                     {testcase.toolIssueLink &&
                         <a
