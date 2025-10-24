@@ -220,8 +220,6 @@ export function useFilter<T>({ items, config }: UseFilterOptions<T>) {
             lg: 'text-lg p-3',
         }
 
-        const sizeClasses = sizeMap[size]
-
         const hasActiveFilters = useMemo(() => {
             return Object.values(filters).some((val) => {
                 if (Array.isArray(val)) {
@@ -386,7 +384,8 @@ export function useFilter<T>({ items, config }: UseFilterOptions<T>) {
                 <div>
                     <ExpandingButton
                         Icon={ListFilter}
-                        label='Filter'
+                        openLabel={`Filter (${filteredItems.length})`}
+                        closedLabel={hasActiveFilters ? `(${filteredItems.length})` : ''}
                         onClick={() => setOpen((open) => !open)}
                         keepExpanded={open}
                     />

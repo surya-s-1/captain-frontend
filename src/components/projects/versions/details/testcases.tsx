@@ -218,13 +218,13 @@ function Testcase({ testcase, status, projectId, version, latestVersion, tool }:
                         <>
                             <ExpandingButton
                                 Icon={RefreshCcw}
-                                label='Retry Sync'
+                                openLabel='Retry Sync'
                                 onClick={() => { resyncTestcases() }}
                                 isLoading={resyncInProgress}
                             />
                             <ExpandingButton
                                 Icon={RefreshCcwDot}
-                                label='Retry Create'
+                                openLabel='Retry Create'
                                 onClick={() => { recreateTestcase(testcase.testcase_id) }}
                                 isLoading={recreateInProgress}
                             />
@@ -233,7 +233,7 @@ function Testcase({ testcase, status, projectId, version, latestVersion, tool }:
                     {testcase.datasets && testcase.datasets.length > 0 &&
                         <ExpandingButton
                             Icon={ArrowDownToLine}
-                            label='Download Dataset'
+                            openLabel='Download Dataset'
                             onClick={() => { downloadDataset(testcase.testcase_id) }}
                             isLoading={downloadSingleLoading}
                         />}
@@ -359,15 +359,15 @@ export default function TestCases({
             },
             toolCreated: {
                 type: 'multi',
-                label: `Creation on ${tool}`,
+                label: `${tool} Issues`,
                 options: [
                     {
-                        label: 'Failed',
-                        value: 'FAILED'
+                        label: 'Created',
+                        value: 'SUCCESS'
                     },
                     {
-                        label: 'Success',
-                        value: 'SUCCESS'
+                        label: 'Not created',
+                        value: 'FAILED'
                     }
                 ]
             }
@@ -426,7 +426,7 @@ export default function TestCases({
                 <p>No test cases found.</p>
             )}
 
-            <div className={`w-full z-10 sticky ${status.startsWith('CONFIRM_') ? 'bottom-24' : 'bottom-4'}`}>
+            <div className={`w-full z-30 sticky ${status.startsWith('CONFIRM_') ? 'bottom-24' : 'bottom-4'}`}>
                 <div className='w-full relative flex items-center justify-center'>
                     <Pagination />
                     <div className='absolute right-24'>
@@ -434,7 +434,6 @@ export default function TestCases({
                     </div>
                 </div>
             </div>
-
         </div>
     )
 }

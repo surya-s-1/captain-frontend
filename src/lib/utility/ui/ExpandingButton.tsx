@@ -3,8 +3,9 @@ import { Loader2 } from 'lucide-react'
 
 interface ExpandingButtonProps {
     Icon: React.ElementType
-    label: string
+    openLabel: string
     onClick: () => void
+    closedLabel?: string
     isLoading?: boolean
     className?: string
     keepExpanded?: boolean
@@ -12,8 +13,9 @@ interface ExpandingButtonProps {
 
 export function ExpandingButton({
     Icon,
-    label,
+    openLabel,
     onClick,
+    closedLabel = '',
     isLoading = false,
     className = '',
     keepExpanded = false
@@ -25,7 +27,7 @@ export function ExpandingButton({
         setExpand(isHovered || keepExpanded)
     }, [isHovered, keepExpanded])
 
-    const widthClass = expand ? 'w-fit pr-4' : 'w-10'
+    const widthClass = expand ? 'w-fit pr-4' : 'w-fit'
     const iconMarginClass = expand ? 'mr-2' : 'm-auto'
 
     const handleClick = () => {
@@ -45,7 +47,7 @@ export function ExpandingButton({
                 transition-[width,padding,background-color,shadow] duration-300 ease-in-out shadow-black/30 dark:shadow-black/50
                 ${widthClass} ${className}
             `}
-            aria-label={label}
+            aria-label={openLabel}
         >
             {isLoading ? (
                 <Loader2 className={`h-6 w-6 animate-spin ${iconMarginClass}`} />
@@ -53,11 +55,15 @@ export function ExpandingButton({
                 <Icon className={`h-6 w-6 transition-all duration-300 ${iconMarginClass}`} />
             )}
 
-            {expand && (
+            {expand ? (
                 <span className={`whitespace-nowrap overflow-hidden text-sm font-medium`}>
-                    {label}
+                    {openLabel}
                 </span>
-            )}
+            ) : closedLabel ? (
+                <span className={`whitespace-nowrap overflow-hidden text-sm font-medium`}>
+                    {closedLabel}
+                </span>
+            ): <></>}
         </button>
     )
 }
