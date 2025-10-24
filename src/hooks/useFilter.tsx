@@ -384,7 +384,7 @@ export function useFilter<T>({ items, config }: UseFilterOptions<T>) {
                 <div>
                     <ExpandingButton
                         Icon={ListFilter}
-                        openLabel={`Filter (${filteredItems.length})`}
+                        openLabel={hasActiveFilters ? `Filter (${filteredItems.length})` : 'Filter'}
                         closedLabel={hasActiveFilters ? `(${filteredItems.length})` : ''}
                         onClick={() => setOpen((open) => !open)}
                         keepExpanded={open}
