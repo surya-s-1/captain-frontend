@@ -91,10 +91,13 @@ export default function RequirementCard({
     }
 
     function groupSources(sources: Source[]) {
-        const grouped: Record<string, string[]> = {}
+        const grouped: Record<string, {location: string, snippet: string}[]> = {}
         sources.forEach(src => {
             if (!grouped[src.file_name]) grouped[src.file_name] = []
-            grouped[src.file_name].push(src.location)
+            grouped[src.file_name].push({
+                location: src.location,
+                snippet: src.text_used
+            })
         })
         return grouped
     }
@@ -216,7 +219,9 @@ export default function RequirementCard({
                                         {expanded && (
                                             <ul className='ml-4 mt-1 flex flex-col gap-1 text-xs'>
                                                 {snippets.map((s, i) => (
-                                                    <li key={i} className='list-disc ml-2'>{s}</li>
+                                                    <li key={i} className='list-disc ml-2'>
+                                                        ({s.location}) {s.snippet}
+                                                    </li>
                                                 ))}
                                             </ul>
                                         )}

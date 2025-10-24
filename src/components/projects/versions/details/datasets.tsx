@@ -90,20 +90,20 @@ export default function Datasets({ projectId, version, latestVersion, status, te
     }
 
     return (
-        <div className='flex flex-col gap-4 w-full p-4'>
+        <div className='flex flex-col gap-4 w-full p-4 text-sm font-medium'>
             <button
                 className={`flex items-center gap-2 w-fit px-4 py-2 rounded-md shadow-sm shadow-black/30 dark:shadow-black/50 transition-shadow ${createLoading ? 'cursor-not-allowed' : 'cursor-pointer hover:shadow-md'}`}
                 onClick={createDatasets}
                 disabled={createLoading}
             >
-                <PackagePlus size={24} />
+                <PackagePlus size={20} />
                 <span>Create datasets</span>
                 {createLoading && <Loader2 className='animate-spin' size={20} />}
             </button>
 
             {createLoading &&
                 <div className='flex items-center gap-2 text-red-500'>
-                    <TriangleAlert size={24} />
+                    <TriangleAlert size={20} />
                     <span>Please don't leave this tab while starting the datasets creation</span>
                 </div>}
 
@@ -112,14 +112,14 @@ export default function Datasets({ projectId, version, latestVersion, status, te
                 onClick={() => downloadEveryDataset()}
                 disabled={downloadAllLoading}
             >
-                <Download size={24} />
+                <Download size={20} />
                 <span>Download all datasets</span>
-                {downloadAllLoading && <Loader2 className='animate-spin' size={20} />}
+                {downloadAllLoading && <Loader2 className='animate-spin' size={18} />}
             </button>
 
             {downloadAllLoading &&
                 <div className='flex items-center gap-2 text-red-500'>
-                    <TriangleAlert size={24} />
+                    <TriangleAlert size={20} />
                     <span>Please don't leave this tab while downloading the datasets</span>
                 </div>}
 

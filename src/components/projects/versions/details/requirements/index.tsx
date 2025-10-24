@@ -14,7 +14,7 @@ import { CHANGE_ANALYSIS_STATUS } from '@/lib/utility/constants'
 export interface Source {
     file_name: string
     location: string
-    snippet: string
+    text_used: string
 }
 
 export interface Regulation {
