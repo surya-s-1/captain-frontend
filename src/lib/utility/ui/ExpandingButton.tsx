@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Loader2 } from 'lucide-react'
 
 interface ExpandingButtonProps {
@@ -7,6 +7,7 @@ interface ExpandingButtonProps {
     onClick: () => void
     isLoading?: boolean
     className?: string
+    keepExpanded?: boolean
 }
 
 export function ExpandingButton({
@@ -15,11 +16,17 @@ export function ExpandingButton({
     onClick,
     isLoading = false,
     className = '',
+    keepExpanded = false
 }: ExpandingButtonProps) {
     const [isHovered, setIsHovered] = useState(false)
+    const [expand, setExpand] = useState(false)
 
-    const widthClass = isHovered ? 'w-fit pr-4' : 'w-10'
-    const iconMarginClass = isHovered ? 'mr-2' : 'm-auto'
+    useEffect(() => {
+        setExpand(isHovered || keepExpanded)
+    }, [isHovered, keepExpanded])
+
+    const widthClass = expand ? 'w-fit pr-4' : 'w-10'
+    const iconMarginClass = expand ? 'mr-2' : 'm-auto'
 
     const handleClick = () => {
         if (!isLoading) {
@@ -33,7 +40,6 @@ export function ExpandingButton({
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             disabled={isLoading}
-
             className={`
                 flex items-center gap-2 p-2 cursor-pointer rounded-full shadow-sm hover:shadow-md transform bg-primary
                 transition-[width,padding,background-color,shadow] duration-300 ease-in-out shadow-black/30 dark:shadow-black/50
@@ -47,7 +53,7 @@ export function ExpandingButton({
                 <Icon className={`h-6 w-6 transition-all duration-300 ${iconMarginClass}`} />
             )}
 
-            {isHovered && (
+            {expand && (
                 <span className={`whitespace-nowrap overflow-hidden text-sm font-medium`}>
                     {label}
                 </span>
@@ -69,7 +75,7 @@ export function ExpandingLink({
     imageUrl,
     label,
     href,
-    className = '',
+    className = ''
 }: ExpandingLinkProps) {
     const [isHovered, setIsHovered] = useState(false)
 

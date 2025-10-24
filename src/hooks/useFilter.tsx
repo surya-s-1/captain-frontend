@@ -1,6 +1,8 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react'
 import { ListFilter } from 'lucide-react'
 
+import { ExpandingButton } from '@/lib/utility/ui/ExpandingButton'
+
 type FilterType =
     | 'multi'
     | 'single'
@@ -381,20 +383,20 @@ export function useFilter<T>({ items, config }: UseFilterOptions<T>) {
                     </div>
                 )}
 
-                <button
-                    onClick={() => setOpen((open) => !open)}
-                    className={`relative flex px-4 items-center gap-2 w-fit rounded-lg shadow-lg bg-primary hover:bg-secondary border border-gray-300 cursor-pointer transition-all select-none ${sizeClasses}`}
-                >
-                    <ListFilter className='w-4 h-4' />
-                    <span>Filter</span>
-
+                <div>
+                    <ExpandingButton
+                        Icon={ListFilter}
+                        label='Filter'
+                        onClick={() => setOpen((open) => !open)}
+                        keepExpanded={open}
+                    />
                     {hasActiveFilters && (
                         <span className='absolute -top-1 -right-1 flex h-3 w-3'>
                             <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75'></span>
                             <span className='relative inline-flex rounded-full h-3 w-3 bg-red-500' />
                         </span>
                     )}
-                </button>
+                </div>
             </div>
         )
     }

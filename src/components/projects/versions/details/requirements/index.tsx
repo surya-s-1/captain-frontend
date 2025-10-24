@@ -180,10 +180,12 @@ export default function Requirements({
                 <p>No requirements found.</p>
             )}
 
-            <div className={`w-full flex items-center justify-center z-10 fixed ${status.startsWith('CONFIRM_') ? 'bottom-24' : 'bottom-4'}`}>
-                <Pagination />
-                <div className='relative -right-48'>
-                    <FilterComponent />
+            <div className={`w-full z-10 sticky ${status.startsWith('CONFIRM_') ? 'bottom-24' : 'bottom-4'}`}>
+                <div className='w-full relative flex items-center justify-center'>
+                    <Pagination />
+                    <div className='absolute right-24'>
+                        <FilterComponent />
+                    </div>
                 </div>
             </div>
         </div>

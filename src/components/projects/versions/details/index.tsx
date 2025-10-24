@@ -247,7 +247,7 @@ export default function ProjectDetails() {
             <DetailsBanner status={status} />
 
             {!HIDE_TABS && (
-                <div className='w-ful sticky top-[150px] backdrop-blur-xs bg-white/20 flex items-center justify-center gap-8 py-2 shadow-xl z-20'>
+                <div className='w-ful sticky top-[150px] backdrop-blur-xs bg-white/20 flex items-center justify-center gap-8 py-2 shadow-xl z-20 text-sm font-medium'>
                     <button
                         className={getTabClassName('requirements')}
                         onClick={() => setTab('requirements')}
