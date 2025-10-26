@@ -69,7 +69,7 @@ function ProjectCard({ project, toolName }: { project: Project, toolName: string
     return (
         <a
             href={project.connected ? `/projects/versions/details?projectId=${project.project_id}&version=${project.latest_version}` : ''}
-            className='flex flex-col justify-between gap-8 cursor-pointer p-4 rounded-md border-[1] border-gray-300 shadow-black/20 shadow-none hover:shadow-md transition-shadow'
+            className='flex flex-col justify-between gap-8 cursor-pointer p-4 rounded-md border-[1] border-gray-300 shadow-black/20 shadow-sm hover:shadow-md transition-shadow'
         >
             <div className='w-full flex items-center gap-4'>
                 <img src={project.imageUrl} className='h-8 rounded-full' />

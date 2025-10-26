@@ -172,6 +172,37 @@ export default function ProjectDetails() {
     }, [requirements, status])
 
 
+    async function confirmExplicitRequirements() {
+        try {
+            if (version !== latestVersion) {
+                alert('Not allowed in this version')
+                return
+            }
+
+            setSubmitLoading(true)
+
+            const user = await getCurrentUser()
+            if (!user) return
+
+            const token = await user.getIdToken()
+            if (!token) return
+
+            const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/v1/${projectId}/v/${version}/requirements/explicit/confirm`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}` }
+            })
+            if (!response.ok) {
+                console.error('Could not confirm requirements')
+                alert('Could not confirm requirements')
+            }
+        } catch (err) {
+            console.error(err)
+        } finally {
+            setSubmitLoading(false)
+        }
+    }
+
+
     async function confirmRequirements() {
         try {
             if (version !== latestVersion) {
@@ -187,7 +218,7 @@ export default function ProjectDetails() {
             const token = await user.getIdToken()
             if (!token) return
 
-            const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/v1/${projectId}/v/${version}/requirements/confirm`, {
+            const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/v1/${projectId}/v/${version}/requirements/all/confirm`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }
             })
@@ -451,6 +482,24 @@ export default function ProjectDetails() {
                     callback={confirmChangeAnalysis}
                 />
             )}
+
+            {status === 'CONFIRM_EXP_REQ_EXTRACT' &&
+                <Notice
+                    title='Verify extracted requirements'
+                    content='Please remove any unwanted requirement and click confirm to go ahead with implicit requirements discovery on regulation.'
+                    buttonLabel='Confirm'
+                    loading={submitLoading}
+                    callback={confirmExplicitRequirements}
+                />}
+
+            {status === 'CONFIRM_IMP_REQ_EXTRACT' &&
+                <Notice
+                    title='Verify extracted requirements'
+                    content='Please remove any unwanted requirement from the extracted requirements and click confirm to go ahead with test cases creation.'
+                    buttonLabel='Confirm'
+                    loading={submitLoading}
+                    callback={confirmRequirements}
+                />}
 
             {status === 'CONFIRM_REQ_EXTRACT' && (
                 <Notice

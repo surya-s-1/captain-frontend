@@ -23,26 +23,24 @@ export interface Regulation {
         filename: string
         page_start: string
         page_end: string
-        raw_snippet: string
         snippet: string
-        from_req_id: string
     }
 }
 
 export interface RequirementInterfaceBase {
     requirement_id: string
     requirement: string
-    requirement_type: string
+    requirement_category: string
     source_type: 'explicit' | 'implicit'
+    sources: Source[]
     deleted: boolean
     duplicate: boolean
     near_duplicate_id: string | null
     change_analysis_status: string | null
     change_analysis_status_reason: string | null
     change_analysis_near_duplicate_id: string | null
-    sources: Source[]
     regulations: Regulation[]
-    exp_req_ids: string[]
+    parent_exp_req_ids: string[]
     testcase_status: string | null
     updated_at: Date | null
     created_at: Date
@@ -79,7 +77,7 @@ export default function Requirements({
 }: RequirementsProps) {
     const reqsPerPage = 30
     const canToggleStatus = status === 'CONFIRM_CHANGE_ANALYSIS_EXPLICIT' && latestVersion
-    const canDelete = status === 'CONFIRM_REQ_EXTRACT' && latestVersion
+    const canDelete = ['CONFIRM_EXP_REQ_EXTRACT', 'CONFIRM_IMP_REQ_EXTRACT', 'CONFIRM_REQ_EXTRACT'].includes(status) && latestVersion
 
     const {
         filteredItems: filteredRequirements,
@@ -128,7 +126,7 @@ export default function Requirements({
 
     return (
         <div className='w-full flex flex-col gap-8 items-center'>
-            <div className='sticky top-[210px] z-30'>
+            <div className='sticky top-[215px] z-30'>
                 <TabFilterComponent
                     uniqueValues={uniqueValues}
                     config={config}

@@ -188,7 +188,7 @@ export default function DetailsBanner({ projectName, latestVersion, versionFiles
                                 className='w-fit bg-primary-contrast text-color-primary-contrast rounded-full p-2 cursor-pointer'
                                 onClick={() => setIsModalOpen(true)}
                             >
-                                {version === 'v1' ? 'Upload Documents' : 'Upload Updated Requirements'} {status.startsWith('ERR') && <span>(Retry)</span>}
+                                {version === '1' ? 'Upload Documents' : 'Upload Updated Requirements'} {status.startsWith('ERR') && <span>(Retry)</span>}
                             </button>
                             <Modal isOpen={isModalOpen} closeModal={() => setIsModalOpen(false)}>
                                 <h2 className='text-xl font-bold mb-4'>

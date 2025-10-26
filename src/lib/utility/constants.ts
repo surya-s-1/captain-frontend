@@ -138,6 +138,7 @@ export const VERSION_STATUS = {
 }
 
 export const REQ_STATUS_MESSAGES = {
+    NOT_STARTED: 'Test cases creation not started yet',
     TESTCASES_CREATION_QUEUED: 'Test cases creation queued',
     TESTCASES_CREATION_STARTED: 'Test cases creation in progress',
     TESTCASES_CREATION_COMPLETE: 'Test cases creation complete',

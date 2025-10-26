@@ -91,7 +91,7 @@ export default function RequirementCard({
     }
 
     function groupSources(sources: Source[]) {
-        const grouped: Record<string, {location: string, snippet: string}[]> = {}
+        const grouped: Record<string, { location: string, snippet: string }[]> = {}
         sources.forEach(src => {
             if (!grouped[src.file_name]) grouped[src.file_name] = []
             grouped[src.file_name].push({
@@ -103,10 +103,10 @@ export default function RequirementCard({
     }
 
     function groupRegulations(regulations: Regulation[]) {
-        const grouped: Record<string, string[]> = {}
+        const grouped: Record<string, {file: string, snippet: string}[]> = {}
         regulations.forEach(reg => {
             if (!grouped[reg.regulation]) grouped[reg.regulation] = []
-            grouped[reg.regulation].push(reg.source.raw_snippet)
+            grouped[reg.regulation].push({ file: reg.source.filename, snippet: reg.source.snippet })
         })
         return grouped
     }
@@ -138,7 +138,7 @@ export default function RequirementCard({
                 <div className='flex items-center gap-2'>
                     <h2 className='text-color-primary/50 text-sm mb-1'>
                         {requirement.requirement_id}
-                        {requirement.requirement_type && ` (${requirement.requirement_type})`}
+                        {requirement.requirement_category && ` (${requirement.requirement_category})`}
                     </h2>
                     {requirement.change_analysis_status &&
                         <Dropdown
@@ -169,7 +169,7 @@ export default function RequirementCard({
 
             {requirement.source_type === 'implicit' &&
                 <div className='text-color-primary/50 text-xs mb-1'>
-                    Derived from {requirement.exp_req_ids.join(', ')}
+                    Derived from {requirement.parent_exp_req_ids.join(', ')}
                 </div>}
 
             {requirement.testcase_status && (
@@ -250,7 +250,7 @@ export default function RequirementCard({
                                         {expanded && (
                                             <ul className='ml-4 mt-1 flex flex-col gap-1 text-xs'>
                                                 {snippets.map((s, i) => (
-                                                    <li key={i} className='list-disc ml-2'>{s}</li>
+                                                    <li key={i} className='list-disc ml-2'><strong>({s.file})</strong> {s.snippet}</li>
                                                 ))}
                                             </ul>
                                         )}
