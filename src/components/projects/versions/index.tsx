@@ -100,7 +100,7 @@ export default function ProjectVersions() {
                         <a
                             key={ind}
                             href={`/projects/versions/details?projectId=${projectId}&version=${ver.version}`}
-                            className='w-[50%] text-color-primary/80 cursor-pointer p-4 rounded-md shadow-md hover:shadow-lg transition-shadow dark:shadow-black/50'
+                            className='w-[50%] text-color-primary/80 cursor-pointer p-4 rounded-md border-[1] border-gray-300 shadow-sm hover:shadow-md transition-shadow'
                         >
                             {ver.version} <span className='text-color-primary/50'>{ver.version === latestVersion ? '(Latest)' : ''}</span>
                         </a>

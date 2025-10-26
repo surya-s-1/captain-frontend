@@ -12,7 +12,6 @@ import Datasets from '@/components/projects/versions/details/datasets'
 import { Notice } from '@/lib/utility/ui/Notice'
 import { firestoreDb } from '@/lib/firebase'
 import { getCurrentUser } from '@/lib/firebase/utilities'
-import { CHANGE_ANALYSIS_STATUS, SUPPORTED_TOOLS } from '@/lib/utility/constants'
 
 const NEXT_PUBLIC_TOOL_ENDPOINT = process.env.NEXT_PUBLIC_TOOL_ENDPOINT || ''
 
