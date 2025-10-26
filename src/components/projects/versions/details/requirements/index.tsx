@@ -99,6 +99,28 @@ export default function Requirements({
                         value: 'implicit'
                     }
                 ]
+            },
+            testcase_status: {
+                type: 'multi',
+                label: 'Testcase Status',
+                options: [
+                    {
+                        label: 'Queued',
+                        value: 'TESTCASES_CREATION_QUEUED'
+                    },
+                    {
+                        label: 'Started',
+                        value: 'TESTCASES_CREATION_STARTED'
+                    },
+                    {
+                        label: 'Completed',
+                        value: 'TESTCASES_CREATION_COMPLETE'
+                    },
+                    {
+                        label: 'Error',
+                        value: 'ERR_TESTCASE_CREATION'
+                    }
+                ]
             }
         }
     })
