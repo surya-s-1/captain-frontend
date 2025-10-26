@@ -5,7 +5,8 @@ import { getCurrentUser } from '@/lib/firebase/utilities'
 
 const NEXT_PUBLIC_TOOL_ENDPOINT = process.env.NEXT_PUBLIC_TOOL_ENDPOINT || ''
 
-export const useDownloadDatasets = (projectId: string, version: string) => {
+export const useDownload = (projectId: string, version: string) => {
+    const [downloadDocLoading, setDownloadDocLoading] = useState(false)
     const [downloadSingleLoading, setDownloadSingleLoading] = useState(false)
     const [downloadAllLoading, setDownloadAllLoading] = useState(false)
 
@@ -75,6 +76,52 @@ export const useDownloadDatasets = (projectId: string, version: string) => {
                 return
             }
         }, POLLING_INTERVAL)
+    }
+
+    const downloadUploadedDocument = async (documentName: string) => {
+        try {
+            if (downloadDocLoading) {
+                return
+            }
+
+            setDownloadDocLoading(true)
+
+            const user = await getCurrentUser()
+            if (!user) return
+
+            const token = await user.getIdToken()
+            if (!token) return
+
+            const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/v1/download/uploadedDocument`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    project_id: projectId,
+                    version: version,
+                    documentName: documentName,
+                }),
+            })
+
+            if (!response.ok) {
+                throw new Error('Failed to start download job')
+            }
+
+            const data = await response.json()
+            const jobId = data.job_id
+            console.log(`Job started with ID: ${jobId}`)
+
+            pollJobStatus(jobId, documentName, () => {
+                setDownloadDocLoading(false)
+            })
+
+        } catch (err) {
+            console.error(err)
+            alert('Failed to start download. Please try again.')
+            setDownloadDocLoading(false)
+        }
     }
 
     const downloadSingleDataset = async (testcaseId: string) => {
@@ -167,8 +214,10 @@ export const useDownloadDatasets = (projectId: string, version: string) => {
     }
 
     return {
+        downloadUploadedDocument,
         downloadSingleDataset,
         downloadAllDatasets,
+        downloadDocLoading,
         downloadSingleLoading,
         downloadAllLoading
     }

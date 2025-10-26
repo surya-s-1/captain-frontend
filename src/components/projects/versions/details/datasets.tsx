@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { PackagePlus, TriangleAlert, Download, Loader2 } from 'lucide-react'
 
-import { useDownloadDatasets } from '@/hooks/useDownloadDatasets'
+import { useDownload } from '@/hooks/useDownload'
 
 import { getCurrentUser } from '@/lib/firebase/utilities'
 import { VERSION_STATUS } from '@/lib/utility/constants'
@@ -29,7 +29,7 @@ export default function Datasets({ projectId, version, latestVersion, status, te
         downloadAllDatasets,
         downloadSingleLoading,
         downloadAllLoading
-    } = useDownloadDatasets(projectId, version)
+    } = useDownload(projectId, version)
 
     if (!canDownload) {
         return (

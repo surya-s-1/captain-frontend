@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Loader2 } from 'lucide-react'
+import { ArrowDownToLine, Loader2 } from 'lucide-react'
 import { doc, onSnapshot } from 'firebase/firestore'
 
 import { Modal } from '@/lib/utility/ui/Modal'
@@ -10,6 +10,7 @@ import { Modal } from '@/lib/utility/ui/Modal'
 import { STANDARD_APP_NAME, VERSION_STATUS } from '@/lib/utility/constants'
 import { firestoreDb } from '@/lib/firebase'
 import { getCurrentUser } from '@/lib/firebase/utilities'
+import { useDownload } from '@/hooks/useDownload'
 
 const NEXT_PUBLIC_TOOL_ENDPOINT = process.env.NEXT_PUBLIC_TOOL_ENDPOINT || ''
 const VALID_FILE_TYPES = [
@@ -34,9 +35,11 @@ export default function DetailsBanner({ projectName, latestVersion, versionFiles
     const [createVersionLoading, setCreateVersionLoading] = useState(false)
     const [isModalOpen, setIsModalOpen] = useState(false)
 
+    const { downloadDocLoading, downloadUploadedDocument } = useDownload(projectId, version)
+
     useEffect(() => {
         if (projectName) {
-            document.title = `${projectName} | ${STANDARD_APP_NAME}`
+            document.title = (projectName ? projectName + ' ' : '') + 'Details | ' + STANDARD_APP_NAME
         }
     }, [projectName])
 
@@ -137,10 +140,6 @@ export default function DetailsBanner({ projectName, latestVersion, versionFiles
         }
     }
 
-    useEffect(() => {
-        document.title = (projectName ? projectName + ' ' : '') + 'Details | ' + STANDARD_APP_NAME
-    }, [projectName])
-
     return (
         <div className='w-full h-[150px] flex items-center justify-between sticky top-0 p-10 bg-gradient-to-br from-indigo-500 to-purple-600 text-white z-20'>
             {projectName &&
@@ -201,16 +200,22 @@ export default function DetailsBanner({ projectName, latestVersion, versionFiles
                             <h4 className='font-semibold'>
                                 Uploaded Files:
                             </h4>
-                            <ul>
-                                {versionFiles.map(file => (
-                                    <li
-                                        key={file.name}
-                                        className='list-disc ml-5'
-                                    >
-                                        {file.name}
-                                    </li>
-                                ))}
-                            </ul>
+                            {versionFiles.map((file, idx) => {
+                                    return (
+                                        <div
+                                            key={file}
+                                            className='ml-5 flex items-center gap-1'
+                                            onClick={() => !downloadDocLoading && downloadUploadedDocument(file.name)}
+                                        >
+                                            <span>{idx + 1}. {file.name}</span>
+                                            <button className='cursor-pointer'>
+                                                {downloadDocLoading ?
+                                                    <Loader2 className='animate-spin' size={20} /> :
+                                                    <ArrowDownToLine size={20} />}
+                                            </button>
+                                        </div>
+                                    )
+                                })}
                         </div>}
                     {versionFiles.length > 0 && status !== 'CREATED' && latestVersion && (
                         <div className='flex flex-col items-center gap-1'>

@@ -6,7 +6,7 @@ import { MoveUpRight, TriangleAlert, ArrowDownToLine, RefreshCcw, RefreshCcwDot,
 import { useFilter } from '@/hooks/useFilter'
 import { useTabFilter } from '@/hooks/useTabFilter'
 import { usePagination } from '@/hooks/usePagination'
-import { useDownloadDatasets } from '@/hooks/useDownloadDatasets'
+import { useDownload } from '@/hooks/useDownload'
 
 import Dropdown from '@/lib/utility/ui/Dropdown'
 import { Markdown } from '@/lib/utility/ui/Markdown'
@@ -60,7 +60,7 @@ function Testcase({ testcase, status, projectId, version, latestVersion, toolNam
         setIsExpanded(!hideDetails)
     }, [hideDetails])
 
-    const { downloadSingleDataset, downloadSingleLoading } = useDownloadDatasets(projectId, version)
+    const { downloadSingleDataset, downloadSingleLoading } = useDownload(projectId, version)
     const canDelete = status === 'CONFIRM_TESTCASES' && latestVersion && !['DEPRECATED', 'UNCHANGED'].includes(testcase.change_analysis_status)
     const canEnhance = status === 'CONFIRM_TESTCASES' && latestVersion && !['DEPRECATED', 'UNCHANGED'].includes(testcase.change_analysis_status)
 
@@ -219,11 +219,11 @@ function Testcase({ testcase, status, projectId, version, latestVersion, toolNam
                         <div className='py-1 cursor-pointer' title={testcase.change_analysis_status_reason}>
                             <CircleQuestionMark className='w-4 h-4 text-gray-400' />
                         </div>}
-                    
+
                     <ExpandingButton
                         Icon={isExpanded ? EyeOff : Eye}
                         openLabel={isExpanded ? 'Hide Details' : 'Show Details'}
-                        onClick={() => { setIsExpanded(prev => !prev)}}
+                        onClick={() => { setIsExpanded(prev => !prev) }}
                         size='sm'
                         className='border-none shadow-transparent shadow-none hover:shadow-none'
                     />
@@ -429,7 +429,7 @@ export default function TestCases({
         })
 
     const { currentItems: currentTestcases, Pagination } = usePagination(refilteredTestcases, testcasesPerPage)
-    const [ hideDetails, setHideDetails ] = useState(false)
+    const [hideDetails, setHideDetails] = useState(false)
 
     return (
         <div className='w-full flex flex-col gap-8 items-center'>
