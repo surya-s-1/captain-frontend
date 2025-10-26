@@ -196,7 +196,7 @@ function Testcase({ testcase, status, projectId, version, latestVersion, toolNam
             <div className='w-full flex flex-col lg:flex-row gap-4 justify-between'>
                 <div className='flex flex-col gap-2 lg:flex-row lg:items-center text-color-primary/50 text-xs'>
                     <span>
-                        {testcase.testcase_id}: This testcase is created for requirement {testcase.requirement_id}.
+                        <strong>{testcase.testcase_id}:</strong> This testcase is created for requirement {testcase.requirement_id}.
                     </span>
                     <a
                         href={`#${testcase.requirement_id}`}

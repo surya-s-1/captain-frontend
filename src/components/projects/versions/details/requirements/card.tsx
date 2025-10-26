@@ -137,7 +137,7 @@ export default function RequirementCard({
             <div className='w-full flex flex-col lg:flex-row gap-4 justify-between'>
                 <div className='flex items-center gap-2'>
                     <h2 className='text-color-primary/50 text-sm mb-1'>
-                        {requirement.requirement_id}
+                        <strong>{requirement.requirement_id}</strong>
                         {requirement.requirement_type && ` (${requirement.requirement_type})`}
                     </h2>
                     {requirement.change_analysis_status &&
