@@ -28,7 +28,7 @@ export default function ProjectDetails() {
     const [error, setError] = useState<string>('')
     const [projectName, setProjectName] = useState<string>('')
     const [latestVersion, setLatestVersion] = useState<string>('')
-    const [versionFiles, setVersionFiles] = useState<any[]>([])
+    const [versionFiles, setVersionFiles] = useState<string[]>([])
     const [toolName, setToolName] = useState<string>('')
     const [requirements, setRequirements] = useState<RequirementInterface[]>([])
     const [showRequirements, setShowRequirements] = useState<RequirementInterface[]>([])
@@ -93,7 +93,7 @@ export default function ProjectDetails() {
                 if (docSnapshot.exists()) {
                     const data = docSnapshot.data()
                     setStatus(data.status || 'NA')
-                    setVersionFiles(data.files || [])
+                    setVersionFiles(data?.files?.map((f: any) => f?.name) || [])
                 } else {
                     setError('Version not found!')
                     setTimeout(() => router.push('/projects'), 2000)

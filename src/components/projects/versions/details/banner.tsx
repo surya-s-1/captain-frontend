@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { ArrowDownToLine, Loader2 } from 'lucide-react'
+import { ArrowDownToLine, Dot, Loader2 } from 'lucide-react'
 import { doc, onSnapshot } from 'firebase/firestore'
 
 import { Modal } from '@/lib/utility/ui/Modal'
@@ -22,7 +22,39 @@ const VALID_FILE_TYPES = [
     'text/csv'
 ]
 
-export default function DetailsBanner({ projectName, latestVersion, versionFiles, status }) {
+interface UploadedFileProps {
+    projectId: string
+    version: string
+    documentName: string
+}
+
+function UploadedFile({ projectId, version, documentName }: UploadedFileProps) {
+    const { downloadDocLoading, downloadUploadedDocument } = useDownload(projectId, version)
+    
+    return (
+        <div
+            className='flex items-center gap-2'
+            onClick={() => !downloadDocLoading && downloadUploadedDocument(documentName)}
+        >
+            <Dot />
+            <span>{documentName}</span>
+            <button className={downloadDocLoading ? 'cursor-not-allowed' : 'cursor-pointer'}>
+                {downloadDocLoading ?
+                    <Loader2 className='animate-spin' size={18} /> :
+                    <ArrowDownToLine size={18} />}
+            </button>
+        </div>
+    )
+}
+
+interface BannerProps {
+    projectName: string
+    latestVersion: boolean
+    versionFiles: string[]
+    status: string
+}
+
+export default function DetailsBanner({ projectName, latestVersion, versionFiles, status }: BannerProps) {
     const router = useRouter()
     const searchParams = useSearchParams()
 
@@ -34,8 +66,6 @@ export default function DetailsBanner({ projectName, latestVersion, versionFiles
     const [submitLoading, setSubmitLoading] = useState(false)
     const [createVersionLoading, setCreateVersionLoading] = useState(false)
     const [isModalOpen, setIsModalOpen] = useState(false)
-
-    const { downloadDocLoading, downloadUploadedDocument } = useDownload(projectId, version)
 
     useEffect(() => {
         if (projectName) {
@@ -195,27 +225,19 @@ export default function DetailsBanner({ projectName, latestVersion, versionFiles
                                 </div>
                             </Modal>
                         </div>)}
-                    {versionFiles.length > 0 && !status.startsWith('ERR') &&
+                    {versionFiles.length > 0 &&
                         <div>
                             <h4 className='font-semibold'>
                                 Uploaded Files:
                             </h4>
-                            {versionFiles.map((file, idx) => {
-                                    return (
-                                        <div
-                                            key={file}
-                                            className='ml-5 flex items-center gap-1'
-                                            onClick={() => !downloadDocLoading && downloadUploadedDocument(file.name)}
-                                        >
-                                            <span>{idx + 1}. {file.name}</span>
-                                            <button className='cursor-pointer'>
-                                                {downloadDocLoading ?
-                                                    <Loader2 className='animate-spin' size={20} /> :
-                                                    <ArrowDownToLine size={20} />}
-                                            </button>
-                                        </div>
-                                    )
-                                })}
+                            {versionFiles.map((fileName, idx) => (
+                                <UploadedFile
+                                    key={idx}
+                                    projectId={projectId}
+                                    version={version}
+                                    documentName={fileName}
+                                />
+                            ))}
                         </div>}
                     {versionFiles.length > 0 && status !== 'CREATED' && latestVersion && (
                         <div className='flex flex-col items-center gap-1'>
