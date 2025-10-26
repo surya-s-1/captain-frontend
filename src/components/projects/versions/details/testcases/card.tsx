@@ -1,41 +1,21 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { MoveUpRight, TriangleAlert, ArrowDownToLine, RefreshCcw, RefreshCcwDot, Loader2, WandSparkles, CircleQuestionMark, ChevronUp, ChevronDown, Eye, EyeOff } from 'lucide-react'
+import { MoveUpRight, TriangleAlert, ArrowDownToLine, RefreshCcw, RefreshCcwDot, Loader2, WandSparkles, CircleQuestionMark, Eye, EyeOff } from 'lucide-react'
 
-import { useFilter } from '@/hooks/useFilter'
-import { useTabFilter } from '@/hooks/useTabFilter'
-import { usePagination } from '@/hooks/usePagination'
 import { useDownload } from '@/hooks/useDownload'
 
 import Dropdown from '@/lib/utility/ui/Dropdown'
 import { Markdown } from '@/lib/utility/ui/Markdown'
-import { CHANGE_ANALYSIS_DROPDOWN_OPTIONS, CHANGE_ANALYSIS_STATUS, TC_DATASET_STATUS_MESSAGES } from '@/lib/utility/constants'
+import { ExpandingButton, ExpandingLink } from '@/lib/utility/ui/ExpandingButton'
+import { CHANGE_ANALYSIS_DROPDOWN_OPTIONS, TC_DATASET_STATUS_MESSAGES } from '@/lib/utility/constants'
 import { getCurrentUser } from '@/lib/firebase/utilities'
 
 import JIRA_ICON from '@/../public/Jira_icon.png'
-import { ExpandingButton, ExpandingLink } from '@/lib/utility/ui/ExpandingButton'
 
-export interface TestCaseInterface {
-    testcase_id: string
-    title: string
-    description: string
-    acceptance_criteria: string
-    priority: string
-    requirement_id: string
-    deleted: boolean
-    change_analysis_status: string | null
-    change_analysis_status_reason: string | null
-    toolCreated: string | null
-    toolIssueKey: string | null
-    toolIssueLink: string | null
-    dataset_status: string | null
-    datasets: string[] | null
-}
-
+import { TestCaseInterface } from '@/components/projects/versions/details/testcases'
 
 const NEXT_PUBLIC_TOOL_ENDPOINT = process.env.NEXT_PUBLIC_TOOL_ENDPOINT || ''
-
 
 interface TestCaseProps {
     projectId: string
@@ -47,8 +27,7 @@ interface TestCaseProps {
     hideDetails: boolean
 }
 
-
-function Testcase({ testcase, status, projectId, version, latestVersion, toolName, hideDetails }: TestCaseProps) {
+export function Testcase({ testcase, status, projectId, version, latestVersion, toolName, hideDetails }: TestCaseProps) {
     const [deleteLoading, setDeleteLoading] = useState(false)
     const [enhancementInProgress, setEnhancementInProgress] = useState(false)
     const [resyncInProgress, setResyncInProgress] = useState(false)
@@ -192,7 +171,7 @@ function Testcase({ testcase, status, projectId, version, latestVersion, toolNam
     }
 
     return (
-        <div key={testcase.testcase_id} className='relative p-4 border-[1] border-gray-300 shadow-md rounded-lg'>
+        <div key={testcase.testcase_id} className='relative p-4 border-[1] border-gray-300 shadow-sm rounded-lg'>
             <div className='w-full flex flex-col lg:flex-row gap-4 justify-between'>
                 <div className='flex flex-col gap-2 lg:flex-row lg:items-center text-color-primary/50 text-xs'>
                     <span>
@@ -327,157 +306,6 @@ function Testcase({ testcase, status, projectId, version, latestVersion, toolNam
                         </div>}
                 </>
             )}
-        </div>
-    )
-}
-
-
-interface TestCasesProps {
-    projectId: string
-    version: string
-    latestVersion: boolean
-    toolName: string
-    status: string
-    testcases: TestCaseInterface[]
-}
-
-
-export default function TestCases({
-    projectId,
-    version,
-    latestVersion,
-    toolName,
-    status,
-    testcases
-}: TestCasesProps) {
-    const testcasesPerPage = 20
-
-    const { filteredItems: filteredTestcases, FilterComponent } = useFilter({
-        items: testcases,
-        config: {
-            testcase_id: {
-                type: 'singleSearch',
-                label: 'Testcase ID'
-            },
-            requirement_id: {
-                type: 'singleSearch',
-                label: 'Parent Requirement'
-            },
-            dataset_status: {
-                type: 'multi',
-                label: 'Dataset Creation',
-                options: [
-                    {
-                        label: 'Completed',
-                        value: 'DATASET_GENERATION_COMPLETED'
-                    },
-                    {
-                        label: 'Queued',
-                        value: 'DATASET_GENERATION_QUEUED'
-                    },
-                    {
-                        label: 'In Progress',
-                        value: 'DATASET_GENERATION_STARTED'
-                    },
-                    {
-                        label: 'Not Started',
-                        value: 'NOT_STARTED'
-                    },
-                    {
-                        label: 'Failed',
-                        value: 'ERR_DATASET_GENERATION'
-                    }
-                ]
-            },
-            toolCreated: {
-                type: 'multi',
-                label: `${toolName} Issues`,
-                options: [
-                    {
-                        label: 'Created',
-                        value: 'SUCCESS'
-                    },
-                    {
-                        label: 'Not created',
-                        value: 'FAILED'
-                    }
-                ]
-            }
-        }
-    })
-
-    const {
-        filteredItems: refilteredTestcases,
-        uniqueValues,
-        config,
-        selectedValue,
-        setSelectedValue,
-        TabFilterComponent
-    } = useTabFilter(filteredTestcases,
-        {
-            field: 'change_analysis_status',
-            valueLabels: {
-                [CHANGE_ANALYSIS_STATUS.NEW]: 'New',
-                [CHANGE_ANALYSIS_STATUS.UNCHANGED]: 'Unchanged',
-                [CHANGE_ANALYSIS_STATUS.DEPRECATED]: 'Deprecated'
-            },
-            valueColors: {
-                [CHANGE_ANALYSIS_STATUS.NEW]: 'bg-[#008000]/50 text-white',
-                [CHANGE_ANALYSIS_STATUS.UNCHANGED]: 'bg-[#0000FF]/50 text-white',
-                [CHANGE_ANALYSIS_STATUS.DEPRECATED]: 'bg-[#FF0000]/50 text-white'
-            }
-        })
-
-    const { currentItems: currentTestcases, Pagination } = usePagination(refilteredTestcases, testcasesPerPage)
-    const [hideDetails, setHideDetails] = useState(false)
-
-    return (
-        <div className='w-full flex flex-col gap-8 items-center'>
-            <div className={`w-full sticky top-[210px] z-30`}>
-                <div className='w-full relative flex items-center justify-center'>
-                    <TabFilterComponent
-                        uniqueValues={uniqueValues}
-                        config={config}
-                        selectedValue={selectedValue}
-                        setSelectedValue={setSelectedValue}
-                    />
-                    <div className='absolute right-24'>
-                        <ExpandingButton
-                            Icon={hideDetails ? Eye : EyeOff}
-                            openLabel={hideDetails ? 'Show Details' : 'Hide Details'}
-                            onClick={() => setHideDetails(prev => !prev)}
-                        />
-                    </div>
-                </div>
-            </div>
-
-            {currentTestcases.length > 0 ? (
-                <div className='w-full flex flex-col gap-4 mb-12'>
-                    {currentTestcases.map((t) => (
-                        <Testcase
-                            key={t.testcase_id}
-                            testcase={t}
-                            status={status}
-                            projectId={projectId}
-                            version={version}
-                            latestVersion={latestVersion}
-                            toolName={toolName}
-                            hideDetails={hideDetails}
-                        />
-                    ))}
-                </div>
-            ) : (
-                <p>No test cases found.</p>
-            )}
-
-            <div className={`w-full z-30 sticky ${status.startsWith('CONFIRM_') ? 'bottom-24' : 'bottom-4'}`}>
-                <div className='w-full relative flex items-center justify-center'>
-                    <Pagination />
-                    <div className='absolute right-24'>
-                        <FilterComponent />
-                    </div>
-                </div>
-            </div>
         </div>
     )
 }
