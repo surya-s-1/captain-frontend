@@ -21,19 +21,15 @@ const VALID_FILE_TYPES = [
     'text/csv'
 ]
 
-export default function DetailsBanner({ status }) {
+export default function DetailsBanner({ projectName, latestVersion, versionFiles, status }) {
     const router = useRouter()
     const searchParams = useSearchParams()
 
     const projectId = searchParams.get('projectId')
     const version = searchParams.get('version')
-    const tool = searchParams.get('tool')
 
     const [error, setError] = useState<string>('')
-    const [projectName, setProjectName] = useState<string>('')
-    const [latestVersion, setLatestVersion] = useState<string>('')
     const [uploadedFiles, setUploadedFiles] = useState<any[]>([])
-    const [versionFiles, setVersionFiles] = useState<any[]>([])
     const [submitLoading, setSubmitLoading] = useState(false)
     const [createVersionLoading, setCreateVersionLoading] = useState(false)
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -43,55 +39,6 @@ export default function DetailsBanner({ status }) {
             document.title = `${projectName} | ${STANDARD_APP_NAME}`
         }
     }, [projectName])
-
-    async function fetchProjectName() {
-        if (!projectId) {
-            router.push('/projects')
-            return
-        }
-
-        const projectRef = doc(firestoreDb, 'projects', projectId)
-
-        const unsubscribe = onSnapshot(projectRef, (docSnapshot) => {
-            if (docSnapshot.exists()) {
-                const data = docSnapshot.data()
-                setProjectName(data.toolProjectName || '')
-                setLatestVersion(data.latest_version || '')
-            } else {
-                setError('Project not found!')
-                setTimeout(() => {
-                    router.push('/projects')
-                }, 2000)
-                return
-            }
-        })
-
-        return () => unsubscribe()
-    }
-
-    async function fetchVersion() {
-        if (!projectId || !version) {
-            router.push('/projects')
-            return
-        }
-
-        const versionDocRef = doc(firestoreDb, 'projects', projectId, 'versions', version)
-
-        const unsubscribe = onSnapshot(versionDocRef, (docSnapshot) => {
-            if (docSnapshot.exists()) {
-                const data = docSnapshot.data()
-                setVersionFiles(data.files || [])
-            } else {
-                setError('Version not found!')
-                setTimeout(() => {
-                    router.push('/projects')
-                }, 2000)
-                return
-            }
-        })
-
-        return () => unsubscribe()
-    }
 
     const handleFileUpload = (e?: React.ChangeEvent<HTMLInputElement>) => {
         if (e && e.target.files) {
@@ -180,7 +127,7 @@ export default function DetailsBanner({ status }) {
             } else {
                 const newVersion = await response.text()
 
-                router.push(`/projects/versions/details?projectId=${projectId}&version=${newVersion}&tool=${tool}`)
+                router.push(`/projects/versions/details?projectId=${projectId}&version=${newVersion}`)
             }
 
             setCreateVersionLoading(false)
@@ -189,11 +136,6 @@ export default function DetailsBanner({ status }) {
             setCreateVersionLoading(false)
         }
     }
-
-    useEffect(() => {
-        fetchProjectName()
-        fetchVersion()
-    }, [projectId, version])
 
     useEffect(() => {
         document.title = (projectName ? projectName + ' ' : '') + 'Details | ' + STANDARD_APP_NAME
@@ -270,7 +212,7 @@ export default function DetailsBanner({ status }) {
                                 ))}
                             </ul>
                         </div>}
-                    {versionFiles.length > 0 && status !== 'CREATED' && version === latestVersion && (
+                    {versionFiles.length > 0 && status !== 'CREATED' && latestVersion && (
                         <div className='flex flex-col items-center gap-1'>
                             <span>Change in requirements?</span>
                             <button

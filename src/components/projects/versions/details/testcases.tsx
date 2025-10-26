@@ -33,19 +33,21 @@ export interface TestCaseInterface {
     datasets: string[] | null
 }
 
-interface TestCasesProps {
-    projectId: string
-    version: string
-    latestVersion: boolean
-    tool: string
-    status: string
-    testcases: TestCaseInterface[]
-}
 
 const NEXT_PUBLIC_TOOL_ENDPOINT = process.env.NEXT_PUBLIC_TOOL_ENDPOINT || ''
 
 
-function Testcase({ testcase, status, projectId, version, latestVersion, tool }: TestCaseProps) {
+interface TestCaseProps {
+    projectId: string
+    version: string
+    latestVersion: boolean
+    toolName: string
+    status: string
+    testcase: TestCaseInterface
+}
+
+
+function Testcase({ testcase, status, projectId, version, latestVersion, toolName }: TestCaseProps) {
     const [deleteLoading, setDeleteLoading] = useState(false)
     const [enhancementInProgress, setEnhancementInProgress] = useState(false)
     const [resyncInProgress, setResyncInProgress] = useState(false)
@@ -241,7 +243,7 @@ function Testcase({ testcase, status, projectId, version, latestVersion, tool }:
                     {testcase.toolIssueLink &&
                         <ExpandingLink
                             imageUrl={JIRA_ICON.src}
-                            label={`Open in ${tool}`}
+                            label={`Open in ${toolName}`}
                             href={testcase.toolIssueLink}
                         />}
 
@@ -264,7 +266,7 @@ function Testcase({ testcase, status, projectId, version, latestVersion, tool }:
             {testcase.toolCreated === 'FAILED' && testcase.change_analysis_status !== 'DEPRECATED' &&
                 <div className='flex items-center gap-1 text-xs text-red-500 my-1'>
                     <TriangleAlert size={14} />
-                    Captain failed to create this issue on {tool}.
+                    Captain failed to create this issue on {toolName}.
                 </div>}
             <h2 className='text-lg font-semibold my-2'>
                 <Markdown text={testcase.title} />
@@ -310,11 +312,22 @@ function Testcase({ testcase, status, projectId, version, latestVersion, tool }:
     )
 }
 
+
+interface TestCasesProps {
+    projectId: string
+    version: string
+    latestVersion: boolean
+    toolName: string
+    status: string
+    testcases: TestCaseInterface[]
+}
+
+
 export default function TestCases({
     projectId,
     version,
     latestVersion,
-    tool,
+    toolName,
     status,
     testcases
 }: TestCasesProps) {
@@ -359,7 +372,7 @@ export default function TestCases({
             },
             toolCreated: {
                 type: 'multi',
-                label: `${tool} Issues`,
+                label: `${toolName} Issues`,
                 options: [
                     {
                         label: 'Created',
@@ -418,7 +431,7 @@ export default function TestCases({
                             projectId={projectId}
                             version={version}
                             latestVersion={latestVersion}
-                            tool={tool}
+                            toolName={toolName}
                         />
                     ))}
                 </div>
@@ -436,13 +449,4 @@ export default function TestCases({
             </div>
         </div>
     )
-}
-
-interface TestCaseProps {
-    projectId: string
-    version: string
-    latestVersion: boolean
-    tool: string
-    status: string
-    testcase: TestCaseInterface
 }

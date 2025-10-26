@@ -64,7 +64,7 @@ interface RequirementsProps {
     latestVersion: boolean
     status: string
     requirements: RequirementInterface[]
-    tool: string
+    toolName: string
 }
 
 export default function Requirements({
@@ -73,7 +73,7 @@ export default function Requirements({
     latestVersion,
     status,
     requirements,
-    tool
+    toolName
 }: RequirementsProps) {
     const reqsPerPage = 30
     const canToggleStatus = status === 'CONFIRM_CHANGE_ANALYSIS_EXPLICIT' && latestVersion

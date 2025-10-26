@@ -24,11 +24,13 @@ export default function ProjectDetails() {
 
     const projectId = searchParams.get('projectId')
     const version = searchParams.get('version')
-    const tool = searchParams.get('tool')
 
     const [status, setStatus] = useState<string>('')
     const [error, setError] = useState<string>('')
+    const [projectName, setProjectName] = useState<string>('')
     const [latestVersion, setLatestVersion] = useState<string>('')
+    const [versionFiles, setVersionFiles] = useState<any[]>([])
+    const [toolName, setToolName] = useState<string>('')
     const [requirements, setRequirements] = useState<RequirementInterface[]>([])
     const [showRequirements, setShowRequirements] = useState<RequirementInterface[]>([])
     const [testcases, setTestcases] = useState<TestCaseInterface[]>([])
@@ -36,6 +38,32 @@ export default function ProjectDetails() {
     const [submitLoading, setSubmitLoading] = useState(false)
 
     const HIDE_TABS = (version === 'v1' && status === 'CREATED') || status.startsWith('ERR')
+
+    async function fetchProject() {
+        if (!projectId) {
+            router.push('/projects')
+            return
+        }
+
+        const projectRef = doc(firestoreDb, 'projects', projectId)
+
+        const unsubscribe = onSnapshot(projectRef, (docSnapshot) => {
+            if (docSnapshot.exists()) {
+                const data = docSnapshot.data()
+                setProjectName(data.toolProjectName || '')
+                setLatestVersion(data.latest_version || '')
+                setToolName(data.tool || '')
+            } else {
+                setError('Project not found!')
+                setTimeout(() => {
+                    router.push('/projects')
+                }, 2000)
+                return
+            }
+        })
+
+        return () => unsubscribe()
+    }
 
     async function fetchVersion() {
         try {
@@ -65,7 +93,8 @@ export default function ProjectDetails() {
             const unsubscribe = onSnapshot(versionDocRef, (docSnapshot) => {
                 if (docSnapshot.exists()) {
                     const data = docSnapshot.data()
-                    setStatus(data.status || 'Unknown')
+                    setStatus(data.status || 'NA')
+                    setVersionFiles(data.files || [])
                 } else {
                     setError('Version not found!')
                     setTimeout(() => router.push('/projects'), 2000)
@@ -120,11 +149,12 @@ export default function ProjectDetails() {
     }
 
     useEffect(() => {
-        if (!projectId || !version || !tool || !Object.values(SUPPORTED_TOOLS).includes(tool)) {
+        if (!projectId || !version) {
             router.push('/projects')
             return
         }
 
+        fetchProject()
         fetchVersion()
         fetchRequirements()
         fetchTestcases()
@@ -168,7 +198,6 @@ export default function ProjectDetails() {
             setSubmitLoading(false)
         }
     }
-
 
     async function confirmTestcases() {
         try {
@@ -244,7 +273,12 @@ export default function ProjectDetails() {
 
     return (
         <div className='w-full h-full overflow-y-auto scrollbar'>
-            <DetailsBanner status={status} />
+            <DetailsBanner
+                projectName={projectName}
+                latestVersion={version === latestVersion}
+                versionFiles={versionFiles}
+                status={status}
+            />
 
             {!HIDE_TABS && (
                 <div className='w-ful sticky top-[150px] backdrop-blur-xs bg-white/20 flex items-center justify-center gap-8 py-2 shadow-xl z-20 text-sm font-medium'>
@@ -275,7 +309,7 @@ export default function ProjectDetails() {
                         projectId={projectId!}
                         version={version!}
                         latestVersion={version === latestVersion}
-                        tool={tool}
+                        toolName={toolName}
                         status={status}
                         requirements={showRequirements}
                     />
@@ -286,7 +320,7 @@ export default function ProjectDetails() {
                         projectId={projectId!}
                         version={version!}
                         latestVersion={version === latestVersion}
-                        tool={tool}
+                        toolName={toolName}
                         status={status}
                         testcases={testcases}
                     />
@@ -342,8 +376,8 @@ export default function ProjectDetails() {
                     title='Verify proposed test cases'
                     content={
                         version === 'v1' ?
-                        'Please remove any unwanted test cases from the proposed ones and click confirm to go ahead with their creation on Jira project.' :
-                        'Please remove any unwanted test cases and click confirm to go ahead with creation of new ones and updation of depreacted ones on Jira project.'
+                            'Please remove any unwanted test cases from the proposed ones and click confirm to go ahead with their creation on Jira project.' :
+                            'Please remove any unwanted test cases and click confirm to go ahead with creation of new ones and updation of depreacted ones on Jira project.'
                     }
                     buttonLabel='Confirm'
                     loading={submitLoading}

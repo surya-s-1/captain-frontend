@@ -18,7 +18,7 @@ export interface Project {
 }
 
 interface ProjectViewInput {
-    tool: string
+    toolName: string
     description: string
     loading: boolean
     error: string | null
@@ -27,7 +27,7 @@ interface ProjectViewInput {
 
 const NEXT_PUBLIC_TOOL_ENDPOINT = process.env.NEXT_PUBLIC_TOOL_ENDPOINT || ''
 
-function ProjectCard({ project, tool }: { project: Project, tool: string }) {
+function ProjectCard({ project, toolName }: { project: Project, toolName: string }) {
     const router = useRouter()
     const [connectLoading, setConnectLoading] = useState(false)
 
@@ -48,7 +48,7 @@ function ProjectCard({ project, tool }: { project: Project, tool: string }) {
                     'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({
-                    tool: tool.toLowerCase(),
+                    tool: toolName.toLowerCase(),
                     siteId,
                     siteDomain,
                     projectName,
@@ -68,7 +68,7 @@ function ProjectCard({ project, tool }: { project: Project, tool: string }) {
 
     return (
         <a
-            href={project.connected ? `/projects/versions/details?projectId=${project.project_id}&version=${project.latest_version}&tool=${tool}` : ''}
+            href={project.connected ? `/projects/versions/details?projectId=${project.project_id}&version=${project.latest_version}` : ''}
             className='flex flex-col justify-between gap-8 cursor-pointer p-4 rounded-md shadow-md hover:shadow-lg transition-shadow dark:shadow-black/50'
         >
             <div className='w-full flex items-center gap-4'>
@@ -82,7 +82,7 @@ function ProjectCard({ project, tool }: { project: Project, tool: string }) {
                             className='text-color-primary/80 cursor-pointer font-sans font-semibold'
                             onClick={(e) => {
                                 e.preventDefault()
-                                router.push(`/projects/versions?projectId=${project.project_id}&tool=${tool}`)
+                                router.push(`/projects/versions?projectId=${project.project_id}`)
                             }}
                         >
                             See versions {'>>'}
@@ -115,10 +115,10 @@ function ProjectCard({ project, tool }: { project: Project, tool: string }) {
         </a>)
 }
 
-export function ProjectView({ tool, description, loading, error, projects }: ProjectViewInput) {
+export function ProjectView({ toolName, description, loading, error, projects }: ProjectViewInput) {
     return (
         <>
-            <h2 className='text-color-primary/70 text-lg font-semibold'>{tool}</h2>
+            <h2 className='text-color-primary/70 text-lg font-semibold'>{toolName}</h2>
             <p className='text-color-primary/50 italic mb-4'>{description}</p>
 
             {loading &&
@@ -132,7 +132,7 @@ export function ProjectView({ tool, description, loading, error, projects }: Pro
             {!loading && !error &&
                 <div className='w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
                     {projects.map((project, idx) => (
-                        <ProjectCard key={idx} project={project} tool={tool} />
+                        <ProjectCard key={idx} project={project} toolName={toolName} />
                     ))}
                 </div>
             }
