@@ -323,6 +323,10 @@ export default function ProjectDetails() {
                 label: 'Testcase Status',
                 options: [
                     {
+                        label: 'Not started',
+                        value: 'NOT_STARTED'
+                    },
+                    {
                         label: 'Queued',
                         value: 'TESTCASES_CREATION_QUEUED'
                     },

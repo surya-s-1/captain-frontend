@@ -135,7 +135,7 @@ export default function Requirements({
                 />
             </div>
             {canToggleStatus &&
-                <div className='sticky top-[260px] flex items-center gap-2 w-full bg-yellow-300 border shadow-sm p-2 rounded-lg z-50'>
+                <div className='sticky top-[260px] flex items-center gap-2 w-fit bg-yellow-300 border shadow-sm p-2 rounded-lg z-20'>
                     <Info className='w-6 h-6' />
                     <span>Showing only explicitly provided requirements for delta analysis review.</span>
                 </div>}
