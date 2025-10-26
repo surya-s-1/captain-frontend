@@ -36,6 +36,9 @@ interface TestCasesProps {
     toolName: string
     status: string
     testcases: TestCaseInterface[]
+    TestcasesFilter: any
+    hideDetails: boolean
+    setHideDetails: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 
@@ -45,72 +48,21 @@ export default function TestCases({
     latestVersion,
     toolName,
     status,
-    testcases
+    testcases,
+    TestcasesFilter,
+    hideDetails,
+    setHideDetails
 }: TestCasesProps) {
     const testcasesPerPage = 20
 
-    const { filteredItems: filteredTestcases, FilterComponent } = useFilter({
-        items: testcases,
-        config: {
-            testcase_id: {
-                type: 'singleSearch',
-                label: 'Testcase ID'
-            },
-            requirement_id: {
-                type: 'singleSearch',
-                label: 'Parent Requirement'
-            },
-            dataset_status: {
-                type: 'multi',
-                label: 'Dataset Creation',
-                options: [
-                    {
-                        label: 'Completed',
-                        value: 'DATASET_GENERATION_COMPLETED'
-                    },
-                    {
-                        label: 'Queued',
-                        value: 'DATASET_GENERATION_QUEUED'
-                    },
-                    {
-                        label: 'In Progress',
-                        value: 'DATASET_GENERATION_STARTED'
-                    },
-                    {
-                        label: 'Not Started',
-                        value: 'NOT_STARTED'
-                    },
-                    {
-                        label: 'Failed',
-                        value: 'ERR_DATASET_GENERATION'
-                    }
-                ]
-            },
-            toolCreated: {
-                type: 'multi',
-                label: `${toolName} Issues`,
-                options: [
-                    {
-                        label: 'Created',
-                        value: 'SUCCESS'
-                    },
-                    {
-                        label: 'Not created',
-                        value: 'FAILED'
-                    }
-                ]
-            }
-        }
-    })
-
     const {
-        filteredItems: refilteredTestcases,
+        filteredItems: filteredTestcases,
         uniqueValues,
         config,
         selectedValue,
         setSelectedValue,
         TabFilterComponent
-    } = useTabFilter(filteredTestcases,
+    } = useTabFilter(testcases,
         {
             field: 'change_analysis_status',
             valueLabels: {
@@ -125,8 +77,7 @@ export default function TestCases({
             }
         })
 
-    const { currentItems: currentTestcases, Pagination } = usePagination(refilteredTestcases, testcasesPerPage)
-    const [hideDetails, setHideDetails] = useState(false)
+    const { currentItems: currentTestcases, Pagination } = usePagination(filteredTestcases, testcasesPerPage)
 
     return (
         <div className='w-full flex flex-col gap-8 items-center'>
@@ -171,7 +122,7 @@ export default function TestCases({
                 <div className='w-full relative flex items-center justify-center'>
                     <Pagination />
                     <div className='absolute right-24'>
-                        <FilterComponent />
+                        <TestcasesFilter />
                     </div>
                 </div>
             </div>

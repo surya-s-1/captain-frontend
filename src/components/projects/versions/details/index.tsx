@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { doc, getDoc, onSnapshot, query, collection, where, orderBy } from 'firebase/firestore'
 
+import { useFilter } from '@/hooks/useFilter'
+
 import DetailsBanner from '@/components/projects/versions/details/banner'
 import Requirements, { RequirementInterface } from '@/components/projects/versions/details/requirements'
 import TestCases, { TestCaseInterface } from '@/components/projects/versions/details/testcases'
@@ -108,7 +110,6 @@ export default function ProjectDetails() {
         }
     }
 
-
     async function fetchRequirements() {
         const reqQuery = query(
             collection(firestoreDb, 'projects', projectId, 'versions', version, 'requirements'),
@@ -131,7 +132,6 @@ export default function ProjectDetails() {
         return () => unsubscribe()
     }
 
-
     async function fetchTestcases() {
         const testcaseQuery = query(
             collection(firestoreDb, 'projects', projectId, 'versions', version, 'testcases'),
@@ -146,6 +146,7 @@ export default function ProjectDetails() {
 
         return () => unsubscribe()
     }
+
 
     useEffect(() => {
         if (!projectId || !version) {
@@ -228,7 +229,6 @@ export default function ProjectDetails() {
         }
     }
 
-
     async function confirmChangeAnalysis() {
         try {
             if (version !== latestVersion) {
@@ -259,7 +259,6 @@ export default function ProjectDetails() {
         }
     }
 
-
     if (error) {
         return (
             <div className='text-error font-semibold'>{error}</div>
@@ -269,6 +268,108 @@ export default function ProjectDetails() {
     function getTabClassName(input: Tab) {
         return `p-2 rounded ${tab === input ? 'bg-primary-contrast text-color-primary-contrast' : 'cursor-pointer'}`
     }
+
+    const { filteredItems: filteredRequirements, FilterComponent: RequirementsFilter } = useFilter({
+        items: showRequirements,
+        config: {
+            requirement_id: {
+                type: 'singleSearch',
+                label: 'Requirement ID'
+            },
+            source_type: {
+                type: 'single',
+                label: 'Source',
+                options: [
+                    {
+                        label: 'Explicit',
+                        value: 'explicit'
+                    },
+                    {
+                        label: 'Implicit',
+                        value: 'implicit'
+                    }
+                ]
+            },
+            testcase_status: {
+                type: 'multi',
+                label: 'Testcase Status',
+                options: [
+                    {
+                        label: 'Queued',
+                        value: 'TESTCASES_CREATION_QUEUED'
+                    },
+                    {
+                        label: 'Started',
+                        value: 'TESTCASES_CREATION_STARTED'
+                    },
+                    {
+                        label: 'Completed',
+                        value: 'TESTCASES_CREATION_COMPLETE'
+                    },
+                    {
+                        label: 'Error',
+                        value: 'ERR_TESTCASE_CREATION'
+                    }
+                ]
+            }
+        }
+    })
+
+    const { filteredItems: filteredTestcases, FilterComponent: TestcasesFilter } = useFilter({
+        items: testcases,
+        config: {
+            testcase_id: {
+                type: 'singleSearch',
+                label: 'Testcase ID'
+            },
+            requirement_id: {
+                type: 'singleSearch',
+                label: 'Parent Requirement'
+            },
+            dataset_status: {
+                type: 'multi',
+                label: 'Dataset Creation',
+                options: [
+                    {
+                        label: 'Completed',
+                        value: 'DATASET_GENERATION_COMPLETED'
+                    },
+                    {
+                        label: 'Queued',
+                        value: 'DATASET_GENERATION_QUEUED'
+                    },
+                    {
+                        label: 'In Progress',
+                        value: 'DATASET_GENERATION_STARTED'
+                    },
+                    {
+                        label: 'Not Started',
+                        value: 'NOT_STARTED'
+                    },
+                    {
+                        label: 'Failed',
+                        value: 'ERR_DATASET_GENERATION'
+                    }
+                ]
+            },
+            toolCreated: {
+                type: 'multi',
+                label: `${toolName} Issues`,
+                options: [
+                    {
+                        label: 'Created',
+                        value: 'SUCCESS'
+                    },
+                    {
+                        label: 'Not created',
+                        value: 'FAILED'
+                    }
+                ]
+            }
+        }
+    })
+
+    const [hideTestCaseDetails, setHideTestcaseDetails] = useState(false)
 
     return (
         <div className='w-full h-full overflow-y-auto scrollbar'>
@@ -310,7 +411,8 @@ export default function ProjectDetails() {
                         latestVersion={version === latestVersion}
                         toolName={toolName}
                         status={status}
-                        requirements={showRequirements}
+                        requirements={filteredRequirements}
+                        RequirementsFilter={RequirementsFilter}
                     />
                 )}
 
@@ -321,7 +423,10 @@ export default function ProjectDetails() {
                         latestVersion={version === latestVersion}
                         toolName={toolName}
                         status={status}
-                        testcases={testcases}
+                        testcases={filteredTestcases}
+                        TestcasesFilter={TestcasesFilter}
+                        hideDetails={hideTestCaseDetails}
+                        setHideDetails={setHideTestcaseDetails}
                     />
                 )}
 

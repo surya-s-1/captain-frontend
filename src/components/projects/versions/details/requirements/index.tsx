@@ -64,6 +64,7 @@ interface RequirementsProps {
     latestVersion: boolean
     status: string
     requirements: RequirementInterface[]
+    RequirementsFilter: any
     toolName: string
 }
 
@@ -73,66 +74,21 @@ export default function Requirements({
     latestVersion,
     status,
     requirements,
+    RequirementsFilter,
     toolName
 }: RequirementsProps) {
     const reqsPerPage = 30
     const canToggleStatus = status === 'CONFIRM_CHANGE_ANALYSIS_EXPLICIT' && latestVersion
     const canDelete = status === 'CONFIRM_REQ_EXTRACT' && latestVersion
 
-    const { filteredItems: filteredRequirements, FilterComponent } = useFilter({
-        items: requirements,
-        config: {
-            requirement_id: {
-                type: 'singleSearch',
-                label: 'Requirement ID'
-            },
-            source_type: {
-                type: 'single',
-                label: 'Source',
-                options: [
-                    {
-                        label: 'Explicit',
-                        value: 'explicit'
-                    },
-                    {
-                        label: 'Implicit',
-                        value: 'implicit'
-                    }
-                ]
-            },
-            testcase_status: {
-                type: 'multi',
-                label: 'Testcase Status',
-                options: [
-                    {
-                        label: 'Queued',
-                        value: 'TESTCASES_CREATION_QUEUED'
-                    },
-                    {
-                        label: 'Started',
-                        value: 'TESTCASES_CREATION_STARTED'
-                    },
-                    {
-                        label: 'Completed',
-                        value: 'TESTCASES_CREATION_COMPLETE'
-                    },
-                    {
-                        label: 'Error',
-                        value: 'ERR_TESTCASE_CREATION'
-                    }
-                ]
-            }
-        }
-    })
-
     const {
-        filteredItems: refilteredRequirements,
+        filteredItems: filteredRequirements,
         uniqueValues,
         config,
         selectedValue,
         setSelectedValue,
         TabFilterComponent
-    } = useTabFilter(filteredRequirements,
+    } = useTabFilter(requirements,
         {
             field: 'change_analysis_status',
             valueLabels: {
@@ -151,7 +107,7 @@ export default function Requirements({
             }
         })
 
-    const { currentItems: currentRequirements, Pagination, goToPage } = usePagination(refilteredRequirements, reqsPerPage)
+    const { currentItems: currentRequirements, Pagination, goToPage } = usePagination(filteredRequirements, reqsPerPage)
 
     useEffect(() => {
         if (requirements.length > 0 && window.location.hash) {
@@ -206,7 +162,7 @@ export default function Requirements({
                 <div className='w-full relative flex items-center justify-center'>
                     <Pagination />
                     <div className='absolute right-24'>
-                        <FilterComponent />
+                        <RequirementsFilter />
                     </div>
                 </div>
             </div>
