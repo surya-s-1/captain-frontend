@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { MoveUpRight, TriangleAlert, ArrowDownToLine, RefreshCcw, RefreshCcwDot, Loader2, WandSparkles, CircleQuestionMark } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { MoveUpRight, TriangleAlert, ArrowDownToLine, RefreshCcw, RefreshCcwDot, Loader2, WandSparkles, CircleQuestionMark, ChevronUp, ChevronDown, Eye, EyeOff } from 'lucide-react'
 
 import { useFilter } from '@/hooks/useFilter'
 import { useTabFilter } from '@/hooks/useTabFilter'
@@ -44,15 +44,21 @@ interface TestCaseProps {
     toolName: string
     status: string
     testcase: TestCaseInterface
+    hideDetails: boolean
 }
 
 
-function Testcase({ testcase, status, projectId, version, latestVersion, toolName }: TestCaseProps) {
+function Testcase({ testcase, status, projectId, version, latestVersion, toolName, hideDetails }: TestCaseProps) {
     const [deleteLoading, setDeleteLoading] = useState(false)
     const [enhancementInProgress, setEnhancementInProgress] = useState(false)
     const [resyncInProgress, setResyncInProgress] = useState(false)
     const [recreateInProgress, setRecreateInProgress] = useState(false)
     const [enhancementInput, setEnhancementInput] = useState('')
+    const [isExpanded, setIsExpanded] = useState(!hideDetails)
+
+    useEffect(() => {
+        setIsExpanded(!hideDetails)
+    }, [hideDetails])
 
     const { downloadSingleDataset, downloadSingleLoading } = useDownloadDatasets(projectId, version)
     const canDelete = status === 'CONFIRM_TESTCASES' && latestVersion && !['DEPRECATED', 'UNCHANGED'].includes(testcase.change_analysis_status)
@@ -185,6 +191,10 @@ function Testcase({ testcase, status, projectId, version, latestVersion, toolNam
         }
     }
 
+    const toggleExpand = () => {
+        setIsExpanded(prev => !prev);
+    }
+
     return (
         <div key={testcase.testcase_id} className='relative p-4 shadow-md shadow-black/30 dark:shadow-black/50 rounded-lg'>
             <div className='w-full flex flex-col lg:flex-row gap-4 justify-between'>
@@ -213,9 +223,16 @@ function Testcase({ testcase, status, projectId, version, latestVersion, toolNam
                         <div className='py-1 cursor-pointer' title={testcase.change_analysis_status_reason}>
                             <CircleQuestionMark className='w-4 h-4 text-gray-400' />
                         </div>}
+                    
+                    <ExpandingButton
+                        Icon={isExpanded ? EyeOff : Eye}
+                        openLabel={isExpanded ? 'Hide Details' : 'Show Details'}
+                        onClick={() => { setIsExpanded(prev => !prev)}}
+                        size='sm'
+                        className='border-none shadow-transparent shadow-none hover:shadow-none'
+                    />
                 </div>
                 <div className='flex items-center gap-2'>
-
                     {testcase.toolCreated === 'FAILED' && status === 'COMPLETE_SYNC_TC_WITH_TOOL' &&
                         <>
                             <ExpandingButton
@@ -238,6 +255,7 @@ function Testcase({ testcase, status, projectId, version, latestVersion, toolNam
                             openLabel='Download Dataset'
                             onClick={() => { downloadDataset(testcase.testcase_id) }}
                             isLoading={downloadSingleLoading}
+                            className='shadow-none hover:shadow-sm'
                         />}
 
                     {testcase.toolIssueLink &&
@@ -245,6 +263,7 @@ function Testcase({ testcase, status, projectId, version, latestVersion, toolNam
                             imageUrl={JIRA_ICON.src}
                             label={`Open in ${toolName}`}
                             href={testcase.toolIssueLink}
+                            className='shadow-none hover:shadow-sm'
                         />}
 
                     {canDelete && (
@@ -271,43 +290,47 @@ function Testcase({ testcase, status, projectId, version, latestVersion, toolNam
             <h2 className='text-lg font-semibold my-2'>
                 <Markdown text={testcase.title} />
             </h2>
-            <div className='text-sm'>
-                <b>Description</b>
-            </div>
-            <div className='my-1'>
-                <Markdown text={testcase.description} />
-            </div>
-            <div className='text-sm'>
-                <b>Acceptance Criteria</b>
-            </div>
-            <div className='my-1'>
-                <Markdown text={testcase.acceptance_criteria} />
-            </div>
-            <div className='text-sm'>
-                <b>Priority</b>
-            </div>
-            <div className='my-1'>
-                <Markdown text={testcase.priority} />
-            </div>
-            {canEnhance &&
-                <div className='flex flex-col lg:flex-row lg:items-center gap-2'>
-                    <input
-                        type='text'
-                        className='p-2 border border-gray-300 focus:outline-none rounded w-[90%]'
-                        value={enhancementInput}
-                        placeholder='Enhance the testcase...'
-                        onChange={e => { !enhancementInProgress && setEnhancementInput(e.target.value) }}
-                    />
-                    <button
-                        className='w-fit flex items-center gap-2 rounded-md shadow-sm hover:shadow-md shadow-black/30 dark:shadow-black/50 transition-shadow p-2 cursor-pointer'
-                        onClick={() => enhanceTestcase(testcase.testcase_id)}
-                        disabled={enhancementInProgress}
-                    >
-                        <WandSparkles size={24} />
-                        Enhance
-                        {enhancementInProgress && <Loader2 className='animate-spin' size={20} />}
-                    </button>
-                </div>}
+            {isExpanded && (
+                <>
+                    <div className='text-sm'>
+                        <b>Description</b>
+                    </div>
+                    <div className='my-1'>
+                        <Markdown text={testcase.description} />
+                    </div>
+                    <div className='text-sm'>
+                        <b>Acceptance Criteria</b>
+                    </div>
+                    <div className='my-1'>
+                        <Markdown text={testcase.acceptance_criteria} />
+                    </div>
+                    <div className='text-sm'>
+                        <b>Priority</b>
+                    </div>
+                    <div className='my-1'>
+                        <Markdown text={testcase.priority} />
+                    </div>
+                    {canEnhance &&
+                        <div className='flex flex-col lg:flex-row lg:items-center gap-2'>
+                            <input
+                                type='text'
+                                className='p-2 border border-gray-300 focus:outline-none rounded w-[90%]'
+                                value={enhancementInput}
+                                placeholder='Enhance the testcase...'
+                                onChange={e => { !enhancementInProgress && setEnhancementInput(e.target.value) }}
+                            />
+                            <button
+                                className='w-fit flex items-center gap-2 rounded-md shadow-sm hover:shadow-md shadow-black/30 dark:shadow-black/50 transition-shadow p-2 cursor-pointer'
+                                onClick={() => enhanceTestcase(testcase.testcase_id)}
+                                disabled={enhancementInProgress}
+                            >
+                                <WandSparkles size={24} />
+                                Enhance
+                                {enhancementInProgress && <Loader2 className='animate-spin' size={20} />}
+                            </button>
+                        </div>}
+                </>
+            )}
         </div>
     )
 }
@@ -410,17 +433,28 @@ export default function TestCases({
         })
 
     const { currentItems: currentTestcases, Pagination } = usePagination(refilteredTestcases, testcasesPerPage)
+    const [ hideDetails, setHideDetails ] = useState(false)
 
     return (
         <div className='w-full flex flex-col gap-8 items-center'>
-            <div className='sticky top-[210px] z-30'>
-                <TabFilterComponent
-                    uniqueValues={uniqueValues}
-                    config={config}
-                    selectedValue={selectedValue}
-                    setSelectedValue={setSelectedValue}
-                />
+            <div className={`w-full sticky top-[210px] z-30`}>
+                <div className='w-full relative flex items-center justify-center'>
+                    <TabFilterComponent
+                        uniqueValues={uniqueValues}
+                        config={config}
+                        selectedValue={selectedValue}
+                        setSelectedValue={setSelectedValue}
+                    />
+                    <div className='absolute right-24'>
+                        <ExpandingButton
+                            Icon={hideDetails ? Eye : EyeOff}
+                            openLabel={hideDetails ? 'Show Details' : 'Hide Details'}
+                            onClick={() => setHideDetails(prev => !prev)}
+                        />
+                    </div>
+                </div>
             </div>
+
             {currentTestcases.length > 0 ? (
                 <div className='w-full flex flex-col gap-4 mb-12'>
                     {currentTestcases.map((t) => (
@@ -432,6 +466,7 @@ export default function TestCases({
                             version={version}
                             latestVersion={latestVersion}
                             toolName={toolName}
+                            hideDetails={hideDetails}
                         />
                     ))}
                 </div>

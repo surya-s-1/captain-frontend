@@ -388,6 +388,7 @@ export function useFilter<T>({ items, config }: UseFilterOptions<T>) {
                         closedLabel={hasActiveFilters ? `(${filteredItems.length})` : ''}
                         onClick={() => setOpen((open) => !open)}
                         keepExpanded={open}
+                        size='md'
                     />
                     {hasActiveFilters && (
                         <span className='absolute top-0 right-0 flex h-3 w-3'>
