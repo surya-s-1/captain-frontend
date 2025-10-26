@@ -27,7 +27,6 @@ export default function ProjectDetails() {
     const version = searchParams.get('version')
 
     const [status, setStatus] = useState<string>('')
-    const [error, setError] = useState<string>('')
     const [projectName, setProjectName] = useState<string>('')
     const [latestVersion, setLatestVersion] = useState<string>('')
     const [versionFiles, setVersionFiles] = useState<string[]>([])
@@ -55,10 +54,8 @@ export default function ProjectDetails() {
                 setLatestVersion(data.latest_version || '')
                 setToolName(data.tool || '')
             } else {
-                setError('Project not found!')
-                setTimeout(() => {
-                    router.push('/projects')
-                }, 2000)
+                alert('Project not found!')
+                router.push('/projects')
                 return
             }
         })
@@ -75,8 +72,8 @@ export default function ProjectDetails() {
             const projectSnap = await getDoc(projectRef)
 
             if (!projectSnap.exists()) {
-                setError('Project not found!')
-                setTimeout(() => router.push('/projects'), 2000)
+                alert('Project not found!')
+                router.push('/projects')
                 return
             }
 
@@ -84,8 +81,8 @@ export default function ProjectDetails() {
             setLatestVersion(projectData.latest_version || '')
 
             if (!projectData.uids || !projectData.uids.includes(user.uid)) {
-                setError('You do not have access to this project.')
-                setTimeout(() => router.push('/projects'), 2000)
+                alert('You do not have access to this project.')
+                router.push('/projects')
                 return
             }
 
@@ -97,16 +94,17 @@ export default function ProjectDetails() {
                     setStatus(data.status || 'NA')
                     setVersionFiles(data?.files?.map((f: any) => f?.name) || [])
                 } else {
-                    setError('Version not found!')
-                    setTimeout(() => router.push('/projects'), 2000)
+                    alert('Version not found!')
+                    router.push('/projects')
+                    return
                 }
             })
 
             return () => unsubscribe()
         } catch (err) {
             console.error('Error fetching version:', err)
-            setError('Something went wrong!')
-            setTimeout(() => router.push('/projects'), 2000)
+            alert('Something went wrong!')
+            router.push('/projects')
         }
     }
 
@@ -120,6 +118,11 @@ export default function ProjectDetails() {
         )
 
         const unsubscribe = onSnapshot(reqQuery, (snapshot) => {
+            if (snapshot.empty) {
+                setRequirements([])
+                return
+            }
+
             const reqsList = snapshot.docs.map(d => {
                 const data = d.data()
                 const { embedding, ...restOfData } = data
@@ -257,12 +260,6 @@ export default function ProjectDetails() {
         } finally {
             setSubmitLoading(false)
         }
-    }
-
-    if (error) {
-        return (
-            <div className='text-error font-semibold'>{error}</div>
-        )
     }
 
     function getTabClassName(input: Tab) {
