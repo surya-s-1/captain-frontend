@@ -115,7 +115,7 @@ export default function DetailsBanner({ projectName, latestVersion, versionFiles
             const token = await user.getIdToken()
             if (!token) return
 
-            const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/v1/${projectId}/createNewVersion`, {
+            const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/v1/${projectId}/v/${version}/createNewVersion`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`
