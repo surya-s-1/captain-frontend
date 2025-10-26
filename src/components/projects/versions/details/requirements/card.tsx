@@ -132,7 +132,7 @@ export default function RequirementCard({
         <div
             id={requirement.requirement_id}
             key={requirement.requirement_id}
-            className='relative p-2 shadow-md shadow-black/30 dark:shadow-black/50 rounded-lg scroll-mt-[210px]'
+            className='relative p-2 border-[1] border-gray-300 shadow-md rounded-lg scroll-mt-[210px]'
         >
             <div className='w-full flex flex-col lg:flex-row gap-4 justify-between'>
                 <div className='flex items-center gap-2'>

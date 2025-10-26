@@ -79,7 +79,7 @@ export function ExpandingButton({
             onMouseLeave={() => setIsHovered(false)}
             disabled={isLoading}
             className={`
-                flex items-center ${gap} ${padding} cursor-pointer rounded-full border-[1] border-gray-300 shadow-black/20 ${shadow} transform bg-primary transition-[width,padding,background-color,shadow] duration-300 ease-in-out ${widthClass} ${className}
+                flex items-center ${gap} ${padding} cursor-pointer rounded-full border-[1] border-gray-300 ${shadow} transform bg-primary transition-[width,padding,background-color,shadow] duration-300 ease-in-out ${widthClass} ${className}
             `}
         >
             {isLoading ? (

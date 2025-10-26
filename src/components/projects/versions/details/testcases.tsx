@@ -191,12 +191,8 @@ function Testcase({ testcase, status, projectId, version, latestVersion, toolNam
         }
     }
 
-    const toggleExpand = () => {
-        setIsExpanded(prev => !prev);
-    }
-
     return (
-        <div key={testcase.testcase_id} className='relative p-4 shadow-md shadow-black/30 dark:shadow-black/50 rounded-lg'>
+        <div key={testcase.testcase_id} className='relative p-4 border-[1] border-gray-300 shadow-md rounded-lg'>
             <div className='w-full flex flex-col lg:flex-row gap-4 justify-between'>
                 <div className='flex flex-col gap-2 lg:flex-row lg:items-center text-color-primary/50 text-xs'>
                     <span>
