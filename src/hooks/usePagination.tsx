@@ -10,8 +10,8 @@ export function usePagination(items = [], itemsPerPage = 10) {
         return items.slice(startIndex, startIndex + itemsPerPage)
     }, [items, currentPage, itemsPerPage])
 
-    const nextPage = () => setCurrentPage((p) => Math.min(p + 1, totalPages))
-    const prevPage = () => setCurrentPage((p) => Math.max(p - 1, 1))
+    const nextPage = () => currentPage + 1 <= totalPages && setCurrentPage((p) => Math.min(p + 1, totalPages))
+    const prevPage = () => currentPage - 1 >= 0 && setCurrentPage((p) => Math.max(p - 1, 1))
     const goToPage = (pageNum) =>
         setCurrentPage(Math.min(Math.max(pageNum, 1), totalPages))
 
