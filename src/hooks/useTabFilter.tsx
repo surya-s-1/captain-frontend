@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 
-export function useBarFilter(
+export function useTabFilter(
     items: any[],
     config: {
         field: string,
@@ -22,7 +22,7 @@ export function useBarFilter(
         return items.filter(item => item[config.field] === selectedValue)
     }, [items, config, selectedValue])
 
-    const BarFilterComponent = ({ uniqueValues, selectedValue, setSelectedValue, config }) => {
+    const TabFilterComponent = ({ uniqueValues, selectedValue, setSelectedValue, config }) => {
         const filterOptions = uniqueValues?.length ? ['All', ...uniqueValues] : []
         const valueColors = config?.valueColors || {}
         const valueLabels = config?.valueLabels || {}
@@ -50,6 +50,6 @@ export function useBarFilter(
         config,
         selectedValue,
         setSelectedValue,
-        BarFilterComponent
+        TabFilterComponent
     }
 }

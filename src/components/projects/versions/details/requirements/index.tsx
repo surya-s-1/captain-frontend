@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { Info } from 'lucide-react'
 
 import { useFilter } from '@/hooks/useFilter'
-import { useBarFilter } from '@/hooks/useBarFilter'
+import { useTabFilter } from '@/hooks/useTabFilter'
 import { usePagination } from '@/hooks/usePagination'
 
 import RequirementCard from '@/components/projects/versions/details/requirements/card'
@@ -109,8 +109,8 @@ export default function Requirements({
         config,
         selectedValue,
         setSelectedValue,
-        BarFilterComponent
-    } = useBarFilter(filteredRequirements,
+        TabFilterComponent
+    } = useTabFilter(filteredRequirements,
         {
             field: 'change_analysis_status',
             valueLabels: {
@@ -151,7 +151,7 @@ export default function Requirements({
     return (
         <div className='w-full flex flex-col gap-8 items-center'>
             <div className='sticky top-[210px] z-30'>
-                <BarFilterComponent
+                <TabFilterComponent
                     uniqueValues={uniqueValues}
                     config={config}
                     selectedValue={selectedValue}

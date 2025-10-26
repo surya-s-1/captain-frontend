@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { MoveUpRight, TriangleAlert, ArrowDownToLine, RefreshCcw, RefreshCcwDot, Loader2, WandSparkles, CircleQuestionMark } from 'lucide-react'
 
 import { useFilter } from '@/hooks/useFilter'
-import { useBarFilter } from '@/hooks/useBarFilter'
+import { useTabFilter } from '@/hooks/useTabFilter'
 import { usePagination } from '@/hooks/usePagination'
 import { useDownloadDatasets } from '@/hooks/useDownloadDatasets'
 
@@ -380,8 +380,8 @@ export default function TestCases({
         config,
         selectedValue,
         setSelectedValue,
-        BarFilterComponent
-    } = useBarFilter(filteredTestcases,
+        TabFilterComponent
+    } = useTabFilter(filteredTestcases,
         {
             field: 'change_analysis_status',
             valueLabels: {
@@ -401,7 +401,7 @@ export default function TestCases({
     return (
         <div className='w-full flex flex-col gap-8 items-center'>
             <div className='sticky top-[210px] z-30'>
-                <BarFilterComponent
+                <TabFilterComponent
                     uniqueValues={uniqueValues}
                     config={config}
                     selectedValue={selectedValue}
