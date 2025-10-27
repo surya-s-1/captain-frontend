@@ -18,12 +18,11 @@ export interface Source {
 }
 
 export interface Regulation {
-    regulation: string
+    regulation: string | null
     source: {
-        filename: string
-        page_start: string
-        page_end: string
-        snippet: string
+        filename: string | null
+        snippet: string | null
+        relevance_score: number | null
     }
 }
 

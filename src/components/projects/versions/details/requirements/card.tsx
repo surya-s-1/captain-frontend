@@ -102,15 +102,6 @@ export default function RequirementCard({
         return grouped
     }
 
-    function groupRegulations(regulations: Regulation[]) {
-        const grouped: Record<string, {file: string, snippet: string}[]> = {}
-        regulations.forEach(reg => {
-            if (!grouped[reg.regulation]) grouped[reg.regulation] = []
-            grouped[reg.regulation].push({ file: reg.source.filename, snippet: reg.source.snippet })
-        })
-        return grouped
-    }
-
     function toggleSource(filename: string) {
         setExpandedSources(prev => ({
             ...prev,
@@ -126,7 +117,6 @@ export default function RequirementCard({
     }
 
     const groupedSources = groupSources(requirement.sources || [])
-    const groupedRegs = groupRegulations(requirement.regulations || [])
 
     return (
         <div
@@ -233,25 +223,35 @@ export default function RequirementCard({
                 )}
 
                 {/* Regulations */}
-                {Object.keys(groupedRegs).length > 0 && (
+                {requirement.regulations.length > 0 && (
                     <div>
                         <h3 className='font-semibold'>Regulations</h3>
                         <ul className='flex flex-col gap-2'>
-                            {Object.entries(groupedRegs).map(([regText, snippets], idx) => {
-                                const expanded = expandedRegs[regText] || false
+                            {requirement.regulations.map((reg, idx) => {
+                                const expanded = expandedRegs[reg.regulation] || false
+
+                                if (!reg.regulation || !reg.source.filename || !reg.source.snippet) return <></>
+
                                 return (
                                     <li key={idx} className='list-disc ml-5'>
                                         <button
-                                            onClick={() => toggleReg(regText)}
-                                            className='text-left underline cursor-pointer'
+                                            onClick={() => toggleReg(reg.regulation)}
+                                            className='flex items-center gap-1 w-fit underline cursor-pointer'
                                         >
-                                            {regText}
+                                            {reg.regulation}
+                                            <div title={`Relevance score: ${reg.source?.relevance_score?.toFixed(2)}`}>
+                                                <CircleQuestionMark
+                                                    className='w-4 h-4 text-gray-400'
+                                                />
+                                            </div>
                                         </button>
                                         {expanded && (
                                             <ul className='ml-4 mt-1 flex flex-col gap-1 text-xs'>
-                                                {snippets.map((s, i) => (
-                                                    <li key={i} className='list-disc ml-2'><strong>({s.file})</strong> {s.snippet}</li>
-                                                ))}
+                                                <li className='list-disc ml-2'>
+                                                    <strong>({reg.source.filename})</strong>
+                                                    <br />
+                                                    {reg.source.snippet}
+                                                </li>
                                             </ul>
                                         )}
                                     </li>
