@@ -257,7 +257,7 @@ export function useFilter<T>({ items, config }: UseFilterOptions<T>) {
                                 </div>
 
                                 {cfg.type === 'multi' && (
-                                    <div className='flex flex-col gap-1 pl-1 max-h-40 overflow-y-auto scrollbar-thin'>
+                                    <div className='flex flex-col gap-1 pl-1 scrollbar-thin'>
                                         {cfg.options?.map((opt) => (
                                             <label key={opt.value} className='inline-flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1 rounded transition-colors'>
                                                 <input
@@ -274,7 +274,7 @@ export function useFilter<T>({ items, config }: UseFilterOptions<T>) {
                                                         else
                                                             setFilters((prev) => ({
                                                                 ...prev,
-                                                                [field]: val.filter((v: string) => v !== opt.value), // Filter by VALUE
+                                                                [field]: val?.filter((v: string) => v !== opt.value), // Filter by VALUE
                                                             }))
                                                     }}
                                                 />

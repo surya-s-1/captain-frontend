@@ -9,7 +9,7 @@ import { usePagination } from '@/hooks/usePagination'
 
 import RequirementCard from '@/components/projects/versions/details/requirements/card'
 
-import { CHANGE_ANALYSIS_STATUS } from '@/lib/utility/constants'
+import { CHANGE_ANALYSIS_STATUS, getNoticeMessage } from '@/lib/utility/constants'
 
 export interface Source {
     file_name: string
@@ -155,7 +155,7 @@ export default function Requirements({
                 <p>No requirements found.</p>
             )}
 
-            <div className={`w-full z-30 sticky ${status.startsWith('CONFIRM_') ? 'bottom-24' : 'bottom-4'}`}>
+            <div className={`w-full z-30 sticky ${status.startsWith('CONFIRM_') || getNoticeMessage(status).title ? 'bottom-24' : 'bottom-4'}`}>
                 <div className='w-full relative flex items-center justify-center'>
                     <Pagination />
                     <div className='absolute right-24'>

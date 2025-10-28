@@ -14,6 +14,7 @@ import Datasets from '@/components/projects/versions/details/datasets'
 import { Notice } from '@/lib/utility/ui/Notice'
 import { firestoreDb } from '@/lib/firebase'
 import { getCurrentUser } from '@/lib/firebase/utilities'
+import { getNoticeMessage } from '@/lib/utility/constants'
 
 const NEXT_PUBLIC_TOOL_ENDPOINT = process.env.NEXT_PUBLIC_TOOL_ENDPOINT || ''
 
@@ -37,7 +38,7 @@ export default function ProjectDetails() {
     const [tab, setTab] = useState<Tab>('requirements')
     const [submitLoading, setSubmitLoading] = useState(false)
 
-    const HIDE_TABS = (version === 'v1' && status === 'CREATED') || status.startsWith('ERR')
+    const HIDE_TABS = (version === 'v1' && status === 'CREATED')
 
     async function fetchProject() {
         if (!projectId) {
@@ -304,6 +305,10 @@ export default function ProjectDetails() {
                 type: 'singleSearch',
                 label: 'Requirement ID'
             },
+            requirement_category: {
+                type: 'multi',
+                label: 'Requirement Category'
+            },
             source_type: {
                 type: 'single',
                 label: 'Source',
@@ -477,62 +482,38 @@ export default function ProjectDetails() {
                 )}
             </div>
 
-            {status === 'CONFIRM_CHANGE_ANALYSIS_EXPLICIT' && (
+            {['CONFIRM_EXP_REQ_EXTRACT', 'ERR_IMP_REQ_EXTRACT'].includes(status) &&
                 <Notice
-                    title='Verify the results of change analysis'
-                    content='Please update the change status of the explicit requirements if they are not captured correctly and click on confirm.'
-                    buttonLabel='Confirm'
-                    loading={submitLoading}
-                    callback={confirmChangeAnalysis}
-                />
-            )}
-
-            {status === 'CONFIRM_EXP_REQ_EXTRACT' &&
-                <Notice
-                    title='Verify extracted requirements'
-                    content='Please remove any unwanted requirement and click confirm to go ahead with implicit requirements discovery on regulation.'
+                    title={getNoticeMessage(status).title}
+                    content={getNoticeMessage(status).content}
                     buttonLabel='Confirm'
                     loading={submitLoading}
                     callback={confirmExplicitRequirements}
                 />}
 
-            {status === 'CONFIRM_IMP_REQ_EXTRACT' &&
+            {['CONFIRM_CHANGE_ANALYSIS_EXPLICIT', 'ERR_CHANGE_ANALYSIS_IMPLICIT'].includes(status) && (
                 <Notice
-                    title='Verify extracted requirements'
-                    content='Please remove any unwanted requirement from the extracted requirements and click confirm to go ahead with test cases creation.'
+                    title={getNoticeMessage(status).title}
+                    content={getNoticeMessage(status).content}
+                    buttonLabel='Confirm'
+                    loading={submitLoading}
+                    callback={confirmChangeAnalysis}
+                />
+                )}
+
+            {['CONFIRM_IMP_REQ_EXTRACT', 'ERR_TESTCASE_CREATION'].includes(status) &&
+                <Notice
+                    title={getNoticeMessage(status).title}
+                    content={getNoticeMessage(status).content}
                     buttonLabel='Confirm'
                     loading={submitLoading}
                     callback={confirmRequirements}
                 />}
 
-            {status === 'CONFIRM_REQ_EXTRACT' && (
+            {['CONFIRM_TESTCASES', 'ERR_TC_CREATION_ON_TOOL'].includes(status) && (
                 <Notice
-                    title='Verify proposed requirements'
-                    content='Please remove any unwanted requirement from the extracted requirements and click confirm to go ahead with test cases creation.'
-                    buttonLabel='Confirm'
-                    loading={submitLoading}
-                    callback={confirmRequirements}
-                />
-            )}
-
-            {status === 'CONFIRM_REQ_EXTRACT_RETRY' && (
-                <Notice
-                    title='Retry'
-                    content='Sorry, there was something wrong. Could you please retry?'
-                    buttonLabel='Confirm'
-                    loading={submitLoading}
-                    callback={confirmRequirements}
-                />
-            )}
-
-            {status === 'CONFIRM_TESTCASES' && (
-                <Notice
-                    title='Verify proposed test cases'
-                    content={
-                        version === 'v1' ?
-                            'Please remove any unwanted test cases from the proposed ones and click confirm to go ahead with their creation on Jira project.' :
-                            'Please remove any unwanted test cases and click confirm to go ahead with creation of new ones and updation of depreacted ones on Jira project.'
-                    }
+                    title={getNoticeMessage(status).title}
+                    content={getNoticeMessage(status).content}
                     buttonLabel='Confirm'
                     loading={submitLoading}
                     callback={confirmTestcases}

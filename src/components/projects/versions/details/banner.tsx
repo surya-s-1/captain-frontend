@@ -3,12 +3,10 @@
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { ArrowDownToLine, Dot, Loader2 } from 'lucide-react'
-import { doc, onSnapshot } from 'firebase/firestore'
 
 import { Modal } from '@/lib/utility/ui/Modal'
 
 import { STANDARD_APP_NAME, VERSION_STATUS } from '@/lib/utility/constants'
-import { firestoreDb } from '@/lib/firebase'
 import { getCurrentUser } from '@/lib/firebase/utilities'
 import { useDownload } from '@/hooks/useDownload'
 
@@ -30,7 +28,7 @@ interface UploadedFileProps {
 
 function UploadedFile({ projectId, version, documentName }: UploadedFileProps) {
     const { downloadDocLoading, downloadUploadedDocument } = useDownload(projectId, version)
-    
+
     return (
         <div
             className='flex items-center gap-2'
@@ -182,49 +180,50 @@ export default function DetailsBanner({ projectName, latestVersion, versionFiles
                             {VERSION_STATUS?.[status]?.LOADER && <Loader2 className='animate-spin' size={20} />}
                         </div>
                     </div>
-                    {(versionFiles.length === 0 || status.startsWith('ERR')) && (
-                        <div>
-                            <button
-                                className='w-fit bg-primary-contrast text-color-primary-contrast rounded-full p-2 cursor-pointer'
-                                onClick={() => setIsModalOpen(true)}
-                            >
-                                {version === '1' ? 'Upload Documents' : 'Upload Updated Requirements'} {status.startsWith('ERR') && <span>(Retry)</span>}
-                            </button>
-                            <Modal isOpen={isModalOpen} closeModal={() => setIsModalOpen(false)}>
-                                <h2 className='text-xl font-bold mb-4'>
-                                    Upload Documents
-                                </h2>
-                                <div className='flex flex-col gap-4'>
-                                    <label htmlFor='files' className='w-fit bg-primary-contrast text-color-primary-contrast rounded-full p-2 cursor-pointer'>
-                                        Select Files
-                                    </label>
-                                    <input
-                                        type='file'
-                                        id='files'
-                                        multiple
-                                        required
-                                        onChange={handleFileUpload}
-                                        accept='.pdf,.doc,.docx,.xls,.xlsx,.csv'
-                                        className='hidden'
-                                    />
-                                    <div className='flex flex-col gap-2 max-h-[100px] overflow-y-auto scrollbar'>
-                                        {uploadedFiles.map(file => (
-                                            <div key={file.name}>
-                                                {file.name}
-                                            </div>
-                                        ))}
+                    {(versionFiles.length === 0 ||
+                        (status.startsWith('ERR_') && VERSION_STATUS?.[status]?.ALLOW_REUPLOAD)) && (
+                            <div>
+                                <button
+                                    className='w-fit bg-primary-contrast text-color-primary-contrast rounded-full p-2 cursor-pointer'
+                                    onClick={() => setIsModalOpen(true)}
+                                >
+                                    {version === '1' ? 'Upload Documents' : 'Upload Updated Requirements'} {status.startsWith('ERR_') && <span>(Retry)</span>}
+                                </button>
+                                <Modal isOpen={isModalOpen} closeModal={() => setIsModalOpen(false)}>
+                                    <h2 className='text-xl font-bold mb-4'>
+                                        Upload Documents
+                                    </h2>
+                                    <div className='flex flex-col gap-4'>
+                                        <label htmlFor='files' className='w-fit bg-primary-contrast text-color-primary-contrast rounded-full p-2 cursor-pointer'>
+                                            Select Files
+                                        </label>
+                                        <input
+                                            type='file'
+                                            id='files'
+                                            multiple
+                                            required
+                                            onChange={handleFileUpload}
+                                            accept='.pdf,.doc,.docx,.xls,.xlsx,.csv'
+                                            className='hidden'
+                                        />
+                                        <div className='flex flex-col gap-2 max-h-[100px] overflow-y-auto scrollbar'>
+                                            {uploadedFiles.map(file => (
+                                                <div key={file.name}>
+                                                    {file.name}
+                                                </div>
+                                            ))}
+                                        </div>
+                                        {uploadedFiles.length > 0 &&
+                                            <button
+                                                className={`w-fit bg-primary-contrast text-color-primary-contrast rounded-full p-2 mt-2 cursor-pointer ${submitLoading && 'bg-primary-contrast/50'}`}
+                                                onClick={() => handleSubmit()}
+                                                disabled={submitLoading}
+                                            >
+                                                Submit
+                                            </button>}
                                     </div>
-                                    {uploadedFiles.length > 0 &&
-                                        <button
-                                            className={`w-fit bg-primary-contrast text-color-primary-contrast rounded-full p-2 mt-2 cursor-pointer ${submitLoading && 'bg-primary-contrast/50'}`}
-                                            onClick={() => handleSubmit()}
-                                            disabled={submitLoading}
-                                        >
-                                            Submit
-                                        </button>}
-                                </div>
-                            </Modal>
-                        </div>)}
+                                </Modal>
+                            </div>)}
                     {versionFiles.length > 0 &&
                         <div>
                             <h4 className='font-semibold'>
