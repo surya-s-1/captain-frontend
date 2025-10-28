@@ -238,18 +238,22 @@ export default function DetailsBanner({ projectName, latestVersion, versionFiles
                                 />
                             ))}
                         </div>}
-                    {versionFiles.length > 0 && status !== 'CREATED' && latestVersion && (
-                        <div className='flex flex-col items-center gap-1'>
-                            <span>Change in requirements?</span>
-                            <button
-                                className='w-fit bg-primary-contrast text-color-primary-contrast rounded-full p-2 cursor-pointer flex items-center gap-2'
-                                onClick={() => createNewVersion()}
-                            >
-                                Create New Version
-                                {createVersionLoading && <Loader2 className='animate-spin' />}
-                            </button>
-                        </div>
-                    )}
+                    {versionFiles.length > 0
+                        && status !== 'CREATED'
+                        && !VERSION_STATUS?.[status]?.LOADER
+                        && latestVersion
+                        && (
+                            <div className='flex flex-col items-center gap-1'>
+                                <span>Change in requirements?</span>
+                                <button
+                                    className='w-fit bg-primary-contrast text-color-primary-contrast rounded-full p-2 cursor-pointer flex items-center gap-2'
+                                    onClick={() => createNewVersion()}
+                                >
+                                    Create New Version
+                                    {createVersionLoading && <Loader2 className='animate-spin' />}
+                                </button>
+                            </div>
+                        )}
                 </>}
         </div>
     )
