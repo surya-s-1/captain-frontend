@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { FileDiff, CircleQuestionMark } from 'lucide-react'
+import { FileDiff, CircleQuestionMark, MoveUpRight } from 'lucide-react'
 
 import Dropdown from '@/lib/utility/ui/Dropdown'
 import { Markdown } from '@/lib/utility/ui/Markdown'
@@ -158,8 +158,19 @@ export default function RequirementCard({
             </div>
 
             {requirement.source_type === 'implicit' &&
-                <div className='text-color-primary/50 text-xs mb-1'>
-                    Derived from {requirement.parent_exp_req_ids.join(', ')}
+                <div className='flex items-center gap-1 text-color-primary/50 text-xs mb-1'>
+                    <span>Derived from</span>
+                    {requirement.parent_exp_req_ids.map((id, idx) => (
+                        <a
+                            href={`#${id}`}
+                            key={idx}
+                            target='_blank'
+                            className='w-fit flex items-center gap-1 border-b-2 border-dotted'
+                        >
+                            <span>{id}</span>
+                            <MoveUpRight size={14} />
+                        </a>
+                    ))}
                 </div>}
 
             {requirement.testcase_status && (
