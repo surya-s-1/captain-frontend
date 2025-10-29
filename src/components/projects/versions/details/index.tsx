@@ -336,7 +336,7 @@ export default function ProjectDetails() {
                         value: 'TESTCASES_CREATION_QUEUED'
                     },
                     {
-                        label: 'Started',
+                        label: 'In Progress',
                         value: 'TESTCASES_CREATION_STARTED'
                     },
                     {
@@ -398,8 +398,12 @@ export default function ProjectDetails() {
                         value: 'SUCCESS'
                     },
                     {
-                        label: 'Not created',
+                        label: 'Failed',
                         value: 'FAILED'
+                    },
+                    {
+                        label: 'Not started',
+                        value: 'NOT_STARTED'
                     }
                 ]
             }
