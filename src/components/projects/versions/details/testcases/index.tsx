@@ -53,7 +53,7 @@ export default function TestCases({
     hideDetails,
     setHideDetails
 }: TestCasesProps) {
-    const testcasesPerPage = 50
+    const testcasesPerPage = 30
 
     const {
         filteredItems: filteredTestcases,
