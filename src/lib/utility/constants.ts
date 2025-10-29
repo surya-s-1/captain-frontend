@@ -138,7 +138,7 @@ export const VERSION_STATUS = {
         ALLOW_REUPLOAD: false
     },
     START_IMPLICIT_REFINE: {
-        MESSAGE: 'Started refining implicit requirements',
+        MESSAGE: 'Started to form implicit requirements from regulations and standards',
         LOADER: true,
         RANK: 18,
         ALLOW_REUPLOAD: false
