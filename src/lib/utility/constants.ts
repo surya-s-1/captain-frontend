@@ -72,7 +72,7 @@ export const VERSION_STATUS = {
         ALLOW_REUPLOAD: false
     },
     START_STORE_EXPLICIT: {
-        MESSAGE: 'Started storing explicit requirements',
+        MESSAGE: 'Started generating embeddings and storing explicit requirements',
         LOADER: true,
         RANK: 9,
         ALLOW_REUPLOAD: false
@@ -144,7 +144,7 @@ export const VERSION_STATUS = {
         ALLOW_REUPLOAD: false
     },
     START_STORE_IMPLICIT: {
-        MESSAGE: 'Started storing implicit requirements',
+        MESSAGE: 'Started generating embeddings and storing implicit requirements',
         LOADER: true,
         RANK: 19,
         ALLOW_REUPLOAD: false

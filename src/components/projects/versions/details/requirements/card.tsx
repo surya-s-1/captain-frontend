@@ -158,14 +158,14 @@ export default function RequirementCard({
             </div>
 
             {requirement.source_type === 'implicit' &&
-                <div className='flex items-center gap-1 text-color-primary/50 text-xs mb-1'>
-                    <span>Derived from</span>
+                <div className='flex items-center gap-1 flex-wrap text-color-primary/50 text-xs mb-1'>
+                    <span>Derived for</span>
                     {requirement.parent_exp_req_ids.map((id, idx) => (
                         <a
                             href={`#${id}`}
                             key={idx}
                             target='_blank'
-                            className='w-fit flex items-center gap-1 border-b-2 border-dotted'
+                            className='min-w-fit flex items-center gap-1 border-b-2 border-dotted'
                         >
                             <span>{id}</span>
                             <MoveUpRight size={14} />
