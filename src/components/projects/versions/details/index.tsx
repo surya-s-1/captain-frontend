@@ -305,10 +305,6 @@ export default function ProjectDetails() {
                 type: 'singleSearch',
                 label: 'Requirement ID'
             },
-            requirement_category: {
-                type: 'multi',
-                label: 'Requirement Category'
-            },
             source_type: {
                 type: 'single',
                 label: 'Source',
@@ -323,9 +319,13 @@ export default function ProjectDetails() {
                     }
                 ]
             },
+            requirement_category: {
+                type: 'multi',
+                label: 'Requirement Category'
+            },
             testcase_status: {
                 type: 'multi',
-                label: 'Testcase Status',
+                label: 'Testcase Creation',
                 options: [
                     {
                         label: 'Not started',
