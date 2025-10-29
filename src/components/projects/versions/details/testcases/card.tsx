@@ -286,23 +286,25 @@ export function Testcase({ testcase, status, projectId, version, latestVersion, 
                         <Markdown text={testcase.priority} />
                     </div>
                     {canEnhance &&
-                        <div className='flex flex-col lg:flex-row lg:items-center gap-2'>
+                        <div className='flex lg:flex-row lg:items-center gap-2 mt-4'>
                             <input
                                 type='text'
-                                className='p-2 border border-gray-300 focus:outline-none rounded w-[90%]'
+                                className='flex-1 rounded-full p-2 border border-gray-400 focus:outline-none w-[90%]'
                                 value={enhancementInput}
                                 placeholder='Enhance the testcase...'
                                 onChange={e => { !enhancementInProgress && setEnhancementInput(e.target.value) }}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        enhanceTestcase(testcase.testcase_id)
+                                    }
+                                }}
                             />
-                            <button
-                                className='w-fit flex items-center gap-2 rounded-md shadow-sm hover:shadow-md shadow-black/30 dark:shadow-black/50 transition-shadow p-2 cursor-pointer'
+                            <ExpandingButton
+                                Icon={WandSparkles}
+                                isLoading={enhancementInProgress}
+                                openLabel='Enhance'
                                 onClick={() => enhanceTestcase(testcase.testcase_id)}
-                                disabled={enhancementInProgress}
-                            >
-                                <WandSparkles size={24} />
-                                Enhance
-                                {enhancementInProgress && <Loader2 className='animate-spin' size={20} />}
-                            </button>
+                            />
                         </div>}
                 </>
             )}
