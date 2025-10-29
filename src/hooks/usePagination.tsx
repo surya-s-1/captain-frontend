@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 
 export function usePagination(items = [], itemsPerPage = 10) {
     const [currentPage, setCurrentPage] = useState(1)
@@ -9,6 +9,11 @@ export function usePagination(items = [], itemsPerPage = 10) {
         const startIndex = (currentPage - 1) * itemsPerPage
         return items.slice(startIndex, startIndex + itemsPerPage)
     }, [items, currentPage, itemsPerPage])
+
+    useEffect(() => {
+        if (totalPages < 1) return
+        if (currentPage > totalPages) setCurrentPage(totalPages)
+    }, [currentPage, totalPages])
 
     const nextPage = () => currentPage + 1 <= totalPages && setCurrentPage((p) => Math.min(p + 1, totalPages))
     const prevPage = () => currentPage - 1 >= 0 && setCurrentPage((p) => Math.max(p - 1, 1))
