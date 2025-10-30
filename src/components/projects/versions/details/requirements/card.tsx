@@ -1,14 +1,18 @@
 'use client'
 
 import { useState } from 'react'
-import { FileDiff, CircleQuestionMark, MoveUpRight } from 'lucide-react'
+import { FileDiff, CircleQuestionMark, MoveUpRight, RefreshCcwDot, RefreshCcw } from 'lucide-react'
 
 import Dropdown from '@/lib/utility/ui/Dropdown'
 import { Markdown } from '@/lib/utility/ui/Markdown'
+import { ExpandingButton, ExpandingLink } from '@/lib/utility/ui/ExpandingButton'
+
 import { CHANGE_ANALYSIS_DROPDOWN_OPTIONS, CHANGE_ANALYSIS_STATUS, REQ_STATUS_MESSAGES } from '@/lib/utility/constants'
 import { getCurrentUser } from '@/lib/firebase/utilities'
 
 import { RequirementInterface, Source, Regulation } from './index'
+
+import JIRA_ICON from '@/../public/Jira_icon.png'
 
 export interface RequirementCardProps {
     projectId: string
@@ -16,6 +20,7 @@ export interface RequirementCardProps {
     requirement: RequirementInterface
     canToggleStatus: boolean
     canDelete: boolean
+    toolName: string
 }
 
 const NEXT_PUBLIC_TOOL_ENDPOINT = process.env.NEXT_PUBLIC_TOOL_ENDPOINT || ''
@@ -25,11 +30,14 @@ export default function RequirementCard({
     version,
     requirement,
     canToggleStatus,
-    canDelete
+    canDelete,
+    toolName
 }: RequirementCardProps) {
     const [deleteLoading, setDeleteLoading] = useState(false)
     const [toggleStatusLoading, setToggleStatusLoading] = useState(false)
     const [showPreviousVersion, setShowPreviousVersion] = useState(false)
+    const [resyncInProgress, setResyncInProgress] = useState(false)
+    const [recreateInProgress, setRecreateInProgress] = useState(false)
 
     const [expandedSources, setExpandedSources] = useState<Record<string, boolean>>({})
     const [expandedRegs, setExpandedRegs] = useState<Record<string, boolean>>({})
@@ -118,6 +126,58 @@ export default function RequirementCard({
 
     const groupedSources = groupSources(requirement.sources || [])
 
+    async function recreateRequirement(req_id: string) {
+        try {
+            if (recreateInProgress) return
+
+            setRecreateInProgress(true)
+
+            const user = await getCurrentUser()
+            if (!user) throw new Error('No user found')
+
+            const token = await user.getIdToken()
+            if (!token) throw new Error('No token found')
+
+            const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/v1/${projectId}/v/${version}/r/${req_id}/create/one`, {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${token}` }
+            })
+
+            if (!response.ok) alert(`Could not create the requirement`)
+        } catch (err) {
+            console.error(err)
+            alert('Could not create the requirement')
+        } finally {
+            setRecreateInProgress(false)
+        }
+    }
+
+    async function resyncRequirement(req_id: string) {
+        try {
+            if (resyncInProgress) return
+
+            setResyncInProgress(true)
+
+            const user = await getCurrentUser()
+            if (!user) throw new Error('No user found')
+
+            const token = await user.getIdToken()
+            if (!token) throw new Error('No token found')
+
+            const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/v1/${projectId}/v/${version}/r/${req_id}/sync/one`, {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${token}` }
+            })
+
+            if (!response.ok) alert(`Could not sync the requirement`)
+        } catch (err) {
+            console.error(err)
+            alert('Could not sync the requirement')
+        } finally {
+            setResyncInProgress(false)
+        }
+    }
+
     return (
         <div
             id={requirement.requirement_id}
@@ -145,6 +205,30 @@ export default function RequirementCard({
                         </div>}
                 </div>
                 <div className='flex items-center gap-2'>
+                    {requirement.toolCreated === 'FAILED' &&
+                        <>
+                            <ExpandingButton
+                                Icon={RefreshCcwDot}
+                                openLabel='Retry Sync'
+                                onClick={() => { resyncRequirement(requirement.requirement_id) }}
+                                isLoading={resyncInProgress}
+                            />
+                            <ExpandingButton
+                                Icon={RefreshCcw}
+                                openLabel='Retry Create'
+                                onClick={() => { recreateRequirement(requirement.requirement_id) }}
+                                isLoading={recreateInProgress}
+                            />
+                        </>}
+
+                    {requirement.toolIssueLink &&
+                        <ExpandingLink
+                            imageUrl={JIRA_ICON.src}
+                            label={`Open in ${toolName}`}
+                            href={requirement.toolIssueLink}
+                            className='shadow-none hover:shadow-sm'
+                        />}
+
                     {canDelete && (
                         <button
                             className='text-red-500 cursor-pointer disabled:opacity-50'

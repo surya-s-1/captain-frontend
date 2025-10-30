@@ -43,6 +43,9 @@ export interface RequirementInterfaceBase {
     testcase_status: string | null
     updated_at: Date | null
     created_at: Date
+    toolCreated: string | null
+    toolIssueKey: string | null
+    toolIssueLink: string | null
 }
 
 export interface RequirementHistoryEntry {
@@ -148,6 +151,7 @@ export default function Requirements({
                             requirement={r}
                             canToggleStatus={canToggleStatus}
                             canDelete={canDelete}
+                            toolName={toolName}
                         />
                     ))}
                 </div>
@@ -155,7 +159,7 @@ export default function Requirements({
                 <p>No requirements found.</p>
             )}
 
-            <div className={`w-full z-30 sticky ${status.startsWith('CONFIRM_') || getNoticeMessage(status).title ? 'bottom-24' : 'bottom-4'}`}>
+            <div className={`w-full z-30 sticky ${getNoticeMessage(status).title ? 'bottom-24' : 'bottom-4'}`}>
                 <div className='w-full relative flex items-center justify-center'>
                     <Pagination />
                     <div className='absolute right-24'>

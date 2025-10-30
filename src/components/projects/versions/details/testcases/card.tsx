@@ -135,7 +135,7 @@ export function Testcase({ testcase, status, projectId, version, latestVersion, 
                 headers: { Authorization: `Bearer ${token}` }
             })
 
-            if (!response.ok) alert(`Could not recreate testcases`)
+            if (!response.ok) alert(`Could not create the testcase`)
         } catch (err) {
             console.error(err)
             alert('Could not create the testcase')
@@ -143,8 +143,6 @@ export function Testcase({ testcase, status, projectId, version, latestVersion, 
             setRecreateInProgress(false)
         }
     }
-
-
 
     async function resyncTestcase(testcase_id: string) {
         try {
@@ -158,12 +156,12 @@ export function Testcase({ testcase, status, projectId, version, latestVersion, 
             const token = await user.getIdToken()
             if (!token) throw new Error('No token found')
 
-            const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/v1/${projectId}/v/${version}/t/${testcase_id}/sync`, {
+            const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/v1/${projectId}/v/${version}/t/${testcase_id}/sync/one`, {
                 method: 'POST',
                 headers: { Authorization: `Bearer ${token}` }
             })
 
-            if (!response.ok) alert(`Could not resync testcases`)
+            if (!response.ok) alert(`Could not sync the testcase`)
         } catch (err) {
             console.error(err)
             alert('Could not sync the testcase')

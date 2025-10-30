@@ -305,7 +305,7 @@ export const getNoticeMessage = (status: string): { title: string, content: stri
         case 'ERR_IMP_REQ_EXTRACT':
         case 'ERR_CHANGE_ANALYSIS_IMPLICIT':
         case 'ERR_TESTCASE_CREATION':
-        case 'ERR_TC_CREATION_ON_TOOL':
+        case 'ERR_ALM_ISSUE_CREATION':
             return {
                 title: 'Something went wrong',
                 content: 'Please try again'

@@ -514,7 +514,7 @@ export default function ProjectDetails() {
                     callback={confirmRequirements}
                 />}
 
-            {['CONFIRM_TESTCASES', 'ERR_TC_CREATION_ON_TOOL'].includes(status) && (
+            {['CONFIRM_TESTCASES', 'ERR_ALM_ISSUE_CREATION'].includes(status) && (
                 <Notice
                     title={getNoticeMessage(status).title}
                     content={getNoticeMessage(status).content}

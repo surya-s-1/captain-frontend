@@ -1,16 +1,14 @@
 'use client'
 
-import { useState } from 'react'
 import { Eye, EyeOff } from 'lucide-react'
 
-import { useFilter } from '@/hooks/useFilter'
 import { useTabFilter } from '@/hooks/useTabFilter'
 import { usePagination } from '@/hooks/usePagination'
 
 import { Testcase } from '@/components/projects/versions/details/testcases/card'
 
 import { ExpandingButton } from '@/lib/utility/ui/ExpandingButton'
-import { CHANGE_ANALYSIS_STATUS } from '@/lib/utility/constants'
+import { CHANGE_ANALYSIS_STATUS, getNoticeMessage } from '@/lib/utility/constants'
 
 export interface TestCaseInterface {
     testcase_id: string
@@ -118,7 +116,7 @@ export default function TestCases({
                 <p>No test cases found.</p>
             )}
 
-            <div className={`w-full z-30 sticky ${status.startsWith('CONFIRM_') ? 'bottom-24' : 'bottom-4'}`}>
+            <div className={`w-full z-30 sticky ${getNoticeMessage(status).title ? 'bottom-24' : 'bottom-4'}`}>
                 <div className='w-full relative flex items-center justify-center'>
                     <Pagination />
                     <div className='absolute right-24'>
