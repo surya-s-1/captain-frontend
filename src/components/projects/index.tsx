@@ -62,7 +62,7 @@ export default function Projects() {
         <div className='w-full flex flex-col items-start p-8'>
             <ProjectView
                 toolName={SUPPORTED_TOOLS.JIRA}
-                description='Make sure your projects allow Worktype Task and Summary, Description and Priority fields in the Task. Otherwise, the issue creation might fail on your Jira project.'
+                description='Make sure your projects allow work type Task and Subtask. And also allow Summary, Description and Priority in the both Task and Subtask. Otherwise, the issue creation might fail on your Jira project.'
                 loading={jiraLoading}
                 error={jiraError}
                 projects={jiraProjects}

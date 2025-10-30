@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Loader2 } from 'lucide-react'
+import { ExternalLink, Loader2 } from 'lucide-react'
 
 import { getCurrentUser } from '@/lib/firebase/utilities'
 
@@ -69,12 +69,24 @@ function ProjectCard({ project, toolName }: { project: Project, toolName: string
     return (
         <a
             href={project.connected ? `/projects/versions/details?projectId=${project.project_id}&version=${project.latest_version}` : ''}
-            className='flex flex-col justify-between gap-8 cursor-pointer p-4 rounded-md border-[1] border-gray-300 shadow-black/20 shadow-sm hover:shadow-md transition-shadow'
+            className='flex flex-col justify-between gap-4 cursor-pointer p-4 rounded-md border-[1] border-gray-300 shadow-black/20 shadow-sm hover:shadow-md transition-shadow'
         >
             <div className='w-full flex items-center gap-4'>
                 <img src={project.imageUrl} className='h-8 rounded-full' />
                 <h2 className='text-xl'>{project.name}</h2>
             </div>
+            <button
+                onClick={(e) => {
+                    e.preventDefault()
+                    window.open(`${project.siteDomain}/jira/software/projects/${project.key}/settings`, '_blank')
+                }}
+                className='text-left text-sm text-link hover:underline cursor-pointer'
+            >
+                <span className='flex items-center gap-1'>
+                    <span>Open project settings on {toolName} and allow required work types and fields</span>
+                    <ExternalLink size={20} />
+                </span>
+            </button>
             <div className={`w-full flex items-center justify-between ${!project.connected && 'flex-row-reverse'}`}>
                 {project.connected ?
                     <>
