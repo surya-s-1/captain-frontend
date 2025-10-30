@@ -208,13 +208,13 @@ export default function RequirementCard({
                     {requirement.toolCreated === 'FAILED' &&
                         <>
                             <ExpandingButton
-                                Icon={RefreshCcwDot}
+                                Icon={RefreshCcw}
                                 openLabel='Retry Sync'
                                 onClick={() => { resyncRequirement(requirement.requirement_id) }}
                                 isLoading={resyncInProgress}
                             />
                             <ExpandingButton
-                                Icon={RefreshCcw}
+                                Icon={RefreshCcwDot}
                                 openLabel='Retry Create'
                                 onClick={() => { recreateRequirement(requirement.requirement_id) }}
                                 isLoading={recreateInProgress}

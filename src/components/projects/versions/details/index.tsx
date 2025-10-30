@@ -348,6 +348,24 @@ export default function ProjectDetails() {
                         value: 'ERR_TESTCASE_CREATION'
                     }
                 ]
+            },
+            toolCreated: {
+                type: 'single',
+                label: `${toolName} Issues`,
+                options: [
+                    {
+                        label: 'Created',
+                        value: 'SUCCESS'
+                    },
+                    {
+                        label: 'Failed',
+                        value: 'FAILED'
+                    },
+                    {
+                        label: 'Not started',
+                        value: 'NOT_STARTED'
+                    }
+                ]
             }
         }
     })
@@ -390,7 +408,7 @@ export default function ProjectDetails() {
                 ]
             },
             toolCreated: {
-                type: 'multi',
+                type: 'single',
                 label: `${toolName} Issues`,
                 options: [
                     {

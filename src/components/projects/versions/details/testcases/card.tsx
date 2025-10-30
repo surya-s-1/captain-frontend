@@ -211,13 +211,13 @@ export function Testcase({ testcase, status, projectId, version, latestVersion, 
                     {testcase.toolCreated === 'FAILED' &&
                         <>
                             <ExpandingButton
-                                Icon={RefreshCcwDot}
+                                Icon={RefreshCcw}
                                 openLabel='Retry Sync'
                                 onClick={() => { resyncTestcase(testcase.testcase_id) }}
                                 isLoading={resyncInProgress}
                             />
                             <ExpandingButton
-                                Icon={RefreshCcw}
+                                Icon={RefreshCcwDot}
                                 openLabel='Retry Create'
                                 onClick={() => { recreateTestcase(testcase.testcase_id) }}
                                 isLoading={recreateInProgress}

@@ -111,11 +111,11 @@ export function useFilter<T>({ items, config }: UseFilterOptions<T>) {
                 switch (cfg.type) {
                     case 'multi':
                         // Filter checks if the item's raw value is included in the filter array (of raw values)
-                        return value.includes(itemValue.toString()) // Compare raw values
+                        return value.includes(itemValue?.toString()) // Compare raw values
                     case 'single':
                     case 'singleSearch':
                         // Filter checks if the item's raw value matches the filter's raw value
-                        return itemValue.toString() === value
+                        return itemValue?.toString() === value
                     case 'dateRange':
                         const [start, end] = value as [string, string]
                         const d = new Date(itemValue)
