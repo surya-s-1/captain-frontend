@@ -118,32 +118,6 @@ export function Testcase({ testcase, status, projectId, version, latestVersion, 
         setEnhancementInput('')
     }
 
-    async function resyncTestcases() {
-        try {
-            if (resyncInProgress) return
-
-            setResyncInProgress(true)
-
-            const user = await getCurrentUser()
-            if (!user) throw new Error('No user found')
-
-            const token = await user.getIdToken()
-            if (!token) throw new Error('No token found')
-
-            const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/v1/${projectId}/v/${version}/testcases/sync`, {
-                method: 'POST',
-                headers: { Authorization: `Bearer ${token}` }
-            })
-
-            if (!response.ok) alert(`Could not resync testcases`)
-        } catch (err) {
-            console.error(err)
-            alert('Could not resync testcases')
-        } finally {
-            setResyncInProgress(false)
-        }
-    }
-
     async function recreateTestcase(testcase_id: string) {
         try {
             if (recreateInProgress) return
@@ -164,9 +138,37 @@ export function Testcase({ testcase, status, projectId, version, latestVersion, 
             if (!response.ok) alert(`Could not recreate testcases`)
         } catch (err) {
             console.error(err)
-            alert('Could not recreate testcases')
+            alert('Could not create the testcase')
         } finally {
             setRecreateInProgress(false)
+        }
+    }
+
+
+
+    async function resyncTestcase(testcase_id: string) {
+        try {
+            if (resyncInProgress) return
+
+            setResyncInProgress(true)
+
+            const user = await getCurrentUser()
+            if (!user) throw new Error('No user found')
+
+            const token = await user.getIdToken()
+            if (!token) throw new Error('No token found')
+
+            const response = await fetch(`${NEXT_PUBLIC_TOOL_ENDPOINT}/projects/v1/${projectId}/v/${version}/t/${testcase_id}/sync`, {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${token}` }
+            })
+
+            if (!response.ok) alert(`Could not resync testcases`)
+        } catch (err) {
+            console.error(err)
+            alert('Could not sync the testcase')
+        } finally {
+            setResyncInProgress(false)
         }
     }
 
@@ -208,16 +210,16 @@ export function Testcase({ testcase, status, projectId, version, latestVersion, 
                     />
                 </div>
                 <div className='flex items-center gap-2'>
-                    {testcase.toolCreated === 'FAILED' && status === 'COMPLETE_SYNC_TC_WITH_TOOL' &&
+                    {testcase.toolCreated === 'FAILED' &&
                         <>
                             <ExpandingButton
-                                Icon={RefreshCcw}
+                                Icon={RefreshCcwDot}
                                 openLabel='Retry Sync'
-                                onClick={() => { resyncTestcases() }}
+                                onClick={() => { resyncTestcase(testcase.testcase_id) }}
                                 isLoading={resyncInProgress}
                             />
                             <ExpandingButton
-                                Icon={RefreshCcwDot}
+                                Icon={RefreshCcw}
                                 openLabel='Retry Create'
                                 onClick={() => { recreateTestcase(testcase.testcase_id) }}
                                 isLoading={recreateInProgress}
