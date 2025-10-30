@@ -197,38 +197,38 @@ export const VERSION_STATUS = {
         RANK: null,
         ALLOW_REUPLOAD: false
     },
-    START_TC_CREATION_ON_TOOL: {
-        MESSAGE: 'Creating test cases on tool',
+    START_ALM_ISSUE_CREATION: {
+        MESSAGE: 'Creating issues on ALM tool',
         LOADER: true,
         RANK: 25,
         ALLOW_REUPLOAD: false
     },
-    COMPLETE_TC_CREATION_ON_TOOL: {
-        MESSAGE: 'Completed creating test cases on tool',
-        LOADER: false,
+    CREATE_ALM_NEW_REQUIREMENTS: {
+        MESSAGE: 'Creating new requirements on ALM tool',
+        LOADER: true,
         RANK: 26,
         ALLOW_REUPLOAD: false
     },
-    ERR_TC_CREATION_ON_TOOL: {
-        MESSAGE: 'Error occurred during test cases creation on tool',
-        LOADER: false,
-        RANK: null,
-        ALLOW_REUPLOAD: false
-    },
-    START_TC_SYNC_WITH_TOOL: {
-        MESSAGE: 'Started syncing the test cases with tool',
+    CREATE_ALM_NEW_TESTCASES: {
+        MESSAGE: 'Creating new test cases on ALM tool',
         LOADER: true,
         RANK: 27,
         ALLOW_REUPLOAD: false
     },
-    COMPLETE_TC_SYNC_WITH_TOOL: {
-        MESSAGE: 'Completed syncing the test cases',
-        LOADER: false,
+    UPDATE_ALM_DEP_ISSUES: {
+        MESSAGE: 'Updating deprecated issues on ALM tool',
+        LOADER: true,
         RANK: 28,
         ALLOW_REUPLOAD: false
     },
-    ERR_TC_SYNC_WITH_TOOL: {
-        MESSAGE: 'Error occurred during test cases sync',
+    COMPLETE_ALM_ISSUE_CREATION: {
+        MESSAGE: 'Completed creating issues on ALM tool',
+        LOADER: false,
+        RANK: 29,
+        ALLOW_REUPLOAD: false
+    },
+    ERR_ALM_ISSUE_CREATION: {
+        MESSAGE: 'Error occurred when creating issues on ALM tool',
         LOADER: false,
         RANK: null,
         ALLOW_REUPLOAD: false
