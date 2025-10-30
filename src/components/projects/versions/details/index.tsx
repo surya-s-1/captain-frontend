@@ -351,7 +351,7 @@ export default function ProjectDetails() {
             },
             toolCreated: {
                 type: 'single',
-                label: `${toolName} Issues`,
+                label: `${toolName.toUpperCase()} Issues`,
                 options: [
                     {
                         label: 'Created',
@@ -409,7 +409,7 @@ export default function ProjectDetails() {
             },
             toolCreated: {
                 type: 'single',
-                label: `${toolName} Issues`,
+                label: `${toolName.toUpperCase()} Issues`,
                 options: [
                     {
                         label: 'Created',
