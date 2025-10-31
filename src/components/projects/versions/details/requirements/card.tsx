@@ -267,7 +267,6 @@ export default function RequirementCard({
 
             {canToggleStatus &&
                 [
-                    CHANGE_ANALYSIS_STATUS.DEPRECATED,
                     CHANGE_ANALYSIS_STATUS.MODIFIED,
                     CHANGE_ANALYSIS_STATUS.UNCHANGED
                 ].includes(requirement.change_analysis_status) &&
