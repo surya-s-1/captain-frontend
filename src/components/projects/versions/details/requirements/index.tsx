@@ -81,7 +81,7 @@ export default function Requirements({
 }: RequirementsProps) {
     const reqsPerPage = 30
     const canToggleStatus = status === 'CONFIRM_CHANGE_ANALYSIS_EXPLICIT' && latestVersion
-    const canDelete = ['CONFIRM_EXP_REQ_EXTRACT', 'CONFIRM_IMP_REQ_EXTRACT', 'CONFIRM_REQ_EXTRACT'].includes(status) && latestVersion
+    const canDelete = ['CONFIRM_CHANGE_ANALYSIS_EXPLICIT', 'CONFIRM_EXP_REQ_EXTRACT', 'CONFIRM_IMP_REQ_EXTRACT'].includes(status) && latestVersion
 
     const {
         filteredItems: filteredRequirements,
