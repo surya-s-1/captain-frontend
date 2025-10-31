@@ -1,9 +1,9 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Info } from 'lucide-react'
 
-import { useFilter } from '@/hooks/useFilter'
+import { useSearch, ExpandingSearchBar, SearchSuggestions } from '@/hooks/useSearch'
 import { useTabFilter } from '@/hooks/useTabFilter'
 import { usePagination } from '@/hooks/usePagination'
 
@@ -109,7 +109,17 @@ export default function Requirements({
             }
         })
 
-    const { currentItems: currentRequirements, Pagination, goToPage } = usePagination(filteredRequirements, reqsPerPage)
+    const [searchText, setSearchText] = useState('')
+    const [selectedItem, setSelectedItem] = useState<RequirementInterface | null>(null)
+    const showSuggestions = searchText.length > 0 && selectedItem?.requirement !== searchText
+
+    const handleSelectSuggestion = (item: RequirementInterface) => {
+        setSelectedItem(item)
+        setSearchText(item.requirement)
+    }
+
+    const { searchResults } = useSearch(filteredRequirements, searchText)
+    const { currentItems: currentRequirements, Pagination, goToPage } = usePagination(searchResults, reqsPerPage)
 
     useEffect(() => {
         if (requirements.length > 0 && window.location.hash) {
@@ -130,13 +140,56 @@ export default function Requirements({
 
     return (
         <div className='w-full flex flex-col gap-8 items-center'>
-            <div className='sticky top-[215px] z-30'>
-                <TabFilterComponent
-                    uniqueValues={uniqueValues}
-                    config={config}
-                    selectedValue={selectedValue}
-                    setSelectedValue={setSelectedValue}
-                />
+            <div className='w-full sticky top-[215px] z-30'>
+                <div className='w-full relative flex items-center justify-center'>
+                    <TabFilterComponent
+                        uniqueValues={uniqueValues}
+                        config={config}
+                        selectedValue={selectedValue}
+                        setSelectedValue={setSelectedValue}
+                    />
+                    <div className='absolute right-24'>
+                        <div className='relative'>
+                            <ExpandingSearchBar
+                                searchText={searchText}
+                                onSearchTextChange={(text) => {
+                                    setSearchText(text)
+                                    setSelectedItem(null)
+                                }}
+                                onClear={() => {
+                                    setSearchText('')
+                                    setSelectedItem(null)
+                                }}
+                                placeholder='Search Requirements...'
+                                size='md'
+                                className='w-full'
+                            />
+
+                            {showSuggestions && (
+                                <div className='absolute top-full left-0 w-full z-30'>
+                                    <SearchSuggestions<RequirementInterface>
+                                        searchResults={searchResults}
+                                        onSelectSuggestion={handleSelectSuggestion}
+                                        renderSuggestion={(item) => (
+                                            <div className='flex justify-between items-center'>
+                                                <span
+                                                    className='font-semibold text-gray-700 truncate'
+                                                    title={`(${item.requirement_id}) ${item.requirement}`}
+                                                >
+                                                    {item.requirement}
+                                                </span>
+                                                <span className='text-xs font-mono text-indigo-500 ml-4 flex-shrink-0'>
+                                                    {item.requirement_category}
+                                                </span>
+                                            </div>
+                                        )}
+                                        maxSuggestions={50}
+                                    />
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
             </div>
             {canToggleStatus &&
                 <div className='sticky top-[260px] flex items-center gap-2 w-fit bg-yellow-300 border shadow-sm p-2 rounded-lg z-20'>
