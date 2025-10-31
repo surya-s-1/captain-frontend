@@ -64,7 +64,8 @@ interface RequirementsProps {
     latestVersion: boolean
     status: string
     requirements: RequirementInterface[]
-    RequirementsFilter: any
+    RequirementsFilterPopup: any
+    RequirementsFilterButton: any
     toolName: string
 }
 
@@ -74,7 +75,8 @@ export default function Requirements({
     latestVersion,
     status,
     requirements,
-    RequirementsFilter,
+    RequirementsFilterPopup,
+    RequirementsFilterButton,
     toolName
 }: RequirementsProps) {
     const reqsPerPage = 30
@@ -163,7 +165,10 @@ export default function Requirements({
                 <div className='w-full relative flex items-center justify-center'>
                     <Pagination />
                     <div className='absolute right-24'>
-                        <RequirementsFilter />
+                        <div className='relative'>
+                            <RequirementsFilterButton />
+                            <RequirementsFilterPopup />
+                        </div>
                     </div>
                 </div>
             </div>

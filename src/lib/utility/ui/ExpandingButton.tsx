@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'
 import { Loader2 } from 'lucide-react'
 
 type ButtonSize = 'sm' | 'md' | 'lg'

@@ -298,13 +298,9 @@ export default function ProjectDetails() {
         return `p-2 rounded ${tab === input ? 'bg-primary-contrast text-color-primary-contrast' : 'cursor-pointer'}`
     }
 
-    const { filteredItems: filteredRequirements, FilterComponent: RequirementsFilter } = useFilter({
+    const { filteredItems: filteredRequirements, FilterPopup: RequirementsFilterPopup, FilterButton: RequirementsFilterButton } = useFilter({
         items: showRequirements,
         config: {
-            requirement_id: {
-                type: 'singleSearch',
-                label: 'Requirement ID'
-            },
             source_type: {
                 type: 'single',
                 label: 'Source',
@@ -350,7 +346,7 @@ export default function ProjectDetails() {
                 ]
             },
             toolCreated: {
-                type: 'single',
+                type: 'multi',
                 label: `${toolName.toUpperCase()} Issues`,
                 options: [
                     {
@@ -370,17 +366,9 @@ export default function ProjectDetails() {
         }
     })
 
-    const { filteredItems: filteredTestcases, FilterComponent: TestcasesFilter } = useFilter({
+    const { filteredItems: filteredTestcases, FilterPopup: TestcasesFilterPopup, FilterButton: TestcasesFilterButton } = useFilter({
         items: testcases,
         config: {
-            testcase_id: {
-                type: 'singleSearch',
-                label: 'Testcase ID'
-            },
-            requirement_id: {
-                type: 'singleSearch',
-                label: 'Parent Requirement'
-            },
             dataset_status: {
                 type: 'multi',
                 label: 'Dataset Creation',
@@ -408,7 +396,7 @@ export default function ProjectDetails() {
                 ]
             },
             toolCreated: {
-                type: 'single',
+                type: 'multi',
                 label: `${toolName.toUpperCase()} Issues`,
                 options: [
                     {
@@ -471,7 +459,8 @@ export default function ProjectDetails() {
                         toolName={toolName}
                         status={status}
                         requirements={filteredRequirements}
-                        RequirementsFilter={RequirementsFilter}
+                        RequirementsFilterButton={RequirementsFilterButton}
+                        RequirementsFilterPopup={RequirementsFilterPopup}
                     />
                 )}
 
@@ -483,7 +472,8 @@ export default function ProjectDetails() {
                         toolName={toolName}
                         status={status}
                         testcases={filteredTestcases}
-                        TestcasesFilter={TestcasesFilter}
+                        TestcasesFilterPopup={TestcasesFilterPopup}
+                        TestcasesFilterButton={TestcasesFilterButton}
                         hideDetails={hideTestCaseDetails}
                         setHideDetails={setHideTestcaseDetails}
                     />

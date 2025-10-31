@@ -34,7 +34,8 @@ interface TestCasesProps {
     toolName: string
     status: string
     testcases: TestCaseInterface[]
-    TestcasesFilter: any
+    TestcasesFilterPopup: any
+    TestcasesFilterButton: any
     hideDetails: boolean
     setHideDetails: React.Dispatch<React.SetStateAction<boolean>>
 }
@@ -47,7 +48,8 @@ export default function TestCases({
     toolName,
     status,
     testcases,
-    TestcasesFilter,
+    TestcasesFilterPopup,
+    TestcasesFilterButton,
     hideDetails,
     setHideDetails
 }: TestCasesProps) {
@@ -120,7 +122,10 @@ export default function TestCases({
                 <div className='w-full relative flex items-center justify-center'>
                     <Pagination />
                     <div className='absolute right-24'>
-                        <TestcasesFilter />
+                        <div className='relative'>
+                            <TestcasesFilterButton />
+                            <TestcasesFilterPopup />
+                        </div>
                     </div>
                 </div>
             </div>
