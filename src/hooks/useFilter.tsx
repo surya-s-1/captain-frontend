@@ -271,26 +271,42 @@ export function useFilter<T>({ items, config }: UseFilterOptions<T>) {
 
     const derivedConfig = useMemo(() => {
         const derived: NormalizedFilterConfig = {}
+
         for (const [field, cfg] of Object.entries(config)) {
             const normalizedMap = new Map<string, string>()
+
             if (cfg.options && cfg.options.length) {
-                cfg.options.forEach((opt) => normalizedMap.set(opt.value, opt.label))
+                cfg.options.forEach((opt) => {
+                    const uniqueDataVals = Array.from(
+                        new Set(items.map((i: any) => i[field]).filter((v) => v != null))
+                    ).map(String);
+
+                    if (uniqueDataVals.includes(opt.value)) {
+                        normalizedMap.set(opt.value, opt.label)
+                    }
+                })
             }
+
             const uniqueDataVals = Array.from(
                 new Set(items.map((i: any) => i[field]).filter((v) => v != null))
             ).map(String)
+
             uniqueDataVals.forEach((val) => {
                 if (!normalizedMap.has(val)) normalizedMap.set(val, val)
             })
+
             const finalOptions: NormalizedOption[] = Array.from(
                 normalizedMap.entries()
             ).map(([value, label]) => ({ value, label }))
+
             finalOptions.sort((a, b) => a.label.localeCompare(b.label))
+
             derived[field] = { ...cfg, options: finalOptions }
         }
+
         return derived
     }, [config, items])
-
+    
     const filteredItems = useMemo(() => {
         return items.filter((item) => {
             return Object.entries(filters).every(([field, value]) => {

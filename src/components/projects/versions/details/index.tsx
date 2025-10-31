@@ -303,17 +303,7 @@ export default function ProjectDetails() {
         config: {
             source_type: {
                 type: 'single',
-                label: 'Source',
-                options: [
-                    {
-                        label: 'Explicit',
-                        value: 'explicit'
-                    },
-                    {
-                        label: 'Implicit',
-                        value: 'implicit'
-                    }
-                ]
+                label: 'Source'
             },
             requirement_category: {
                 type: 'multi',
