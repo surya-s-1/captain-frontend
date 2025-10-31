@@ -115,7 +115,7 @@ export default function TestCases({
                                         setSearchText('')
                                         setSelectedItem(null)
                                     }}
-                                    placeholder='Search Requirements...'
+                                    placeholder='Search Testcases...'
                                     size='md'
                                     className='w-full'
                                 />
