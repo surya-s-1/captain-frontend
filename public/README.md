@@ -92,6 +92,12 @@ This notice is meant to help you understand what you can do today, why certain c
 
 ---
 
+### ❓Help Section
+
+1. You can go to help section and checkout the pieces there on how to use this app.
+
+---
+
 ## 🚀 Future Updates on Our Roadmap
 
 ### 🔀 Upload Existing Testcases
