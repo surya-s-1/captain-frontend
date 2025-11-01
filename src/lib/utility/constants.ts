@@ -209,22 +209,28 @@ export const VERSION_STATUS = {
         RANK: 26,
         ALLOW_REUPLOAD: false
     },
+    UPDATE_ALM_MOD_REQUIREMENTS: {
+        MESSAGE: 'Updating modified requirements on ALM tool',
+        LOADER: true,
+        RANK: 27,
+        ALLOW_REUPLOAD: false
+    },
     CREATE_ALM_NEW_TESTCASES: {
         MESSAGE: 'Creating new test cases on ALM tool',
         LOADER: true,
-        RANK: 27,
+        RANK: 28,
         ALLOW_REUPLOAD: false
     },
     UPDATE_ALM_DEP_ISSUES: {
         MESSAGE: 'Updating deprecated issues on ALM tool',
         LOADER: true,
-        RANK: 28,
+        RANK: 29,
         ALLOW_REUPLOAD: false
     },
     COMPLETE_ALM_ISSUE_CREATION: {
         MESSAGE: 'Completed creating issues on ALM tool',
         LOADER: false,
-        RANK: 29,
+        RANK: 30,
         ALLOW_REUPLOAD: false
     },
     ERR_ALM_ISSUE_CREATION: {
