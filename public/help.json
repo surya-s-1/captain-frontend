@@ -3,5 +3,25 @@
         "title": "Connect to Jira and enable necessary Work types and Fields on Jira project",
         "description": "You must connect your Jira account and on the project you want to connect, enable 'Task' and 'Subtask' work types for requirements and testcases creation respectively. And also enable 'Summary', 'Description' and 'Priority' fields in both the work types. By default, you will be able to connect the project, see the requirements and testcases created in this app but if you don't enable these in Jira, these requirements and testcases can't be created there.",
         "iframe": "https://www.youtube.com/embed/Kp6-IkkZncE"
+    },
+    {
+        "title": "How to use this app?",
+        "description": "Captain is designed to extract requirements from plain text documents, find regulatory requirements and also create test cases for the requirements, plus integrated with ALM tools (currently Jira) for seemless creation of ALM issues for software testing and requirements tracking. This app is designed keeping in mind that requirements for a software can change with time. Please watch this video to see how to use this app.",
+        "iframe": "https://www.youtube.com/embed/9fd4yyoqyAw"
+    },
+    {
+        "title": "Explicit Requirement",
+        "description": "Explicit requirements are made from user provided documentation. Though they are refined using Gemini, you can find the source file and the original text used as well. These are created as 'Task' work type on Jira.",
+        "public_image": "requirement-exp.png"
+    },
+    {
+        "title": "Implicit Requirement",
+        "description": "Implicit or regulatory requirements are found from a vector database of regulations and standards using the each explicit requirement text. You can find the regulation, regulation document name and text snippet from the regulation as well along with which explicit requirement was used to find this regulatory requirement. Sometimes you might see multiple parent explicit requirements, as we do deduplication and we join the parent explicit ids during that step. These are created as 'Task' work type on Jira.",
+        "public_image": "requirement-imp.png"
+    },
+    {
+        "title": "Test Case",
+        "description": "Test cases have no identity if not from a requirement. You can see the requirement for which a test case belongs. A test case is created as a 'Subtask' to its parent requirement 'Task' in Jira.",
+        "public_image": "testcase.png"
     }
 ]
