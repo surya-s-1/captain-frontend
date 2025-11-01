@@ -58,7 +58,7 @@ export function useJiraProjects(connectedProjects: ConnectedProject[]) {
                 )
                 setLoading(false)
             } else {
-                setError('Error fetching Jira projects. Please reload this page. If the issue persists, please check if you have connected your Jira account and reconnect it.')
+                setError('Please reload this page. If the issue persists, please check if you have connected your Jira account and reconnect it.')
                 setLoading(false)
             }
         } catch (err) {
