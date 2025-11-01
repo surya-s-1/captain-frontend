@@ -1,0 +1,7 @@
+[
+    {
+        "title": "Connect your Jira account and enable necessary Work types and Fields",
+        "description": "You must connect your Jira account and enable 'Task' and 'Subtask' work types for requirements and testcases creation respectively. And also enable 'Summary', 'Description' and 'Priority' fields in both the work types. By default, you will be able to see the requirements and testcases created in this app but if you don't enable these in Jira, these requirements and testcases can't be created on Jira.",
+        "iframe": "https://www.youtube.com/embed/Kp6-IkkZncE"
+    }
+]

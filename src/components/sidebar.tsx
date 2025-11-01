@@ -1,10 +1,10 @@
 'use client'
 
-import React from 'react'
+import React, { lazy } from 'react'
 import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { signOut } from 'firebase/auth'
-import { PanelLeft, X, Cable, LayoutDashboard, Settings, MessageSquare, CircleAlert, LogOut } from 'lucide-react'
+import { PanelLeft, X, Cable, LayoutDashboard, Settings, MessageSquare, CircleAlert, LogOut, CircleQuestionMark } from 'lucide-react'
 
 import { auth } from '@/lib/firebase'
 import { RootState } from '@/lib/store'
@@ -37,6 +37,12 @@ const Sidebar = ({ sidebarExpanded, setSidebarExpanded }) => {
         { label: 'Integrations', icon: Cable, link: '/integrations' },
         { label: 'Projects', icon: LayoutDashboard, link: '/projects' },
         { label: 'Ask Captain', icon: MessageSquare, link: '/ask-captain' }
+    ]
+
+    const lowerNavItems = [
+        { label: 'Help', icon: CircleQuestionMark, link: '/help', target_blank: false },
+        { label: 'Notice', icon: CircleAlert, link: '/notice', target_blank: true },
+        { label: 'Settings', icon: Settings, link: '/settings', target_blank: false }
     ]
 
     const navButtonClass = 'flex items-center space-x-3 p-2 rounded-lg hover:bg-white/20 backdrop-blur-sm transition-colors duration-200 cursor-pointer'
@@ -80,27 +86,21 @@ const Sidebar = ({ sidebarExpanded, setSidebarExpanded }) => {
             </nav>
 
             <div>
-                <a
-                    href='/notice'
-                    target='_blank'
-                    className={navButtonClass}
-                >
-                    <CircleAlert size={20} />
-                    {sidebarExpanded &&
-                        <span className='whitespace-nowrap overflow-hidden transition-opacity duration-300'>
-                            Notice
-                        </span>}
-                </a>
-                <a
-                    href={'/settings'}
-                    className={navButtonClass}
-                >
-                    <Settings size={20} />
-                    {sidebarExpanded &&
-                        <span className='whitespace-nowrap overflow-hidden transition-opacity duration-300'>
-                            Settings
-                        </span>}
-                </a>
+                {lowerNavItems.map((item, index) => (
+                    <a
+                        key={index}
+                        href={item.link}
+                        target={item.target_blank ? '_blank' : '_self'}
+                        className={navButtonClass}
+                    >
+                        <item.icon size={20} />
+                        {sidebarExpanded &&
+                            <span className='whitespace-nowrap overflow-hidden transition-opacity duration-300'>
+                                {item.label}
+                            </span>}
+                    </a>))}
+            </div>
+            <div className='mt-auto'>
                 <button
                     className={`${navButtonClass} w-full text-red-500 hover:text-red-500`}
                     onClick={handleLogout}
