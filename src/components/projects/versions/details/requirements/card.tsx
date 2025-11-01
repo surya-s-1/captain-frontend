@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { FileDiff, CircleQuestionMark, MoveUpRight, RefreshCcwDot, RefreshCcw } from 'lucide-react'
+import { FileDiff, CircleQuestionMark, MoveUpRight, RefreshCcwDot, RefreshCcw, Trash } from 'lucide-react'
 
 import Dropdown from '@/lib/utility/ui/Dropdown'
 import { Markdown } from '@/lib/utility/ui/Markdown'
@@ -21,6 +21,17 @@ export interface RequirementCardProps {
     canToggleStatus: boolean
     canDelete: boolean
     toolName: string
+}
+
+interface GroupedRegulation {
+    regulation: string
+    min_relevance_score: number | null
+    max_relevance_score: number | null
+    sources: {
+        filename: string
+        snippet: string
+        relevance_score: number | null
+    }[]
 }
 
 const NEXT_PUBLIC_TOOL_ENDPOINT = process.env.NEXT_PUBLIC_TOOL_ENDPOINT || ''
@@ -124,7 +135,45 @@ export default function RequirementCard({
         }))
     }
 
+    function transformRegulations(input: Regulation[]): GroupedRegulation[] {
+        const groupedRegulations: Record<string, GroupedRegulation> = {}
+
+        input.forEach(item => {
+            const { regulation, source } = item
+
+            if (!groupedRegulations[regulation]) {
+                groupedRegulations[regulation] = {
+                    regulation: regulation,
+                    min_relevance_score: Number(source?.relevance_score?.toFixed(2)) || 0,
+                    max_relevance_score: Number(source?.relevance_score?.toFixed(2)) || 0,
+                    sources: []
+                }
+            }
+
+            const isSourceDuplicate = groupedRegulations[regulation].sources.some(
+                s => s.filename === source.filename && s.snippet === source.snippet
+            )
+
+            if (!isSourceDuplicate) {
+                groupedRegulations[regulation].sources.push(source)
+            }
+
+            groupedRegulations[regulation].max_relevance_score = Number(Math.max(
+                groupedRegulations[regulation].max_relevance_score,
+                source.relevance_score
+            ).toFixed(2) || 0)
+
+            groupedRegulations[regulation].min_relevance_score = Number(Math.min(
+                groupedRegulations[regulation].min_relevance_score,
+                source.relevance_score
+            ).toFixed(2) || 0)
+        })
+
+        return Object.values(groupedRegulations)
+    }
+
     const groupedSources = groupSources(requirement.sources || [])
+    const groupedRegulations = transformRegulations(requirement.regulations || [])
 
     async function recreateRequirement(req_id: string) {
         try {
@@ -224,19 +273,19 @@ export default function RequirementCard({
                     {requirement.toolIssueLink &&
                         <ExpandingLink
                             imageUrl={JIRA_ICON.src}
-                            label={`Open in ${toolName}`}
+                            label={`Open in ${toolName?.toUpperCase()}`}
                             href={requirement.toolIssueLink}
                             className='shadow-none hover:shadow-sm'
                         />}
 
                     {canDelete && (
-                        <button
-                            className='text-red-500 cursor-pointer disabled:opacity-50'
+                        <ExpandingButton
+                            Icon={Trash}
                             onClick={() => deleteRequirement(requirement.requirement_id)}
-                            disabled={deleteLoading}
-                        >
-                            {deleteLoading ? 'Deleting...' : 'Remove'}
-                        </button>
+                            isLoading={deleteLoading}
+                            openLabel='Remove'
+                            className='shadow-none hover:shadow-sm text-red-500'
+                        />
                     )}
                 </div>
             </div>
@@ -317,14 +366,14 @@ export default function RequirementCard({
                 )}
 
                 {/* Regulations */}
-                {requirement.regulations.length > 0 && (
+                {groupedRegulations.length > 0 && (
                     <div>
                         <h3 className='font-semibold'>Regulations</h3>
                         <ul className='flex flex-col gap-2'>
-                            {requirement.regulations.map((reg, idx) => {
+                            {groupedRegulations.map((reg, idx) => {
                                 const expanded = expandedRegs[reg.regulation] || false
 
-                                if (!reg.regulation || !reg.source.filename || !reg.source.snippet) return <></>
+                                if (!reg.regulation || !reg.sources.length) return <></>
 
                                 return (
                                     <li key={idx} className='list-disc ml-5'>
@@ -333,7 +382,13 @@ export default function RequirementCard({
                                             className='flex items-center gap-1 w-fit underline cursor-pointer'
                                         >
                                             {reg.regulation}
-                                            <div title={`Relevance score: ${reg.source?.relevance_score?.toFixed(2)}`}>
+                                            <div
+                                                title={
+                                                    reg.min_relevance_score === reg.max_relevance_score
+                                                        ? `Relevance score: ${reg.min_relevance_score}`
+                                                        : `Relevance scores range: ${reg.min_relevance_score} - ${reg.max_relevance_score}`
+                                                }
+                                            >
                                                 <CircleQuestionMark
                                                     className='w-4 h-4 text-gray-400'
                                                 />
@@ -341,11 +396,13 @@ export default function RequirementCard({
                                         </button>
                                         {expanded && (
                                             <ul className='ml-4 mt-1 flex flex-col gap-1 text-xs'>
-                                                <li className='list-disc ml-2'>
-                                                    <strong>({reg.source.filename})</strong>
-                                                    <br />
-                                                    {reg.source.snippet}
-                                                </li>
+                                                {reg.sources.map((s, i) => (
+                                                    <li key={i} className='list-disc ml-2'>
+                                                        <strong>({s.filename})</strong>
+                                                        <br />
+                                                        {s.snippet}
+                                                    </li>
+                                                ))}
                                             </ul>
                                         )}
                                     </li>

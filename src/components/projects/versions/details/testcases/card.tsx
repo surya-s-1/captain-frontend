@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { MoveUpRight, TriangleAlert, ArrowDownToLine, RefreshCcw, RefreshCcwDot, Loader2, WandSparkles, CircleQuestionMark, Eye, EyeOff } from 'lucide-react'
+import { MoveUpRight, TriangleAlert, ArrowDownToLine, RefreshCcw, RefreshCcwDot, Trash, WandSparkles, CircleQuestionMark, Eye, EyeOff } from 'lucide-react'
 
 import { useDownload } from '@/hooks/useDownload'
 
@@ -236,19 +236,19 @@ export function Testcase({ testcase, status, projectId, version, latestVersion, 
                     {testcase.toolIssueLink &&
                         <ExpandingLink
                             imageUrl={JIRA_ICON.src}
-                            label={`Open in ${toolName}`}
+                            label={`Open in ${toolName?.toUpperCase()}`}
                             href={testcase.toolIssueLink}
                             className='shadow-none hover:shadow-sm'
                         />}
 
                     {canDelete && (
-                        <button
-                            className='text-red-500 cursor-pointer'
+                        <ExpandingButton
+                            Icon={Trash}
                             onClick={() => deleteTestcase(testcase.testcase_id)}
-                            disabled={deleteLoading}
-                        >
-                            Remove
-                        </button>
+                            isLoading={deleteLoading}
+                            openLabel='Remove'
+                            className='shadow-none hover:shadow-sm text-red-500'
+                        />
                     )}
                 </div>
             </div>
