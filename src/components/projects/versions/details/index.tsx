@@ -303,7 +303,17 @@ export default function ProjectDetails() {
         config: {
             source_type: {
                 type: 'single',
-                label: 'Source'
+                label: 'Requirements Source',
+                options: [
+                    {
+                        label: 'Uploaded Documents',
+                        value: 'explicit'
+                    },
+                    {
+                        label: 'Regulations & Standards',
+                        value: 'implicit'
+                    }
+                ]
             },
             requirement_category: {
                 type: 'multi',
