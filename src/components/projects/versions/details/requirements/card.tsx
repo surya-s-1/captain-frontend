@@ -278,7 +278,7 @@ export default function RequirementCard({
                             className='shadow-none hover:shadow-sm'
                         />}
 
-                    {canDelete && (
+                    {canDelete && ([CHANGE_ANALYSIS_STATUS.NEW].includes(requirement?.change_analysis_status)) && (
                         <ExpandingButton
                             Icon={Trash}
                             onClick={() => deleteRequirement(requirement.requirement_id)}
