@@ -32,13 +32,13 @@ export interface RequirementInterfaceBase {
     requirement_category: string
     source_type: 'explicit' | 'implicit'
     sources: Source[]
+    regulations: Regulation[]
     deleted: boolean
     duplicate: boolean
     near_duplicate_id: string | null
     change_analysis_status: string | null
     change_analysis_status_reason: string | null
     change_analysis_near_duplicate_id: string | null
-    regulations: Regulation[]
     parent_exp_req_ids: string[]
     testcase_status: string | null
     updated_at: Date | null
@@ -198,9 +198,9 @@ export default function Requirements({
                 </div>}
             {currentRequirements.length > 0 ? (
                 <div className='w-full flex flex-col gap-4 mb-12'>
-                    {currentRequirements.map(r => (
+                    {currentRequirements.map((r, idx) => (
                         <RequirementCard
-                            key={r.requirement_id}
+                            key={idx}
                             projectId={projectId}
                             version={version}
                             requirement={r}
