@@ -204,7 +204,7 @@ export const VERSION_STATUS = {
         ALLOW_REUPLOAD: false
     },
     CREATE_ALM_NEW_REQUIREMENTS: {
-        MESSAGE: 'Creating new requirements on ALM tool',
+        MESSAGE: 'Creating requirements on ALM tool',
         LOADER: true,
         RANK: 26,
         ALLOW_REUPLOAD: false
