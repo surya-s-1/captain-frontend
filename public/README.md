@@ -57,7 +57,7 @@ This notice is meant to help you understand what you can do today, why certain c
 2. For convenience, this app syncs those testcases right after creation:
 
     - After creation, they are synced back into this app.
-    - Each synced test case provides an **“Open in <ALM Tool Name>** option for direct navigation.
+    - Each synced test case provides an **"Open in <ALM Tool Name>"** option for direct navigation.
 
 ---
 
