@@ -17,14 +17,6 @@ export interface Project {
     latest_version: string | null
 }
 
-interface ProjectViewInput {
-    toolName: string
-    description: string
-    loading: boolean
-    error: string | null
-    projects: Project[]
-}
-
 const NEXT_PUBLIC_TOOL_ENDPOINT = process.env.NEXT_PUBLIC_TOOL_ENDPOINT || ''
 
 function ProjectCard({ project, toolName }: { project: Project, toolName: string }) {
@@ -127,11 +119,32 @@ function ProjectCard({ project, toolName }: { project: Project, toolName: string
         </a>)
 }
 
-export function ProjectView({ toolName, description, loading, error, projects }: ProjectViewInput) {
+interface ProjectViewInput {
+    toolName: string
+    description: string
+    helpLink?: string
+    loading: boolean
+    error: string | null
+    projects: Project[]
+}
+
+export function ProjectView({ toolName, description, helpLink = '', loading, error, projects }: ProjectViewInput) {
     return (
         <>
             <h2 className='text-color-primary/70 text-lg font-semibold'>{toolName}</h2>
-            <p className='text-color-primary/50 italic mb-4'>{description}</p>
+            <p className='text-color-primary/50 italic'>{description}</p>
+            {helpLink &&
+                <p className='text-color-primary/50 mb-4'>
+                    <span>Help: </span>
+                    <a
+                        className='text-link italic'
+                        href={helpLink}
+                        target='_blank'
+                        rel='noreferrer'
+                    >
+                        {helpLink}
+                    </a>
+                </p>}
 
             {loading &&
                 <div className='flex items-center gap-2'>
