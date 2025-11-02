@@ -5,7 +5,7 @@ import { Eye, EyeOff } from 'lucide-react'
 import { useTabFilter } from '@/hooks/useTabFilter'
 import { usePagination } from '@/hooks/usePagination'
 
-import { Testcase } from '@/components/projects/versions/details/testcases/card'
+import { TestCaseCard } from '@/components/projects/versions/details/testcases/card'
 
 import { ExpandingButton } from '@/lib/utility/ui/ExpandingButton'
 import { CHANGE_ANALYSIS_STATUS, getNoticeMessage } from '@/lib/utility/constants'
@@ -95,14 +95,16 @@ export default function TestCases({
     return (
         <div className='w-full flex flex-col gap-8 items-center'>
             <div className={`w-full sticky top-[215px] z-30`}>
-                <div className='w-full relative flex items-center justify-center'>
-                    <TabFilterComponent
-                        uniqueValues={uniqueValues}
-                        config={config}
-                        selectedValue={selectedValue}
-                        setSelectedValue={setSelectedValue}
-                    />
-                    <div className='absolute right-24'>
+                <div className='w-full relative flex flex-col items-end md:flex-row md:items-center md:justify-center'>
+                    <div className='w-full overflow-x-auto scrollbar md:w-fit'>
+                        <TabFilterComponent
+                            uniqueValues={uniqueValues}
+                            config={config}
+                            selectedValue={selectedValue}
+                            setSelectedValue={setSelectedValue}
+                        />
+                    </div>
+                    <div className='right-4 w-fit md:absolute md:right-24'>
                         <div className='flex items-start gap-2'>
                             <div className='relative'>
                                 <ExpandingSearchBar
@@ -155,7 +157,7 @@ export default function TestCases({
             {currentTestcases.length > 0 ? (
                 <div className='w-full flex flex-col gap-4 mb-12'>
                     {currentTestcases.map((t) => (
-                        <Testcase
+                        <TestCaseCard
                             key={t.testcase_id}
                             testcase={t}
                             status={status}
@@ -172,9 +174,11 @@ export default function TestCases({
             )}
 
             <div className={`w-full z-30 sticky ${getNoticeMessage(status).title ? 'bottom-24' : 'bottom-4'}`}>
-                <div className='w-full relative flex items-center justify-center'>
-                    <Pagination />
-                    <div className='absolute right-24'>
+                <div className='w-full relative flex flex-col-reverse items-end md:flex-row md:items-center md:justify-center'>
+                    <div className='w-full md:w-fit'>
+                        <Pagination />
+                    </div>
+                    <div className='right-4 w-fit md:absolute md:right-24'>
                         <div className='relative'>
                             <TestcasesFilterButton />
                             <TestcasesFilterPopup />

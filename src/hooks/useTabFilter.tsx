@@ -28,7 +28,7 @@ export function useTabFilter(
         const valueLabels = config?.valueLabels || {}
 
         return (
-            <div className={`flex w-fit overflow-x-auto bg-secondary rounded-md border border-gray-300 shadow-md scrollbar-hide`}>
+            <div className={`flex w-fit overflow-x-auto scrollbar bg-secondary rounded-md border border-gray-300 shadow-md scrollbar-hide`}>
                 {filterOptions.map((option) => {
                     return (
                         <button

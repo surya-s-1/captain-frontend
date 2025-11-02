@@ -169,7 +169,7 @@ export default function DetailsBanner({ projectName, latestVersion, versionFiles
     }
 
     return (
-        <div className='w-full h-[150px] flex items-center justify-between sticky top-0 p-10 bg-gradient-to-br from-indigo-500 to-purple-600 text-white z-20'>
+        <div className='w-full h-[150px] flex flex-col items-baseline gap-4 overflow-auto scrollbar md:flex-row md:items-center justify-between text-sm lg:text-base sticky top-0 p-10 bg-gradient-to-br from-indigo-500 to-purple-600 text-white z-20'>
             {projectName &&
                 <>
                     <div>

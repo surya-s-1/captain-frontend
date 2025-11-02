@@ -77,7 +77,7 @@ export default function Integrations() {
     return (
         <div className='flex flex-col items-start gap-8 p-8 w-full'>
             <h2 className='text-2xl font-bold'>Integrations</h2>
-            <div className='flex items-center gap-32'>
+            <div className='flex items-center gap-8 md:gap-32 overflow-x-auto scrollbar'>
                 <img 
                     src={appUser.theme === 'light' ? Jira_Light_Logo.src : Jira_Dark_Logo.src} 
                     alt='Jira Logo' 

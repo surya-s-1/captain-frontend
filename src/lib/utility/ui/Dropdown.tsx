@@ -53,7 +53,7 @@ export default function Dropdown({
         <div className='relative inline-block text-left'>
             <div
                 className={`
-                    flex items-center gap-2 border cursor-pointer shadow-sm 
+                    flex items-center gap-2 border cursor-pointer shadow-sm w-fit
                     transition-colors select-none ${sizeClasses} rounded-t-3xl rounded-b-3xl
                     ${isOpen ? 'border-gray-400' : 'border-gray-300'}
                     ${disabled ? 'opacity-50 cursor-not-allowed' : ''}

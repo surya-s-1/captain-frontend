@@ -42,7 +42,7 @@ export default function Settings() {
     */
 
     return (
-        <div className='w-full h-full flex flex-col pl-4 lg:pl-40 mt-8 gap-4 lg:gap-8'>
+        <div className='w-full h-full overflow-x-auto scrollbar flex flex-col pl-4 lg:pl-40 mt-8 gap-4 lg:gap-8'>
             {appUser?.photoURL ?
                 <Image src={appUser.photoURL} alt='User' width={60} height={60} className='rounded-full' /> :
                 <UserRound className='text-color-secondary bg-secondary rounded-full' size={72} />

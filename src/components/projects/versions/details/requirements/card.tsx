@@ -234,24 +234,26 @@ export default function RequirementCard({
             className='relative p-4 border-[1] border-gray-300 shadow-sm rounded-lg scroll-mt-[210px]'
         >
             <div className='w-full flex flex-col lg:flex-row gap-4 justify-between'>
-                <div className='flex items-center gap-2'>
+                <div className='flex flex-col items-baseline md:flex-row md:items-center gap-2'>
                     <h2 className='text-color-primary/50 text-sm mb-1'>
                         {requirement.requirement_id}
                         {requirement.requirement_category && ` (${requirement.requirement_category})`}
                     </h2>
-                    {requirement.change_analysis_status &&
-                        <Dropdown
-                            options={CHANGE_ANALYSIS_DROPDOWN_OPTIONS}
-                            value={requirement.change_analysis_status}
-                            onChange={toggleChangeAnalysisStatus}
-                            isLoading={toggleStatusLoading}
-                            disabled={!canToggleStatus || ['IGNORED', 'NEW'].includes(requirement.change_analysis_status)}
-                            size='xs'
-                        />}
-                    {requirement.change_analysis_status_reason &&
-                        <div className='py-1 cursor-pointer' title={requirement.change_analysis_status_reason}>
-                            <CircleQuestionMark className='w-4 h-4 text-gray-400' />
-                        </div>}
+                    <div className='flex items-center gap-2'>
+                        {requirement.change_analysis_status &&
+                            <Dropdown
+                                options={CHANGE_ANALYSIS_DROPDOWN_OPTIONS}
+                                value={requirement.change_analysis_status}
+                                onChange={toggleChangeAnalysisStatus}
+                                isLoading={toggleStatusLoading}
+                                disabled={!canToggleStatus || ['IGNORED', 'NEW'].includes(requirement.change_analysis_status)}
+                                size='xs'
+                            />}
+                        {requirement.change_analysis_status_reason &&
+                            <div className='py-1 cursor-pointer' title={requirement.change_analysis_status_reason}>
+                                <CircleQuestionMark className='w-4 h-4 text-gray-400' />
+                            </div>}
+                    </div>
                 </div>
                 <div className='flex items-center gap-2'>
                     {requirement.toolCreated === 'FAILED' &&

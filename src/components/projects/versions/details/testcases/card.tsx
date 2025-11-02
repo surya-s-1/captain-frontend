@@ -27,7 +27,7 @@ interface TestCaseProps {
     hideDetails: boolean
 }
 
-export function Testcase({ testcase, status, projectId, version, latestVersion, toolName, hideDetails }: TestCaseProps) {
+export function TestCaseCard({ testcase, status, projectId, version, latestVersion, toolName, hideDetails }: TestCaseProps) {
     const [deleteLoading, setDeleteLoading] = useState(false)
     const [enhancementInProgress, setEnhancementInProgress] = useState(false)
     const [resyncInProgress, setResyncInProgress] = useState(false)
@@ -185,19 +185,22 @@ export function Testcase({ testcase, status, projectId, version, latestVersion, 
                         <span>View Requirement</span>
                         <MoveUpRight size={14} />
                     </a>
-                    {testcase.change_analysis_status &&
-                        <Dropdown
-                            options={CHANGE_ANALYSIS_DROPDOWN_OPTIONS}
-                            value={testcase.change_analysis_status}
-                            onChange={() => { }}
-                            isLoading={false}
-                            disabled={true}
-                            size='xs'
-                        />}
-                    {testcase.change_analysis_status_reason &&
-                        <div className='py-1 cursor-pointer' title={testcase.change_analysis_status_reason}>
-                            <CircleQuestionMark className='w-4 h-4 text-gray-400' />
-                        </div>}
+
+                    <div className='flex items-center gap-2'>
+                        {testcase.change_analysis_status &&
+                            <Dropdown
+                                options={CHANGE_ANALYSIS_DROPDOWN_OPTIONS}
+                                value={testcase.change_analysis_status}
+                                onChange={() => { }}
+                                isLoading={false}
+                                disabled={true}
+                                size='xs'
+                            />}
+                        {testcase.change_analysis_status_reason &&
+                            <div className='py-1 cursor-pointer' title={testcase.change_analysis_status_reason}>
+                                <CircleQuestionMark className='w-4 h-4 text-gray-400' />
+                            </div>}
+                    </div>
 
                     <ExpandingButton
                         Icon={isExpanded ? EyeOff : Eye}
